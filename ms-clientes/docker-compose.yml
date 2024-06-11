@@ -42,8 +42,9 @@ services:
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      EUREKA_CLIENT_ENABLED: true
     ports:
-      - "6080:8080"
+      - "0:8080" # Usar puerto aleatorio en el host
     depends_on:
       - mysql
     networks:
