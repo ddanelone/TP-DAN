@@ -1,7 +1,4 @@
-version: '3.8'
-
 services:
-
   pg-dan:
     image: postgres
     container_name: pg-dan-db
@@ -11,7 +8,7 @@ services:
     environment:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpassword
-      POSTGRES_DB: pg-dan      
+      POSTGRES_DB: pg-dan
     volumes:
       - pg-data:/var/lib/postgresql/data
     networks:
@@ -48,16 +45,73 @@ services:
       - "6180:8080"
     depends_on:
       - pg-dan
+
     networks:
       - productos-net
       - backend-net
 
+  mongo-dan:
+    image: mongo
+    container_name: mongo-dan
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: dan
+    networks:
+      - pedidos-net
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8027:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: dan
+      ME_CONFIG_MONGODB_URL: mongodb://root:dan@mongo-dan:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongo-dan
+    networks:
+      - pedidos-net
+
+  ms-pedidos-svc:
+    image: ms-pedidos-svc:latest
+    container_name: ms-pedidos-svc
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongo-dan
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: pedidosdb
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: dan
+      SPRING_DATA_MONGODB_URL: mongodb://root:dan@mongo-dan:27017/pedidosdb?authSource=admin
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+
+    ports:
+      - "6280:8080"
+    depends_on:
+      - mongo-dan
+
+    networks:
+      - pedidos-net
+      - backend-net
 
 networks:
   backend-net:
     external: true
   productos-net:
     driver: bridge
+  pedidos-net:
+    driver: bridge
 
 volumes:
   pg-data:
+  mongo-data:
