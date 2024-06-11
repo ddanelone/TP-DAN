@@ -1,12 +1,12 @@
 services:
-  eureka-server:
+  gateway-server:
     image: gateway-server:latest
     container_name: gateway-server
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+      - "8082:8081" # Cambia el puerto expuesto a 8082
     networks:
       - backend-net
 
