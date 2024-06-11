@@ -43,6 +43,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       EUREKA_CLIENT_ENABLED: true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     ports:
       - "0:8080" # Usar puerto aleatorio en el host
     depends_on:
