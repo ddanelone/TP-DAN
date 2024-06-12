@@ -30,7 +30,11 @@ services:
 
   ms-clientes-svc:
     image: ms-clientes-svc:latest
-    container_name: ms-clientes-svc
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    #container_name: ms-clientes-svc
     build:
       context: .
       dockerfile: Dockerfile

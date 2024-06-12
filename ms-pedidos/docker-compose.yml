@@ -30,7 +30,11 @@ services:
 
   ms-pedidos-svc:
     image: ms-pedidos-svc:latest
-    container_name: ms-pedidos-svc
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    #container_name: ms-pedidos-svc
     build:
       context: .
       dockerfile: Dockerfile

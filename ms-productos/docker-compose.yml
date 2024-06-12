@@ -29,7 +29,11 @@ services:
 
   ms-productos-svc:
     image: ms-productos-svc:latest
-    container_name: ms-productos-svc
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    #container_name: ms-productos-svc
     build:
       context: .
       dockerfile: Dockerfile
