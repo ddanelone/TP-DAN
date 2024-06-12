@@ -44,7 +44,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
     ports:
-      - "6280:8080"
+      - "0:8080"
     depends_on:
       - mongo-dan
     networks:
