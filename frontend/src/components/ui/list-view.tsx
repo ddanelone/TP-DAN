@@ -1,22 +1,14 @@
 import { formatPrice } from "@/action/format-price";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
 import { Product } from "@/interfaces/product-interface";
 import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
-import Image from "next/image";
-import { CreateUpdateItem } from "./create-update-item-form";
-import { ConfirmDeletion } from "./confirm-deletion";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { CreateUpdateItem } from "@/app/(vendedor)/abm/components/create-update-item-form";
+import { ConfirmDeletion } from "@/app/(vendedor)/abm/components/confirm-deletion";
+import AddItemToCart from "@/app/(cliente)/components/add-item-to-cart";
 
 interface ListViewProps {
   items: Product[];
@@ -26,7 +18,7 @@ interface ListViewProps {
   addItem?: (item: Product) => void;
 }
 
-const ListView = ({
+export const ListView = ({
   items,
   getItems,
   deleteItem,
@@ -77,13 +69,11 @@ const ListView = ({
               )}
               {/* ========== Agregar al carrito ========== */}
               {addItem && (
-                <Button
-                  className="ml-4"
-                  variant={"outline"}
-                  onClick={() => addItem(item)}
-                >
-                  <ShoppingCart />
-                </Button>
+                <AddItemToCart item={item} addItem={addItem}>
+                  <Button>
+                    <ShoppingCart />
+                  </Button>
+                </AddItemToCart>
               )}
             </div>
           </div>

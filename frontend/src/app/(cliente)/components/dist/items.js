@@ -46,14 +46,14 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var use_user_1 = require("@/hooks/use-user");
 var react_1 = require("react");
-var table_view_1 = require("./table-view");
 var button_1 = require("@/components/ui/button");
 var react_hot_toast_1 = require("react-hot-toast");
 var badge_1 = require("@/components/ui/badge");
-var list_view_1 = require("./list-view");
 var auth_1 = require("@/lib/auth");
 var lucide_react_1 = require("lucide-react");
 var buy_cart_1 = require("./buy-cart");
+var table_view_1 = require("@/components/ui/table-view");
+var list_view_1 = require("@/components/ui/list-view");
 var Items = function () {
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), items = _a[0], setItems = _a[1];
@@ -114,6 +114,6 @@ var Items = function () {
                         React.createElement("span", { className: "inline-block bg-gray-200 rounded-full p-1 ml-2" },
                             React.createElement(lucide_react_1.ShoppingCart, { className: "text-gray-600", size: 20 })))))),
         React.createElement(table_view_1.TableView, { items: items, isLoading: isLoading, addItem: addItemToCart }),
-        React.createElement(list_view_1["default"], { items: items, isLoading: isLoading, addItem: addItemToCart })));
+        React.createElement(list_view_1.ListView, { items: items, isLoading: isLoading, addItem: addItemToCart })));
 };
 exports["default"] = Items;

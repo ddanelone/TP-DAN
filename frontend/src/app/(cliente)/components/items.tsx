@@ -2,17 +2,16 @@
 
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
-import { TableView } from "./table-view";
 import { Product } from "@/interfaces/product-interface";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 
-import ListView from "./list-view";
 import { getProducts } from "@/lib/auth";
-import { Bag } from "react-bootstrap-icons";
 import { ShoppingCart } from "lucide-react";
 import { BuyCart } from "./buy-cart";
+import { TableView } from "@/components/ui/table-view";
+import { ListView } from "@/components/ui/list-view";
 
 const Items = () => {
   const user = useUser();
@@ -23,6 +22,7 @@ const Items = () => {
   /* ========== Cargar los productos en la tabla ========== */
   const getItems = async () => {
     setIsLoading(true);
+
     try {
       const res = await getProducts();
       setItems(res);

@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Product } from "@/interfaces/product-interface";
 import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
-import { CreateUpdateItem } from "./create-update-item-form";
-import { ConfirmDeletion } from "./confirm-deletion";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AddItemToCart } from "./add-item-to-cart";
+import { CreateUpdateItem } from "@/app/(vendedor)/abm/components/create-update-item-form";
+import { ConfirmDeletion } from "@/app/(vendedor)/abm/components/confirm-deletion";
+import AddItemToCart from "@/app/(cliente)/components/add-item-to-cart";
 
 interface TableViewProps {
   items: Product[];

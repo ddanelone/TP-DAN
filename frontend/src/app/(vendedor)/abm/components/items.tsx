@@ -3,15 +3,15 @@
 import { useUser } from "@/hooks/use-user";
 import { CreateUpdateItem } from "./create-update-item-form";
 import { useEffect, useState } from "react";
-import { TableView } from "./table-view";
 import { Product } from "@/interfaces/product-interface";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
-import { formatPrice } from "@/action/format-price";
-import ListView from "./list-view";
+
 import { deleteProductById, getProducts } from "@/lib/auth";
+import { TableView } from "@/components/ui/table-view";
+import ListView from "@/components/ui/list-view";
 
 const Items = () => {
   const user = useUser();

@@ -40,13 +40,13 @@ exports.__esModule = true;
 var use_user_1 = require("@/hooks/use-user");
 var create_update_item_form_1 = require("./create-update-item-form");
 var react_1 = require("react");
-var table_view_1 = require("./table-view");
 var button_1 = require("@/components/ui/button");
 var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
 var badge_1 = require("@/components/ui/badge");
-var list_view_1 = require("./list-view");
 var auth_1 = require("@/lib/auth");
+var table_view_1 = require("@/components/ui/table-view");
+var list_view_1 = require("@/components/ui/list-view");
 var Items = function () {
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), items = _a[0], setItems = _a[1];
