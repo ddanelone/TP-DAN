@@ -12,30 +12,36 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
-    @Autowired
-    private ProductoService productoService;
 
-    @PostMapping
-    public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
-        Producto savedProducto = productoService.saveProducto(producto);
-        return ResponseEntity.ok(savedProducto);
-    }
+   @Autowired
+   private ProductoService productoService;
 
-    @GetMapping
-    public List<Producto> getAllProductos() {
-        return productoService.getAllProductos();
-    }
+   @PostMapping
+   public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
+      Producto savedProducto = productoService.saveProducto(producto);
+      return ResponseEntity.ok(savedProducto);
+   }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
-        Producto producto = productoService.getProductoById(id);
-        return producto != null ? ResponseEntity.ok(producto) : ResponseEntity.notFound().build();
-    }
+   @GetMapping
+   public List<Producto> getAllProductos() {
+      return productoService.getAllProductos();
+   }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
-        productoService.deleteProducto(id);
-        return ResponseEntity.noContent().build();
-    }
+   @GetMapping("/{id}")
+   public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
+      Producto producto = productoService.getProductoById(id);
+      return producto != null ? ResponseEntity.ok(producto) : ResponseEntity.notFound().build();
+   }
+
+   @GetMapping("/ids")
+   public ResponseEntity<List<Producto>> getProductosByIds(@RequestParam List<Long> ids) {
+      List<Producto> productos = productoService.getProductosByIds(ids);
+      return ResponseEntity.ok(productos);
+   }
+
+   @DeleteMapping("/{id}")
+   public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
+      productoService.deleteProducto(id);
+      return ResponseEntity.noContent().build();
+   }
 }
-

@@ -16,34 +16,35 @@ import java.util.List;
 
 @Service
 public class ProductoService {
-    @Autowired
-    private ProductoRepository productoRepository;
-    Logger log = LoggerFactory.getLogger(ProductoService.class);
+   @Autowired
+   private ProductoRepository productoRepository;
+   Logger log = LoggerFactory.getLogger(ProductoService.class);
 
-    @RabbitListener(queues = RabbitMQConfig.STOCK_UPDATE_QUEUE)
-    public void handleStockUpdate(Message msg) {
-        log.info("Recibido {}", msg);
-        // buscar el producto
-        // actualizar el stock
-        // verificar el punto de pedido y generar un pedido
-    }
+   @RabbitListener(queues = RabbitMQConfig.STOCK_UPDATE_QUEUE)
+   public void handleStockUpdate(Message msg) {
+      log.info("Recibido {}", msg);
+      // buscar el producto
+      // actualizar el stock
+      // verificar el punto de pedido y generar un pedido
+   }
 
+   public Producto saveProducto(Producto producto) {
+      return productoRepository.save(producto);
+   }
 
+   public List<Producto> getAllProductos() {
+      return productoRepository.findAll();
+   }
 
-    public Producto saveProducto(Producto producto) {
-        return productoRepository.save(producto);
-    }
+   public Producto getProductoById(Long id) {
+      return productoRepository.findById(id).orElse(null);
+   }
 
-    public List<Producto> getAllProductos() {
-        return productoRepository.findAll();
-    }
+   public void deleteProducto(Long id) {
+      productoRepository.deleteById(id);
+   }
 
-    public Producto getProductoById(Long id) {
-        return productoRepository.findById(id).orElse(null);
-    }
-
-    public void deleteProducto(Long id) {
-        productoRepository.deleteById(id);
-    }
+   public List<Producto> getProductosByIds(List<Long> ids) {
+      return productoRepository.findAllById(ids);
+   }
 }
-

@@ -30,7 +30,11 @@ services:
 
   ms-clientes-svc:
     image: ms-clientes-svc:latest
-    container_name: ms-clientes-svc
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    #container_name: ms-clientes-svc
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,7 +47,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
     ports:
-      - "6080:8080"
+      - "0:8080" # Uso el puerto aleatorio en el host
     depends_on:
       - mysql
     networks:

@@ -1,0 +1,7 @@
+export enum Category {
+  CEMENTOS = "CEMENTOS",
+  PLACAS = "PLACAS",
+  PERFILES = "PERFILES",
+  MORTEROS = "MORTEROS",
+  YESERIA = "YESERIA",
+}

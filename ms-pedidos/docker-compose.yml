@@ -30,7 +30,11 @@ services:
 
   ms-pedidos-svc:
     image: ms-pedidos-svc:latest
-    container_name: ms-pedidos-svc
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    #container_name: ms-pedidos-svc
     build:
       context: .
       dockerfile: Dockerfile
@@ -44,7 +48,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
     ports:
-      - "6280:8080"
+      - "0:8080"
     depends_on:
       - mongo-dan
     networks:
