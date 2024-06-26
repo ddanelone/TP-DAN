@@ -52,7 +52,7 @@ function BuyCart(_a) {
                             " ",
                             format_price_1.formatPrice(cartItems.reduce(function (acc, item) { return acc + item.precio * item.cantidad; }, 0)))),
                     React.createElement("div", { className: "flex space-x-2" },
-                        React.createElement(button_1.Button, { className: "bg-gray-200 text-gray-800 hover:bg-gray-300", onClick: handleClose }, "Seguir Comprando"),
-                        React.createElement(button_1.Button, { className: "bg-blue-600 text-white hover:bg-blue-700", onClick: handlePurchase }, "Comprar")))))));
+                        React.createElement(button_1.Button, { className: "bg-gray-200 text-gray-800 hover:bg-gray-300", onClick: handleClose }, "Agregar m\u00E1s productos"),
+                        React.createElement(button_1.Button, { className: "bg-blue-600 text-white hover:bg-blue-700", onClick: handlePurchase }, "Crear Pedido")))))));
 }
 exports.BuyCart = BuyCart;

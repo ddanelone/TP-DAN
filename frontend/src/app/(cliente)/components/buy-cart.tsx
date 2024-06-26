@@ -104,13 +104,13 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
                 className="bg-gray-200 text-gray-800 hover:bg-gray-300"
                 onClick={handleClose}
               >
-                Seguir Comprando
+                Agregar más productos
               </Button>
               <Button
                 className="bg-blue-600 text-white hover:bg-blue-700"
                 onClick={handlePurchase}
               >
-                Comprar
+                Crear Pedido
               </Button>
             </div>
           </div>

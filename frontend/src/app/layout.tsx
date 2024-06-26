@@ -34,7 +34,7 @@ export default function RootLayout({
     if (user) {
       // Redirigir usuarios autenticados fuera de las rutas de autenticación
       if (authRoutes.includes(pathName)) {
-        if (user.role === 1 && pathName !== "/abm/productos") {
+        if (user.role === 1 && pathName !== "/abm/clientes") {
           router.push("/abm/productos");
         } else if (user.role === 0 && pathName !== "/productos") {
           router.push("/productos");

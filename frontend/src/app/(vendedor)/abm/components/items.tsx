@@ -53,13 +53,6 @@ const Items = () => {
     }
   };
 
-  const getProfits = () => {
-    // return items.reduce(
-    // (index, item) => index + item.price * item.soldUnits,
-    //0
-    //);
-  };
-
   useEffect(() => {
     if (user) getItems();
   }, [user]);

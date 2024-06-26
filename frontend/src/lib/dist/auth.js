@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -240,6 +240,127 @@ exports.deleteProductById = function (productId) { return __awaiter(void 0, void
             case 2:
                 error_8 = _a.sent();
                 throw new Error(error_8.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+/* ==========  CLIENTES ========== */
+// Función para obtener la lista de clientes
+exports.getAllClients = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_9;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].get("/clientes", config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_9 = _a.sent();
+                throw new Error(error_9.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para obtener un cliente por ID
+exports.getClientById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_10;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].get("/clientes/" + id, config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_10 = _a.sent();
+                throw new Error(error_10.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para crear un nuevo cliente
+exports.createClient = function (clientData) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_11;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].post("/clientes", clientData, config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_11 = _a.sent();
+                throw new Error(error_11.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para actualizar un cliente existente
+exports.updateClient = function (id, clientData) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_12;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].put("/clientes/" + id, clientData, config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_12 = _a.sent();
+                throw new Error(error_12.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para eliminar un cliente
+exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, error_13;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"]["delete"]("/clientes/" + id, config)];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_13 = _a.sent();
+                throw new Error(error_13.response.data.message);
             case 3: return [2 /*return*/];
         }
     });

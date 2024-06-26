@@ -16,3 +16,24 @@ export const connectRabbitMQ = async () => {
 };
 
 export const getChannel = () => channel;
+
+export const sendClientCreationMessage = async (clienteData) => {
+    if (!channel) {
+        console.error('Canal de RabbitMQ no disponible');
+        return;
+    }
+
+    try {
+        const queue = 'crear_cliente';
+        const msg = JSON.stringify(clienteData);
+
+        await channel.assertQueue(queue, {
+            durable: true,
+        });
+        channel.sendToQueue(queue, Buffer.from(msg));
+
+        console.log(" [x] Sent %s", msg);
+    } catch (error) {
+        console.error('Error al enviar el mensaje a RabbitMQ:', error);
+    }
+};

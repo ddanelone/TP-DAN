@@ -13,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUser } from "@/lib/auth";
 import { CircleUser, LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { User } from "@/interfaces/user.interface";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { useRouter } from "next/navigation";

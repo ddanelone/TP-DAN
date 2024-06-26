@@ -204,8 +204,9 @@ export function CreateUpdateItem({
                 placeholder="0"
                 step="1"
                 type="number"
+                min="0"
               />
-              <p className="form-error">{errors.stockActual?.message}</p>
+              <p className="form-error">{errors.stockActual?.message} </p>
             </div>
             {/* ========== Stock Mínimo ========== */}
             <div className="mb-3">
@@ -216,6 +217,7 @@ export function CreateUpdateItem({
                 placeholder="0"
                 step="1"
                 type="number"
+                min="0"
               />
               <p className="form-error">{errors.stockMinimo?.message}</p>
             </div>

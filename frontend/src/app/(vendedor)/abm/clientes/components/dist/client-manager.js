@@ -37,21 +37,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+var badge_1 = require("@/components/ui/badge");
 var use_user_1 = require("@/hooks/use-user");
-var create_update_item_form_1 = require("./create-update-item-form");
 var react_1 = require("react");
 var button_1 = require("@/components/ui/button");
 var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
-var badge_1 = require("@/components/ui/badge");
+var table_client_1 = require("@/components/ui/table-client");
 var auth_1 = require("@/lib/auth");
-var table_view_1 = require("@/components/ui/table-view");
-var list_view_1 = require("@/components/ui/list-view");
-var Items = function () {
+var create_update_client_1 = require("./create-update-client");
+var CustomerManager = function () {
     var user = use_user_1.useUser();
-    var _a = react_1.useState([]), items = _a[0], setItems = _a[1];
+    var _a = react_1.useState([]), clients = _a[0], setClients = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
-    var getItems = function () { return __awaiter(void 0, void 0, void 0, function () {
+    /* ========== Traer todos los Clientes a la Tabla  ========== */
+    var getClients = function () { return __awaiter(void 0, void 0, void 0, function () {
         var res, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -60,11 +60,11 @@ var Items = function () {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.getProducts()];
+                    return [4 /*yield*/, auth_1.getAllClients()];
                 case 2:
-                    res = _a.sent();
+                    res = (_a.sent());
                     console.log(res);
-                    setItems(res);
+                    setClients(res);
                     return [3 /*break*/, 5];
                 case 3:
                     error_1 = _a.sent();
@@ -77,9 +77,9 @@ var Items = function () {
             }
         });
     }); };
-    /* ========== Borrar un item en la base de datos ========== */
-    var deleteItem = function (item) { return __awaiter(void 0, void 0, void 0, function () {
-        var res, newItems, error_2;
+    /* ========== Borrar un Cliente de la base de datos ========== */
+    var deleteCostumer = function (client) { return __awaiter(void 0, void 0, void 0, function () {
+        var newClients, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -87,16 +87,18 @@ var Items = function () {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.deleteProductById(item.id)];
+                    return [4 /*yield*/, auth_1.deleteClient(client === null || client === void 0 ? void 0 : client.id)];
                 case 2:
-                    res = _a.sent();
-                    react_hot_toast_1["default"].success("Item eliminado correctamente");
-                    newItems = items.filter(function (i) { return i.id !== item.id; });
-                    setItems(newItems);
+                    _a.sent();
+                    react_hot_toast_1["default"].success("Cliente eliminado correctamente");
+                    newClients = clients.filter(function (i) { return i.id !== client.id; });
+                    setClients(newClients);
                     return [3 /*break*/, 5];
                 case 3:
                     error_2 = _a.sent();
-                    react_hot_toast_1["default"].error(error_2.message, { duration: 4000 });
+                    react_hot_toast_1["default"].error("No se pudo eliminar el Cliente: " + error_2.message, {
+                        duration: 4000
+                    });
                     return [3 /*break*/, 5];
                 case 4:
                     setIsLoading(false);
@@ -107,18 +109,18 @@ var Items = function () {
     }); };
     react_1.useEffect(function () {
         if (user)
-            getItems();
+            getClients();
     }, [user]);
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex justify-between items-center m-4 mb-8" },
             React.createElement("div", null,
-                React.createElement("h1", { className: "text-2xl ml-1" }, "Mis Productos"),
-                items.length > 0 && (React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES"))),
-            React.createElement(create_update_item_form_1.CreateUpdateItem, { getItems: getItems },
+                React.createElement("h1", { className: "text-2xl ml-1" }, "Administraci\u00F3n de Clientes"),
+                React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES")),
+            React.createElement(create_update_client_1.CreateUpdateClient, { getClients: getClients },
                 React.createElement(button_1.Button, { className: "px-6" },
                     "Crear",
                     React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" })))),
-        React.createElement(table_view_1.TableView, { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading }),
-        React.createElement(list_view_1["default"], { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading })));
+        React.createElement("div", { className: "m-4" },
+            React.createElement(table_client_1.TableClient, { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer }))));
 };
-exports["default"] = Items;
+exports["default"] = CustomerManager;

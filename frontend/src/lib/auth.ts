@@ -3,6 +3,7 @@ import { User } from "@/interfaces/user.interface";
 import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 import { Product } from "@/interfaces/product-interface";
+import { Costumer } from "@/interfaces/costumer.interface";
 
 /* ========== Usuarios  ========== */
 
@@ -180,6 +181,87 @@ export const deleteProductById = async (productId?: number): Promise<void> => {
 
     // Realiza la solicitud para eliminar el producto por ID
     await api.delete(`/productos/${productId}`, config);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+/* ==========  CLIENTES ========== */
+
+// Función para obtener la lista de clientes
+export const getAllClients = async () => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.get("/clientes", config);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para obtener un cliente por ID
+export const getClientById = async (id: number) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.get(`/clientes/${id}`, config);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para crear un nuevo cliente
+export const createClient = async (clientData: Costumer) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.post("/clientes", clientData, config);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para actualizar un cliente existente
+export const updateClient = async (id?: number, clientData?: Costumer) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.put(`/clientes/${id}`, clientData, config);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para eliminar un cliente
+export const deleteClient = async (id?: number) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    await api.delete(`/clientes/${id}`, config);
   } catch (error: any) {
     throw new Error(error.response.data.message);
   }

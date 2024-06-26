@@ -11,17 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import * as z from "zod";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { LoaderCircle } from "lucide-react";
-import toast from "react-hot-toast";
+import { useState } from "react";
 
-import { useUser } from "@/hooks/use-user";
 import { Product } from "@/interfaces/product-interface";
-import { Category } from "@/interfaces/product-category-interface";
-import { saveProduct } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
 interface AddItemToCartProps {
@@ -91,7 +84,7 @@ export const AddItemToCart = ({
                 name="cantidad"
                 control={control}
                 render={({ field }) => (
-                  <Input id="cantidad" type="number" {...field} />
+                  <Input id="cantidad" type="number" {...field} min={0} />
                 )}
               />
             </div>

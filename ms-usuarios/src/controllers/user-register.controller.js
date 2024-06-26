@@ -1,6 +1,7 @@
 import { SALT } from '#Constants/salt.js';
 import UserModel from '#Schemas/user.schema.js';
 import { hash } from 'bcrypt';
+import { sendClientCreationMessage } from '#Config/rabbitMQ.js'; // Importa la función para enviar mensajes
 
 const userRegisterController = async (req, res) => {
     const { name, surname, dni, email, password, role } = req.body;
@@ -29,6 +30,19 @@ const userRegisterController = async (req, res) => {
             password: hashedPassword,
             role,
         });
+
+        // Si el rol es 0, envía los datos del cliente a RabbitMQ
+        if (role === 0) {
+            const clienteData = {
+               nombre: name,
+               apellido: surname,
+                  dni: dni,
+                correoElectronico: email,
+                cuit: '', // Asigna el valor de CUIT que corresponda, si está disponible
+                maximoDescubierto: 0, // Valor por defecto
+            };
+            await sendClientCreationMessage(clienteData);
+        }
 
         // Obtener datos del usuario creado (excepto contraseña)
         const userData = {

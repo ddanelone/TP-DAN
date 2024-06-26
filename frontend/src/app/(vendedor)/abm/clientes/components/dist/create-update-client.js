@@ -1,4 +1,4 @@
-"use client";
+"user client";
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -48,7 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.CreateUpdateItem = void 0;
+exports.CreateUpdateClient = void 0;
 var dialog_1 = require("@/components/ui/dialog");
 var input_1 = require("@/components/ui/input");
 var label_1 = require("@/components/ui/label");
@@ -60,61 +60,72 @@ var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
 var use_user_1 = require("@/hooks/use-user");
 var button_1 = require("@/components/ui/button");
-var product_category_interface_1 = require("@/interfaces/product-category-interface");
-var products_category_select_1 = require("@/components/ui/products-category-select");
 var auth_1 = require("@/lib/auth");
-function CreateUpdateItem(_a) {
+function CreateUpdateClient(_a) {
     var _this = this;
     var _b, _c, _d, _e, _f, _g;
-    var children = _a.children, itemToUpdate = _a.itemToUpdate, getItems = _a.getItems;
+    var children = _a.children, clientToUpdate = _a.clientToUpdate, getClients = _a.getClients;
     var user = use_user_1.useUser();
     var _h = react_1.useState(false), isLoading = _h[0], setIsLoading = _h[1];
     var _j = react_1.useState(false), open = _j[0], setOpen = _j[1];
+    //const [clients, setClients] = useState<Costumer[]>([]);
     /* ========== Formulario ========== */
     var formSchema = z.object({
-        nombre: z.string().min(4, { message: "El nombre es requerido" }),
-        descripcion: z.string().min(4, { message: "La descripción es requerida" }),
-        categoria: z.nativeEnum(product_category_interface_1.Category),
-        precio: z.coerce.number().gte(0, "El precio debe ser mayor a 0"),
-        stockActual: z.coerce
-            .number()
-            .gte(0, "El stock debe ser mayor o igual a 0"),
-        stockMinimo: z.coerce
-            .number()
-            .gte(0, "El stock mínimo debe ser mayor o igual a 0")
+        nombre: z.string().min(2, {
+            message: "Nombre debe tener al menos 2 caracteres de longitud"
+        }),
+        apellido: z.string().min(4, {
+            message: "Apellido debe tener al menos 4 caracteres de longitud"
+        }),
+        dni: z
+            .string()
+            .min(1, {
+            message: "El número de documento no es válido, debe ser un número entero"
+        })
+            .regex(/^\d+$/, {
+            message: "El número de documento debe contener solo dígitos"
+        }),
+        correoElectronico: z
+            .string()
+            .email("El formato del email no es válido, debe cumplir el RFC 5322"),
+        cuit: z
+            .string()
+            .min(13)
+            .max(13)
+            .regex(/^\d{2}-\d{8}-\d{1}$/, {
+            message: "El formato de cuit no es válido, debe ser XX-XXXXXXXX-X"
+        }),
+        maximoDescubierto: z.coerce.number().int().min(0)
     });
     var form = react_hook_form_1.useForm({
         resolver: zod_1.zodResolver(formSchema),
-        defaultValues: itemToUpdate
-            ? itemToUpdate
+        defaultValues: clientToUpdate
+            ? clientToUpdate
             : {
                 nombre: "",
-                descripcion: "",
-                categoria: product_category_interface_1.Category.CEMENTOS,
-                precio: undefined,
-                stockActual: undefined,
-                stockMinimo: undefined
+                apellido: "",
+                dni: "",
+                correoElectronico: "",
+                cuit: "",
+                maximoDescubierto: 0
             }
     });
     var register = form.register, handleSubmit = form.handleSubmit, formState = form.formState, setValue = form.setValue;
     var errors = formState.errors;
-    /* ========== Crear o actualizar un Producto ========== */
-    var onSubmit = function (item) { return __awaiter(_this, void 0, void 0, function () {
+    /* ========== Crear o actualizar un Cliente ========== */
+    var onSubmit = function (client) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            if (itemToUpdate && itemToUpdate.id) {
-                // Si itemToUpdate tiene un id, es una actualización
-                updateItem(__assign(__assign({}, item), { id: itemToUpdate.id }));
-            }
-            else {
-                // De lo contrario, es una creación
-                createItem(item);
-            }
+            console.log(client);
+            if (clientToUpdate)
+                updateCostumer(client);
+            else
+                createCostumer(client);
             return [2 /*return*/];
         });
     }); };
-    /* ========== Crear un item en la base de datos ========== */
-    var createItem = function (item) { return __awaiter(_this, void 0, void 0, function () {
-        var createdProduct, error_1;
+    /* ========== Crear un nuevo Cliente ========== */
+    var createCostumer = function (client) { return __awaiter(_this, void 0, void 0, function () {
+        var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -122,11 +133,11 @@ function CreateUpdateItem(_a) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.saveProduct(item)];
+                    return [4 /*yield*/, auth_1.createClient(client)];
                 case 2:
-                    createdProduct = _a.sent();
-                    react_hot_toast_1["default"].success("Item creado correctamente");
-                    getItems();
+                    _a.sent();
+                    react_hot_toast_1["default"].success("Cliente creado correctamente");
+                    getClients();
                     setOpen(false);
                     form.reset();
                     return [3 /*break*/, 5];
@@ -141,9 +152,9 @@ function CreateUpdateItem(_a) {
             }
         });
     }); };
-    /* ========== Actualizar un item en la base de datos ========== */
-    var updateItem = function (item) { return __awaiter(_this, void 0, void 0, function () {
-        var updatedProduct, error_2;
+    /* ========== Actualizar un cliente ========== */
+    var updateCostumer = function (client) { return __awaiter(_this, void 0, void 0, function () {
+        var error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -151,11 +162,11 @@ function CreateUpdateItem(_a) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.saveProduct(item)];
+                    return [4 /*yield*/, auth_1.updateClient(clientToUpdate === null || clientToUpdate === void 0 ? void 0 : clientToUpdate.id, client)];
                 case 2:
-                    updatedProduct = _a.sent();
-                    react_hot_toast_1["default"].success("Item actualizado correctamente");
-                    getItems();
+                    _a.sent();
+                    react_hot_toast_1["default"].success("Cliente actualizado correctamente");
+                    getClients();
                     setOpen(false);
                     form.reset();
                     return [3 /*break*/, 5];
@@ -170,47 +181,51 @@ function CreateUpdateItem(_a) {
             }
         });
     }); };
-    /* ========== Manejo del select de categorias ========== */
-    var handleCategoryChange = function (category) {
-        setValue("categoria", category);
-    };
     return (React.createElement(dialog_1.Dialog, { open: open, onOpenChange: setOpen },
         React.createElement(dialog_1.DialogTrigger, { asChild: true }, children),
         React.createElement(dialog_1.DialogContent, { className: "sm:max-w-[425px]" },
             React.createElement(dialog_1.DialogHeader, null,
-                React.createElement(dialog_1.DialogTitle, null, itemToUpdate ? "Actualizar Producto" : "Crear Producto"),
-                React.createElement(dialog_1.DialogDescription, null, "Gestiona tus productos con la siguiente informaci\u00F3n")),
+                React.createElement(dialog_1.DialogTitle, null, clientToUpdate ? "Actualizar Cliente" : "Alta de Cliente"),
+                React.createElement(dialog_1.DialogDescription, null, "Gestiona el cliente con la siguiente informaci\u00F3n")),
             React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
                 React.createElement("div", { className: "grid gap-2" },
                     React.createElement("div", { className: "mb-3" },
                         React.createElement(label_1.Label, { htmlFor: "nombre" }, "Nombre"),
-                        React.createElement(input_1.Input, __assign({}, register("nombre"), { id: "nombre", placeholder: "Nombre del producto", type: "text", autoComplete: "nombre" })),
+                        React.createElement(input_1.Input, __assign({}, register("nombre", {
+                            required: "El nombre es obligatorio"
+                        }), { id: "nombre", placeholder: "Juan P\u00E9rez", type: "text", autoComplete: "nombre" })),
                         React.createElement("p", { className: "form-error" }, (_b = errors.nombre) === null || _b === void 0 ? void 0 : _b.message)),
                     React.createElement("div", { className: "mb-3" },
-                        React.createElement(label_1.Label, { htmlFor: "descripcion" }, "Descripci\u00F3n"),
-                        React.createElement(input_1.Input, __assign({}, register("descripcion"), { id: "descripcion", placeholder: "Descripci\u00F3n del producto", type: "text", autoComplete: "descripcion" })),
-                        React.createElement("p", { className: "form-error" }, (_c = errors.descripcion) === null || _c === void 0 ? void 0 : _c.message)),
+                        React.createElement(label_1.Label, { htmlFor: "apellido" }, "Apellido"),
+                        React.createElement(input_1.Input, __assign({}, register("apellido", {
+                            required: "El apellido es obligatorio"
+                        }), { id: "apellido", placeholder: "Apellido", type: "text", autoComplete: "apellido" })),
+                        React.createElement("p", { className: "form-error" }, (_c = errors.apellido) === null || _c === void 0 ? void 0 : _c.message)),
                     React.createElement("div", { className: "mb-3" },
-                        React.createElement(label_1.Label, { htmlFor: "categoria" }, "Categor\u00EDa"),
-                        React.createElement(products_category_select_1.SelectCategoryes, { selectedCategory: form.watch("categoria") || null, onCategoryChange: handleCategoryChange }),
-                        React.createElement("p", { className: "form-error" }, (_d = errors.categoria) === null || _d === void 0 ? void 0 : _d.message)),
+                        React.createElement(label_1.Label, { htmlFor: "dni" }, "Documento"),
+                        React.createElement(input_1.Input, __assign({}, register("dni", {
+                            required: "El documento es obligatorio"
+                        }), { id: "dni", placeholder: "22222222", type: "text", autoComplete: "dni" })),
+                        React.createElement("p", { className: "form-error" }, (_d = errors.dni) === null || _d === void 0 ? void 0 : _d.message)),
                     React.createElement("div", { className: "mb-3" },
-                        React.createElement(label_1.Label, { htmlFor: "Precio" }, "Precio"),
-                        React.createElement(input_1.Input, __assign({}, register("precio"), { id: "precio", placeholder: "0.00", step: "0.01", type: "number" })),
-                        React.createElement("p", { className: "form-error" }, (_e = errors.precio) === null || _e === void 0 ? void 0 : _e.message)),
+                        React.createElement(label_1.Label, { htmlFor: "correoElectronico" }, "Correo Electr\u00F3nico"),
+                        React.createElement(input_1.Input, __assign({}, register("correoElectronico", {
+                            required: "El correo es obligatorio"
+                        }), { id: "correoElectronico", placeholder: "nombre@ejemplo.com", type: "correoElectronico", autoComplete: "correoElectronico" })),
+                        React.createElement("p", { className: "form-error" }, (_e = errors.correoElectronico) === null || _e === void 0 ? void 0 : _e.message)),
                     React.createElement("div", { className: "mb-3" },
-                        React.createElement(label_1.Label, { htmlFor: "stockActual" }, "Stock Actual"),
-                        React.createElement(input_1.Input, __assign({}, register("stockActual"), { id: "stockActual", placeholder: "0", step: "1", type: "number", min: "0" })),
-                        React.createElement("p", { className: "form-error" }, (_f = errors.stockActual) === null || _f === void 0 ? void 0 :
-                            _f.message,
-                            " ")),
+                        React.createElement(label_1.Label, { htmlFor: "cuit" }, "Cuit"),
+                        React.createElement(input_1.Input, __assign({}, register("cuit"), { id: "cuit", placeholder: "xx-xxxxxxxx-x", type: "text" })),
+                        React.createElement("p", { className: "form-error" }, (_f = errors.cuit) === null || _f === void 0 ? void 0 : _f.message)),
                     React.createElement("div", { className: "mb-3" },
-                        React.createElement(label_1.Label, { htmlFor: "stockMinimo" }, "Stock M\u00EDnimo"),
-                        React.createElement(input_1.Input, __assign({}, register("stockMinimo"), { id: "stockMinimo", placeholder: "0", step: "1", type: "number", min: "0" })),
-                        React.createElement("p", { className: "form-error" }, (_g = errors.stockMinimo) === null || _g === void 0 ? void 0 : _g.message)),
+                        React.createElement(label_1.Label, { htmlFor: "maximoDescubierto" }, "M\u00E1ximo Descubierto"),
+                        React.createElement(input_1.Input, __assign({}, register("maximoDescubierto", {
+                            required: "Máximo descubierto"
+                        }), { id: "maximoDescubierto", placeholder: "0.00", type: "text" })),
+                        React.createElement("p", { className: "form-error" }, (_g = errors.maximoDescubierto) === null || _g === void 0 ? void 0 : _g.message)),
                     React.createElement(dialog_1.DialogFooter, null,
                         React.createElement(button_1.Button, { type: "submit", disabled: isLoading },
                             isLoading && (React.createElement(lucide_react_1.LoaderCircle, { className: "mr-2 h-4 w-4 animate-spin" })),
-                            itemToUpdate ? "Actualizar" : "Crear")))))));
+                            clientToUpdate ? "Actualizar" : "Crear")))))));
 }
-exports.CreateUpdateItem = CreateUpdateItem;
+exports.CreateUpdateClient = CreateUpdateClient;

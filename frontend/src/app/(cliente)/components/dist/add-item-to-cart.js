@@ -61,7 +61,7 @@ exports.AddItemToCart = function (_a) {
                         React.createElement(label_1.Label, { htmlFor: "cantidad" }, "Cantidad"),
                         React.createElement(react_hook_form_1.Controller, { name: "cantidad", control: control, render: function (_a) {
                                 var field = _a.field;
-                                return (React.createElement(input_1.Input, __assign({ id: "cantidad", type: "number" }, field)));
+                                return (React.createElement(input_1.Input, __assign({ id: "cantidad", type: "number" }, field, { min: 0 })));
                             } })),
                     React.createElement("div", { className: "mb-3" },
                         React.createElement(label_1.Label, { htmlFor: "totalItem" }, "Total"),
