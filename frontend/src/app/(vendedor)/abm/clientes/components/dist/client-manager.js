@@ -46,6 +46,7 @@ var react_hot_toast_1 = require("react-hot-toast");
 var table_client_1 = require("@/components/ui/table-client");
 var auth_1 = require("@/lib/auth");
 var create_update_client_1 = require("./create-update-client");
+var list_client_1 = require("@/components/ui/list-client");
 var CustomerManager = function () {
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), clients = _a[0], setClients = _a[1];
@@ -121,6 +122,7 @@ var CustomerManager = function () {
                     "Crear",
                     React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" })))),
         React.createElement("div", { className: "m-4" },
-            React.createElement(table_client_1.TableClient, { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer }))));
+            React.createElement(table_client_1.TableClient, { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer }),
+            React.createElement(list_client_1["default"], { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer }))));
 };
 exports["default"] = CustomerManager;

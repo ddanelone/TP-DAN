@@ -6,8 +6,8 @@ exports.metadata = {
     title: "Obras",
     description: "Gestione sus Obras"
 };
-var Dashboard = function () {
+var ClienteObra = function () {
     return (React.createElement("div", null,
         React.createElement(navbar_1["default"], null)));
 };
-exports["default"] = Dashboard;
+exports["default"] = ClienteObra;

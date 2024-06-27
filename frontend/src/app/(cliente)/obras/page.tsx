@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Gestione sus Obras",
 };
 
-const Dashboard = () => {
+const ClienteObra = () => {
   return (
     <div>
       <Navbar />
@@ -14,4 +14,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ClienteObra;

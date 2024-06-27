@@ -7,10 +7,10 @@ exports.metadata = {
     title: "Productos",
     description: "Catálogo de productos"
 };
-var Dashboard = function () {
+var ClienteProducto = function () {
     return (React.createElement(React.Fragment, null,
         React.createElement(navbar_1["default"], null),
         React.createElement("div", { className: "md:border border-solid border-gray-300 rounded-3xl p-3 md:m-6 lg:mx-36" },
             React.createElement(items_1["default"], null))));
 };
-exports["default"] = Dashboard;
+exports["default"] = ClienteProducto;

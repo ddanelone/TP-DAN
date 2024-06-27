@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "ABM de Pedidos",
 };
 
-const Dashboard = () => {
+const VendedorPedido = () => {
   return (
     <div>
       <Navbar />
@@ -14,4 +14,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default VendedorPedido;

@@ -10,6 +10,7 @@ import { TableClient } from "@/components/ui/table-client";
 import { deleteClient, getAllClients } from "@/lib/auth";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { CreateUpdateClient } from "./create-update-client";
+import ListClient from "@/components/ui/list-client";
 
 const CustomerManager = () => {
   const user = useUser();
@@ -82,13 +83,12 @@ const CustomerManager = () => {
           getClients={getClients}
           deleteClient={deleteCostumer}
         />
-        {/*  ACÁ VA LA VISTA PARA DISPOSITIVOS MOVILES 
-        <ListView
-          deleteItem={deleteItem}
-          getItems={getItems}
-          items={items}
+        <ListClient
           isLoading={isLoading}
-        /> */}
+          clients={clients}
+          getClients={getClients}
+          deleteClient={deleteCostumer}
+        />
       </div>
     </>
   );

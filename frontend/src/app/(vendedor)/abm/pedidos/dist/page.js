@@ -6,8 +6,8 @@ exports.metadata = {
     title: "Pedidos",
     description: "ABM de Pedidos"
 };
-var Dashboard = function () {
+var VendedorPedido = function () {
     return (React.createElement("div", null,
         React.createElement(navbar_1["default"], null)));
 };
-exports["default"] = Dashboard;
+exports["default"] = VendedorPedido;

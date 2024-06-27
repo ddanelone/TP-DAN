@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Catálogo de productos",
 };
 
-const Dashboard = () => {
+const ClienteProducto = () => {
   return (
     <>
       <Navbar />
@@ -19,4 +19,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ClienteProducto;

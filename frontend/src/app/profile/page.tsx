@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Gestión Integral",
 };
 
-const Dashboard = () => {
+const Profile = () => {
   return (
     <div>
       <Navbar />
@@ -19,4 +19,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Profile;
