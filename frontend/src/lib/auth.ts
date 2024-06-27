@@ -4,6 +4,7 @@ import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 import { Product } from "@/interfaces/product-interface";
 import { Costumer } from "@/interfaces/costumer.interface";
+import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
 
 /* ========== Usuarios  ========== */
 
@@ -262,6 +263,101 @@ export const deleteClient = async (id?: number) => {
       },
     };
     await api.delete(`/clientes/${id}`, config);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+/* ========== USUARIOS HABILITADOS PARA OPERAR POR UN CLIENTE ========== */
+
+// Función para obtener la lista de usuarios habilitados
+export const getAllAuthorizedUsers = async () => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.get("/clientes/usuarios-habilitados", config);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para obtener un usuario habilitado por ID
+export const getAuthorizedUserById = async (id: number) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.get(
+      `/clientes/usuarios-habilitados/${id}`,
+      config
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para crear un nuevo usuario habilitado
+export const createAuthorizedUser = async (userData: AuthorizedUser) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.post(
+      "/clientes/usuarios-habilitados",
+      userData,
+      config
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para actualizar un usuario habilitado existente
+export const updateAuthorizedUser = async (
+  id: number,
+  userData: AuthorizedUser
+) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.put(
+      `/clientes/usuarios-habilitados/${id}`,
+      userData,
+      config
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para eliminar un usuario habilitado
+export const deleteAuthorizedUser = async (id: number) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    await api.delete(`/clientes/usuarios-habilitados/${id}`, config);
   } catch (error: any) {
     throw new Error(error.response.data.message);
   }

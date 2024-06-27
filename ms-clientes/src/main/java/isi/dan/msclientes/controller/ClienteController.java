@@ -12,6 +12,7 @@ import isi.dan.msclientes.servicios.UsuarioHabilitadoService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -73,7 +74,7 @@ public class ClienteController {
    }
 
    @GetMapping("/{clienteId}/usuarios-habilitados")
-   public ResponseEntity<List<UsuarioHabilitado>> getUsuariosHabilitados(@PathVariable Integer clienteId) {
+   public ResponseEntity<Set<UsuarioHabilitado>> getUsuariosHabilitados(@PathVariable Integer clienteId) {
       Optional<Cliente> clienteOpt = clienteService.findById(clienteId);
       if (!clienteOpt.isPresent()) {
          return ResponseEntity.notFound().build();
@@ -90,7 +91,7 @@ public class ClienteController {
       }
 
       Cliente cliente = clienteOpt.get();
-      List<UsuarioHabilitado> usuariosHabilitados = cliente.getUsuariosHabilitados();
+      Set<UsuarioHabilitado> usuariosHabilitados = cliente.getUsuariosHabilitados();
       UsuarioHabilitado usuarioHabilitado = usuariosHabilitados.stream()
             .filter(uh -> uh.getId().equals(usuarioHabilitadoId))
             .findFirst()

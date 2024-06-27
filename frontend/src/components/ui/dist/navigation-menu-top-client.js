@@ -17,6 +17,9 @@ function NavigationMenuTopClient() {
                     React.createElement(navigation_menu_1.NavigationMenuLink, { className: navigation_menu_1.navigationMenuTriggerStyle() }, "Obras"))),
             React.createElement(navigation_menu_1.NavigationMenuItem, null,
                 React.createElement(link_1["default"], { href: "/pedidos", legacyBehavior: true, passHref: true },
-                    React.createElement(navigation_menu_1.NavigationMenuLink, { className: navigation_menu_1.navigationMenuTriggerStyle() }, "Pedidos"))))));
+                    React.createElement(navigation_menu_1.NavigationMenuLink, { className: navigation_menu_1.navigationMenuTriggerStyle() }, "Pedidos"))),
+            React.createElement(navigation_menu_1.NavigationMenuItem, null,
+                React.createElement(link_1["default"], { href: "/usuarios", legacyBehavior: true, passHref: true },
+                    React.createElement(navigation_menu_1.NavigationMenuLink, { className: navigation_menu_1.navigationMenuTriggerStyle() }, "Usuarios Habilitados"))))));
 }
 exports.NavigationMenuTopClient = NavigationMenuTopClient;

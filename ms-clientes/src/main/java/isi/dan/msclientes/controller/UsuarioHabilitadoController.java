@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.UsuarioHabilitado;
-import isi.dan.msclientes.servicios.ClienteService;
 import isi.dan.msclientes.servicios.UsuarioHabilitadoService;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/clientes/usuarios-habilitados")
@@ -44,12 +44,24 @@ public class UsuarioHabilitadoController {
 
    @PutMapping("/{id}")
    public ResponseEntity<UsuarioHabilitado> update(@PathVariable final Integer id,
-         @RequestBody UsuarioHabilitado cliente) {
+         @RequestBody UsuarioHabilitado usuarioHabilitado) {
       if (!usuarioHabilitadoService.findById(id).isPresent()) {
          return ResponseEntity.notFound().build();
       }
-      cliente.setId(id);
-      return ResponseEntity.ok(usuarioHabilitadoService.update(cliente));
+      usuarioHabilitado.setId(id);
+      return ResponseEntity.ok(usuarioHabilitadoService.update(usuarioHabilitado));
+   }
+
+   @PutMapping("/update-usuarios-habilitados/{clienteId}")
+   public ResponseEntity<Cliente> updateClienteUsuariosHabilitados(@PathVariable Integer clienteId,
+         @RequestBody List<UsuarioHabilitado> usuariosHabilitados) {
+      try {
+         Cliente updatedCliente = usuarioHabilitadoService.updateClienteUsuariosHabilitados(clienteId,
+               usuariosHabilitados);
+         return ResponseEntity.ok(updatedCliente);
+      } catch (EntityNotFoundException e) {
+         return ResponseEntity.notFound().build();
+      }
    }
 
    @DeleteMapping("/{id}")
@@ -60,5 +72,4 @@ public class UsuarioHabilitadoController {
       usuarioHabilitadoService.deleteById(id);
       return ResponseEntity.noContent().build();
    }
-
 }

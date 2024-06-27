@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -361,6 +361,127 @@ exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, 
             case 2:
                 error_13 = _a.sent();
                 throw new Error(error_13.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+/* ========== USUARIOS HABILITADOS PARA OPERAR POR UN CLIENTE ========== */
+// Función para obtener la lista de usuarios habilitados
+exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_14;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].get("/clientes/usuarios-habilitados", config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_14 = _a.sent();
+                throw new Error(error_14.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para obtener un usuario habilitado por ID
+exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_15;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].get("/clientes/usuarios-habilitados/" + id, config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_15 = _a.sent();
+                throw new Error(error_15.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para crear un nuevo usuario habilitado
+exports.createAuthorizedUser = function (userData) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_16;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].post("/clientes/usuarios-habilitados", userData, config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_16 = _a.sent();
+                throw new Error(error_16.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para actualizar un usuario habilitado existente
+exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_17;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].put("/clientes/usuarios-habilitados/" + id, userData, config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_17 = _a.sent();
+                throw new Error(error_17.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para eliminar un usuario habilitado
+exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, error_18;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"]["delete"]("/clientes/usuarios-habilitados/" + id, config)];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_18 = _a.sent();
+                throw new Error(error_18.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
