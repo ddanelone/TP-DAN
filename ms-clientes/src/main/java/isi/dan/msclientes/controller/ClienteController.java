@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import isi.dan.msclientes.dao.UsuarioHabilitadoRepository;
+import isi.dan.msclientes.conf.MessageSenderService;
+import isi.dan.msclientes.conf.RabbitMQConfig;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.UsuarioHabilitado;
 import isi.dan.msclientes.servicios.ClienteService;
@@ -24,6 +25,9 @@ public class ClienteController {
    @Autowired
    private UsuarioHabilitadoService usuarioHabilitadoService;
 
+   @Autowired
+   private MessageSenderService messageSenderService;
+
    @GetMapping
    public List<Cliente> getAll() {
       return clienteService.findAll();
@@ -37,6 +41,7 @@ public class ClienteController {
 
    @PostMapping
    public Cliente create(@RequestBody Cliente cliente) {
+      messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, cliente);
       return clienteService.save(cliente);
    }
 
@@ -58,6 +63,12 @@ public class ClienteController {
       return ResponseEntity.noContent().build();
    }
 
+   @GetMapping("/email/{email}")
+   public ResponseEntity<Cliente> getByEmail(@PathVariable String email) {
+      Optional<Cliente> cliente = clienteService.findByCorreoElectronico(email);
+      return cliente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+   }
+
    @PostMapping("/{clienteId}/usuarios-habilitados")
    public ResponseEntity<UsuarioHabilitado> agregarUsuarioHabilitado(
          @PathVariable Integer clienteId, @RequestBody UsuarioHabilitado usuarioHabilitado) {
@@ -68,9 +79,10 @@ public class ClienteController {
 
       Cliente cliente = clienteOpt.get();
       usuarioHabilitado.setCliente(cliente);
-      usuarioHabilitadoService.save(usuarioHabilitado);
+      UsuarioHabilitado savedUser = usuarioHabilitadoService.save(usuarioHabilitado);
+      messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, savedUser);
 
-      return ResponseEntity.ok(usuarioHabilitado);
+      return ResponseEntity.ok(savedUser);
    }
 
    @GetMapping("/{clienteId}/usuarios-habilitados")

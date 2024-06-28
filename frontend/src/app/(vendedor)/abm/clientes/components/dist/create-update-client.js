@@ -63,12 +63,12 @@ var button_1 = require("@/components/ui/button");
 var auth_1 = require("@/lib/auth");
 function CreateUpdateClient(_a) {
     var _this = this;
-    var _b, _c, _d, _e, _f, _g;
+    var _b, _c, _d, _e, _f, _g, _h;
     var children = _a.children, clientToUpdate = _a.clientToUpdate, getClients = _a.getClients;
     var user = use_user_1.useUser();
-    var _h = react_1.useState(false), isLoading = _h[0], setIsLoading = _h[1];
-    var _j = react_1.useState(false), open = _j[0], setOpen = _j[1];
-    //const [clients, setClients] = useState<Costumer[]>([]);
+    var _j = react_1.useState(false), isLoading = _j[0], setIsLoading = _j[1];
+    var _k = react_1.useState(false), open = _k[0], setOpen = _k[1];
+    var _l = react_1.useState([]), clients = _l[0], setClients = _l[1];
     /* ========== Formulario ========== */
     var formSchema = z.object({
         nombre: z.string().min(2, {
@@ -95,7 +95,8 @@ function CreateUpdateClient(_a) {
             .regex(/^\d{2}-\d{8}-\d{1}$/, {
             message: "El formato de cuit no es válido, debe ser XX-XXXXXXXX-X"
         }),
-        maximoDescubierto: z.coerce.number().int().min(0)
+        maximoDescubierto: z.coerce.number().int().min(0),
+        cantidad_obras: z.coerce.number().int().min(0)
     });
     var form = react_hook_form_1.useForm({
         resolver: zod_1.zodResolver(formSchema),
@@ -107,7 +108,8 @@ function CreateUpdateClient(_a) {
                 dni: "",
                 correoElectronico: "",
                 cuit: "",
-                maximoDescubierto: 0
+                maximoDescubierto: 0,
+                cantidad_obras: 0
             }
     });
     var register = form.register, handleSubmit = form.handleSubmit, formState = form.formState, setValue = form.setValue;
@@ -115,7 +117,6 @@ function CreateUpdateClient(_a) {
     /* ========== Crear o actualizar un Cliente ========== */
     var onSubmit = function (client) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            console.log(client);
             if (clientToUpdate)
                 updateCostumer(client);
             else
@@ -215,14 +216,20 @@ function CreateUpdateClient(_a) {
                         React.createElement("p", { className: "form-error" }, (_e = errors.correoElectronico) === null || _e === void 0 ? void 0 : _e.message)),
                     React.createElement("div", { className: "mb-3" },
                         React.createElement(label_1.Label, { htmlFor: "cuit" }, "Cuit"),
-                        React.createElement(input_1.Input, __assign({}, register("cuit"), { id: "cuit", placeholder: "xx-xxxxxxxx-x", type: "text" })),
+                        React.createElement(input_1.Input, __assign({}, register("cuit"), { id: "cuit", placeholder: "12-12345678-1", type: "text" })),
                         React.createElement("p", { className: "form-error" }, (_f = errors.cuit) === null || _f === void 0 ? void 0 : _f.message)),
                     React.createElement("div", { className: "mb-3" },
                         React.createElement(label_1.Label, { htmlFor: "maximoDescubierto" }, "M\u00E1ximo Descubierto"),
                         React.createElement(input_1.Input, __assign({}, register("maximoDescubierto", {
                             required: "Máximo descubierto"
-                        }), { id: "maximoDescubierto", placeholder: "0.00", type: "text" })),
+                        }), { id: "maximoDescubierto", placeholder: "0.00", step: "0.01", type: "number" })),
                         React.createElement("p", { className: "form-error" }, (_g = errors.maximoDescubierto) === null || _g === void 0 ? void 0 : _g.message)),
+                    React.createElement("div", { className: "mb-3" },
+                        React.createElement(label_1.Label, { htmlFor: "cantidad_obras" }, "M\u00E1xima Cantidad Obras"),
+                        React.createElement(input_1.Input, __assign({}, register("cantidad_obras", {
+                            required: "Máxima cantidad de obras"
+                        }), { id: "cantidad_obras", placeholder: "0", step: "1", type: "number" })),
+                        React.createElement("p", { className: "form-error" }, (_h = errors.cantidad_obras) === null || _h === void 0 ? void 0 : _h.message)),
                     React.createElement(dialog_1.DialogFooter, null,
                         React.createElement(button_1.Button, { type: "submit", disabled: isLoading },
                             isLoading && (React.createElement(lucide_react_1.LoaderCircle, { className: "mr-2 h-4 w-4 animate-spin" })),

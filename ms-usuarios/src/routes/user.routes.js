@@ -7,6 +7,7 @@ import userUpdateEmailController from '#Controllers/user-update-email.controller
 import userUpdatePasswordController from '#Controllers/user-update-password.controller.js';
 import getAllUsersController from '#Controllers/user-getAll.controller.js';
 import getUserByIdController from '#Controllers/user-getById.controller.js';
+import userDeleteController from '#Controllers/user-delete.controller.js';
 
 import userJWTDTO from '#Dto/user-jwt.dto.js';
 import userLoginDTO from '#Dto/user-login.dto.js';
@@ -54,5 +55,7 @@ userRouter.delete(
     userUnregisterDTO,
     userUnregisterController
 );
+
+userRouter.delete('/:id', userJWTDTO, userDeleteController);
 
 export default userRouter;

@@ -4,35 +4,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import isi.dan.msclientes.dao.ObraRepository;
+import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ObraService {
-    
-    @Autowired
-    private ObraRepository obraRepository;
 
-    public List<Obra> findAll() {
-        return obraRepository.findAll();
-    }
+   @Autowired
+   private ObraRepository obraRepository;
 
-    public Optional<Obra> findById(Integer id) {
-        return obraRepository.findById(id);
-    }
+   public List<Obra> findAll() {
+      return obraRepository.findAll();
+   }
 
-    public Obra save(Obra obra) {
-        return obraRepository.save(obra);
-    }
+   public Optional<Obra> findById(Integer id) {
+      return obraRepository.findById(id);
+   }
 
-    public Obra update(Obra obra) {
-        return obraRepository.save(obra);
-    }
+   public Obra save(Obra obra) {
+      return obraRepository.save(obra);
+   }
 
-    public void deleteById(Integer id) {
-        obraRepository.deleteById(id);
-    }
+   public Obra update(Obra obra) {
+      return obraRepository.save(obra);
+   }
+
+   public void deleteById(Integer id) {
+      obraRepository.deleteById(id);
+   }
+
+   public List<Estado> findStates() {
+      return Arrays.asList(Estado.values());
+   }
 }
-

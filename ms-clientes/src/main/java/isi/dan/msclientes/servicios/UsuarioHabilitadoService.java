@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import isi.dan.msclientes.conf.MessageSenderService;
+import isi.dan.msclientes.conf.RabbitMQConfig;
 import isi.dan.msclientes.dao.ClienteRepository;
 import isi.dan.msclientes.dao.UsuarioHabilitadoRepository;
 import isi.dan.msclientes.model.Cliente;
@@ -21,8 +23,13 @@ public class UsuarioHabilitadoService {
    @Autowired
    private ClienteRepository clienteRepository;
 
+   @Autowired
+   private MessageSenderService messageSenderService;
+
    public UsuarioHabilitado save(UsuarioHabilitado usuarioHabilitado) {
-      return usuarioHabilitadoRepository.save(usuarioHabilitado);
+      UsuarioHabilitado savedUser = usuarioHabilitadoRepository.save(usuarioHabilitado);
+      messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, savedUser);
+      return savedUser;
    }
 
    public List<UsuarioHabilitado> findAll() {

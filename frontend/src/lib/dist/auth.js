@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -293,9 +293,33 @@ exports.getClientById = function (id) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
+// Función para obtener un cliente por ID
+exports.getClientByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_11;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = get_from_localstorage_1.getFromLocalstorage("jwt");
+                config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                };
+                return [4 /*yield*/, axios_1["default"].get("/clientes/email/" + email, config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_11 = _a.sent();
+                throw new Error(error_11.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 // Función para crear un nuevo cliente
 exports.createClient = function (clientData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_11;
+    var token, config, response, error_12;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -311,15 +335,15 @@ exports.createClient = function (clientData) { return __awaiter(void 0, void 0, 
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_11 = _a.sent();
-                throw new Error(error_11.response.data.message);
+                error_12 = _a.sent();
+                throw new Error(error_12.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para actualizar un cliente existente
 exports.updateClient = function (id, clientData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_12;
+    var token, config, response, error_13;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -335,15 +359,15 @@ exports.updateClient = function (id, clientData) { return __awaiter(void 0, void
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_12 = _a.sent();
-                throw new Error(error_12.response.data.message);
+                error_13 = _a.sent();
+                throw new Error(error_13.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para eliminar un cliente
 exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, error_13;
+    var token, config, error_14;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -359,8 +383,8 @@ exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, 
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                error_13 = _a.sent();
-                throw new Error(error_13.response.data.message);
+                error_14 = _a.sent();
+                throw new Error(error_14.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
@@ -368,7 +392,7 @@ exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, 
 /* ========== USUARIOS HABILITADOS PARA OPERAR POR UN CLIENTE ========== */
 // Función para obtener la lista de usuarios habilitados
 exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_14;
+    var token, config, response, error_15;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -384,15 +408,15 @@ exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, v
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_14 = _a.sent();
-                throw new Error(error_14.response.data.message);
+                error_15 = _a.sent();
+                throw new Error(error_15.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para obtener un usuario habilitado por ID
 exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_15;
+    var token, config, response, error_16;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -408,15 +432,15 @@ exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0,
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_15 = _a.sent();
-                throw new Error(error_15.response.data.message);
+                error_16 = _a.sent();
+                throw new Error(error_16.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para crear un nuevo usuario habilitado
-exports.createAuthorizedUser = function (userData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_16;
+exports.createAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, config, response, error_17;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -427,20 +451,20 @@ exports.createAuthorizedUser = function (userData) { return __awaiter(void 0, vo
                         Authorization: "Bearer " + token
                     }
                 };
-                return [4 /*yield*/, axios_1["default"].post("/clientes/usuarios-habilitados", userData, config)];
+                return [4 /*yield*/, axios_1["default"].post("/clientes/" + id + "/usuarios-habilitados", userData, config)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_16 = _a.sent();
-                throw new Error(error_16.response.data.message);
+                error_17 = _a.sent();
+                throw new Error(error_17.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para actualizar un usuario habilitado existente
 exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_17;
+    var token, config, response, error_18;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -456,15 +480,15 @@ exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_17 = _a.sent();
-                throw new Error(error_17.response.data.message);
+                error_18 = _a.sent();
+                throw new Error(error_18.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para eliminar un usuario habilitado
 exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, error_18;
+    var token, config, error_19;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -480,8 +504,8 @@ exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, 
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                error_18 = _a.sent();
-                throw new Error(error_18.response.data.message);
+                error_19 = _a.sent();
+                throw new Error(error_19.response.data.message);
             case 3: return [2 /*return*/];
         }
     });

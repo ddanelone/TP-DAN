@@ -8,5 +8,6 @@ export interface Costumer {
   correoElectronico: string;
   cuit: string;
   maximoDescubierto: number;
+  cantidad_obras: number;
   usuariosHabilitados?: AuthorizedUser[];
 }

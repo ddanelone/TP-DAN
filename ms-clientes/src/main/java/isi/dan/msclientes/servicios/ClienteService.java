@@ -43,4 +43,8 @@ public class ClienteService {
    public void deleteById(Integer id) {
       clienteRepository.deleteById(id);
    }
+
+   public Optional<Cliente> findByCorreoElectronico(String correoElectronico) {
+      return clienteRepository.findByCorreoElectronico(correoElectronico);
+   }
 }

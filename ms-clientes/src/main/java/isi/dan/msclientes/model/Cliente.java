@@ -15,7 +15,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -33,6 +32,9 @@ public class Cliente {
 
    @Column(name = "dni", unique = true)
    private String dni;
+
+   @Column(name = "CANTIDAD_OBRAS")
+   private Integer cantidad_obras;
 
    @Column(name = "CORREO_ELECTRONICO", unique = true)
    private String correoElectronico;

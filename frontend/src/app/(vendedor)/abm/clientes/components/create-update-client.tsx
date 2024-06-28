@@ -22,7 +22,6 @@ import { useUser } from "@/hooks/use-user";
 import { Button } from "@/components/ui/button";
 import { createClient, updateClient } from "@/lib/auth";
 import { Costumer } from "@/interfaces/costumer.interface";
-import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
 
 interface CreateUpdateClientProps {
   children: React.ReactNode;
@@ -38,7 +37,7 @@ export function CreateUpdateClient({
   const user = useUser();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  //const [clients, setClients] = useState<Costumer[]>([]);
+  const [clients, setClients] = useState<Costumer[]>([]);
 
   /* ========== Formulario ========== */
   const formSchema = z.object({
@@ -68,6 +67,7 @@ export function CreateUpdateClient({
         message: "El formato de cuit no es válido, debe ser XX-XXXXXXXX-X",
       }),
     maximoDescubierto: z.coerce.number().int().min(0),
+    cantidad_obras: z.coerce.number().int().min(0),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,6 +81,7 @@ export function CreateUpdateClient({
           correoElectronico: "",
           cuit: "",
           maximoDescubierto: 0,
+          cantidad_obras: 0,
         },
   });
 
@@ -90,8 +91,6 @@ export function CreateUpdateClient({
   /* ========== Crear o actualizar un Cliente ========== */
 
   const onSubmit = async (client: z.infer<typeof formSchema>) => {
-    console.log(client);
-
     if (clientToUpdate) updateCostumer(client);
     else createCostumer(client);
   };
@@ -210,7 +209,7 @@ export function CreateUpdateClient({
               <Input
                 {...register("cuit")}
                 id="cuit"
-                placeholder="xx-xxxxxxxx-x"
+                placeholder="12-12345678-1"
                 type="text"
               />
               <p className="form-error">{errors.cuit?.message}</p>
@@ -223,9 +222,24 @@ export function CreateUpdateClient({
                 })}
                 id="maximoDescubierto"
                 placeholder="0.00"
-                type="text"
+                step="0.01"
+                type="number"
               />
               <p className="form-error">{errors.maximoDescubierto?.message}</p>
+            </div>
+
+            <div className="mb-3">
+              <Label htmlFor="cantidad_obras">Máxima Cantidad Obras</Label>
+              <Input
+                {...register("cantidad_obras", {
+                  required: "Máxima cantidad de obras",
+                })}
+                id="cantidad_obras"
+                placeholder="0"
+                step="1"
+                type="number"
+              />
+              <p className="form-error">{errors.cantidad_obras?.message}</p>
             </div>
 
             <DialogFooter>

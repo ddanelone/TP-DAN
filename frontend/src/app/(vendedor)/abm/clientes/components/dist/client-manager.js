@@ -98,7 +98,7 @@ var CustomerManager = function () {
                 case 3:
                     error_2 = _a.sent();
                     react_hot_toast_1["default"].error("No se pudo eliminar el Cliente: " + error_2.message, {
-                        duration: 4000
+                        duration: 2000
                     });
                     return [3 /*break*/, 5];
                 case 4:

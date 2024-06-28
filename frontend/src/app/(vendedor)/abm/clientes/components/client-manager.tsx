@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CirclePlus, LoaderCircle } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { TableClient } from "@/components/ui/table-client";
 import { deleteClient, getAllClients } from "@/lib/auth";
@@ -24,6 +24,7 @@ const CustomerManager = () => {
     try {
       const res = (await getAllClients()) as Costumer[];
       console.log(res);
+
       setClients(res);
     } catch (error) {
       console.error(error);
@@ -48,7 +49,7 @@ const CustomerManager = () => {
       setClients(newClients);
     } catch (error: any) {
       toast.error("No se pudo eliminar el Cliente: " + error.message, {
-        duration: 4000,
+        duration: 2000,
       });
     } finally {
       setIsLoading(false);

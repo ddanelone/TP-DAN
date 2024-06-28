@@ -37,6 +37,7 @@ export function TableClient({
             <TableHead>Correo Electrónico</TableHead>
             <TableHead>CUIT</TableHead>
             <TableHead>Máximo Descubierto</TableHead>
+            <TableHead>Máxima Cantidad Obras</TableHead>
             <TableHead className="text-center w-[250px]">Acciones</TableHead>
           </TableRow>
         </TableHeader>
@@ -53,6 +54,9 @@ export function TableClient({
                 <TableCell>{client.cuit}</TableCell>
                 <TableCell className="w-[ 50px]">
                   {client.maximoDescubierto}
+                </TableCell>
+                <TableCell className="w-[ 50px]">
+                  {client.cantidad_obras}
                 </TableCell>
                 <TableCell className="text-center">
                   {/* ========== Actualizar Cliente ========== */}

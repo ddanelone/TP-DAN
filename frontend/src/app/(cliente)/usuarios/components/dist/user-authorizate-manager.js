@@ -43,32 +43,39 @@ var react_1 = require("react");
 var button_1 = require("@/components/ui/button");
 var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
-var table_client_1 = require("@/components/ui/table-client");
 var auth_1 = require("@/lib/auth");
-var create_update_client_1 = require("./create-update-client");
-var list_client_1 = require("@/components/ui/list-client");
+var table_authorizate_user_1 = require("@/components/ui/table-authorizate-user");
+var list_authorizate_user_1 = require("@/components/ui/list-authorizate-user");
+var create_update_user_1 = require("./create-update-user");
+var set_in_localstorage_1 = require("@/action/set-in-localstorage");
+var get_from_localstorage_1 = require("@/action/get-from-localstorage");
 var UserAuthorizateManager = function () {
     var user = use_user_1.useUser();
-    var _a = react_1.useState([]), clients = _a[0], setClients = _a[1];
+    var _a = react_1.useState([]), userAuths = _a[0], setAuthUsers = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
-    /* ========== Traer todos los Clientes a la Tabla  ========== */
-    var getClients = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res, error_1;
+    var getMyClientData = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var emailUser, res, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    emailUser = user === null || user === void 0 ? void 0 : user.email;
                     setIsLoading(true);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.getAllClients()];
+                    return [4 /*yield*/, auth_1.getClientByEmail(emailUser)];
                 case 2:
-                    res = (_a.sent());
+                    res = _a.sent();
                     console.log(res);
-                    setClients(res);
+                    if (res) {
+                        set_in_localstorage_1.setInLocalstorage("idClient", res.id);
+                    }
                     return [3 /*break*/, 5];
                 case 3:
                     error_1 = _a.sent();
+                    react_hot_toast_1["default"].error("No se han recuperado usuarios autorizados", {
+                        duration: 2000
+                    });
                     console.error(error_1);
                     return [3 /*break*/, 5];
                 case 4:
@@ -78,9 +85,39 @@ var UserAuthorizateManager = function () {
             }
         });
     }); };
-    /* ========== Borrar un Cliente de la base de datos ========== */
-    var deleteCostumer = function (client) { return __awaiter(void 0, void 0, void 0, function () {
-        var newClients, error_2;
+    var getUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var idClient, res, authorizedUsers, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    idClient = get_from_localstorage_1.getFromLocalstorage("idClient");
+                    setIsLoading(true);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, 4, 5]);
+                    return [4 /*yield*/, auth_1.getClientById(idClient)];
+                case 2:
+                    res = _a.sent();
+                    console.log(res);
+                    authorizedUsers = res.usuariosHabilitados || [];
+                    setAuthUsers(authorizedUsers);
+                    return [3 /*break*/, 5];
+                case 3:
+                    error_2 = _a.sent();
+                    react_hot_toast_1["default"].error("No se han recuperado usuarios autorizados", {
+                        duration: 2000
+                    });
+                    console.error(error_2);
+                    return [3 /*break*/, 5];
+                case 4:
+                    setIsLoading(false);
+                    return [7 /*endfinally*/];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); };
+    var deleteUser = function (userA) { return __awaiter(void 0, void 0, void 0, function () {
+        var newUsers, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -88,16 +125,17 @@ var UserAuthorizateManager = function () {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.deleteClient(client === null || client === void 0 ? void 0 : client.id)];
+                    return [4 /*yield*/, auth_1.deleteAuthorizedUser(userA === null || userA === void 0 ? void 0 : userA.id)];
                 case 2:
                     _a.sent();
-                    react_hot_toast_1["default"].success("Cliente eliminado correctamente");
-                    newClients = clients.filter(function (i) { return i.id !== client.id; });
-                    setClients(newClients);
+                    react_hot_toast_1["default"].success("Usuario Authorizado desvinculado correctamente");
+                    newUsers = userAuths.filter(function (i) { return i.id !== userA.id; });
+                    setAuthUsers(newUsers);
                     return [3 /*break*/, 5];
                 case 3:
-                    error_2 = _a.sent();
-                    react_hot_toast_1["default"].error("No se pudo eliminar el Cliente: " + error_2.message, {
+                    error_3 = _a.sent();
+                    react_hot_toast_1["default"].error("No se pudo eliminar el Usuario Autorizado por el Cliente: " +
+                        error_3.message, {
                         duration: 4000
                     });
                     return [3 /*break*/, 5];
@@ -109,20 +147,23 @@ var UserAuthorizateManager = function () {
         });
     }); };
     react_1.useEffect(function () {
-        if (user)
-            getClients();
+        if (user) {
+            getMyClientData().then(function () {
+                getUsers();
+            });
+        }
     }, [user]);
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex justify-between items-center m-4 mb-8" },
             React.createElement("div", null,
                 React.createElement("h1", { className: "text-2xl ml-1" }, "Administraci\u00F3n Usuarios Habilitados"),
                 React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA COMPRADORES")),
-            React.createElement(create_update_client_1.CreateUpdateClient, { getClients: getClients },
+            React.createElement(create_update_user_1.CreateUpdateUser, { getUsers: getUsers },
                 React.createElement(button_1.Button, { className: "px-6" },
-                    "Crear",
+                    "Nuevo Habilitado",
                     React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" })))),
         React.createElement("div", { className: "m-4" },
-            React.createElement(table_client_1.TableClient, { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer }),
-            React.createElement(list_client_1["default"], { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer }))));
+            React.createElement(table_authorizate_user_1.TableAuthorizateUser, { isLoading: isLoading, userAuths: userAuths, getUsers: getUsers, deleteUser: deleteUser }),
+            React.createElement(list_authorizate_user_1["default"], { isLoading: isLoading, userAuths: userAuths, getUsers: getUsers, deleteUser: deleteUser }))));
 };
 exports["default"] = UserAuthorizateManager;

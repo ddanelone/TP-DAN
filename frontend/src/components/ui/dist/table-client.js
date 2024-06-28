@@ -19,6 +19,7 @@ function TableClient(_a) {
                     react_1["default"].createElement(table_1.TableHead, null, "Correo Electr\u00F3nico"),
                     react_1["default"].createElement(table_1.TableHead, null, "CUIT"),
                     react_1["default"].createElement(table_1.TableHead, null, "M\u00E1ximo Descubierto"),
+                    react_1["default"].createElement(table_1.TableHead, null, "M\u00E1xima Cantidad Obras"),
                     react_1["default"].createElement(table_1.TableHead, { className: "text-center w-[250px]" }, "Acciones"))),
             react_1["default"].createElement(table_1.TableBody, null,
                 !isLoading &&
@@ -29,6 +30,7 @@ function TableClient(_a) {
                         react_1["default"].createElement(table_1.TableCell, null, client.correoElectronico),
                         react_1["default"].createElement(table_1.TableCell, null, client.cuit),
                         react_1["default"].createElement(table_1.TableCell, { className: "w-[ 50px]" }, client.maximoDescubierto),
+                        react_1["default"].createElement(table_1.TableCell, { className: "w-[ 50px]" }, client.cantidad_obras),
                         react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
                             react_1["default"].createElement(create_update_client_1.CreateUpdateClient, { clientToUpdate: client, getClients: getClients },
                                 react_1["default"].createElement(button_1.Button, null,

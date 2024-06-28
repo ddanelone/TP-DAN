@@ -206,7 +206,7 @@ export const getAllClients = async () => {
 };
 
 // Función para obtener un cliente por ID
-export const getClientById = async (id: number) => {
+export const getClientById = async (id?: number) => {
   try {
     const token = getFromLocalstorage("jwt");
     const config = {
@@ -215,6 +215,22 @@ export const getClientById = async (id: number) => {
       },
     };
     const response = await api.get(`/clientes/${id}`, config);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para obtener un cliente por ID
+export const getClientByEmail = async (email?: string) => {
+  try {
+    const token = getFromLocalstorage("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.get(`/clientes/email/${email}`, config);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.message);
@@ -287,7 +303,7 @@ export const getAllAuthorizedUsers = async () => {
 };
 
 // Función para obtener un usuario habilitado por ID
-export const getAuthorizedUserById = async (id: number) => {
+export const getAuthorizedUserById = async (id?: number) => {
   try {
     const token = getFromLocalstorage("jwt");
     const config = {
@@ -306,7 +322,10 @@ export const getAuthorizedUserById = async (id: number) => {
 };
 
 // Función para crear un nuevo usuario habilitado
-export const createAuthorizedUser = async (userData: AuthorizedUser) => {
+export const createAuthorizedUser = async (
+  id?: number,
+  userData?: AuthorizedUser
+) => {
   try {
     const token = getFromLocalstorage("jwt");
     const config = {
@@ -315,7 +334,7 @@ export const createAuthorizedUser = async (userData: AuthorizedUser) => {
       },
     };
     const response = await api.post(
-      "/clientes/usuarios-habilitados",
+      `/clientes/${id}/usuarios-habilitados`,
       userData,
       config
     );
@@ -327,8 +346,8 @@ export const createAuthorizedUser = async (userData: AuthorizedUser) => {
 
 // Función para actualizar un usuario habilitado existente
 export const updateAuthorizedUser = async (
-  id: number,
-  userData: AuthorizedUser
+  id?: number,
+  userData?: AuthorizedUser
 ) => {
   try {
     const token = getFromLocalstorage("jwt");
@@ -349,7 +368,7 @@ export const updateAuthorizedUser = async (
 };
 
 // Función para eliminar un usuario habilitado
-export const deleteAuthorizedUser = async (id: number) => {
+export const deleteAuthorizedUser = async (id?: number) => {
   try {
     const token = getFromLocalstorage("jwt");
     const config = {

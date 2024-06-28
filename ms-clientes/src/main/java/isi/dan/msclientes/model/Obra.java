@@ -17,23 +17,30 @@ import lombok.Data;
 @Data
 public class Obra {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    
-    private String direccion;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Integer id;
 
-    @Column(name = "ES_REMODELACION")
-    private Boolean esRemodelacion;
-    
-    private float lat;
-    
-    private float lng;
-    
-    @ManyToOne
-    @JoinColumn(name = "ID_CLIENTE")
-    private Cliente cliente;
-    
-    private BigDecimal presupuesto;
+   private String calle;
+   private String ciudad;
+   private String provincia;
+   private String pais;
+   private String altura;
+   private String direccion;
+
+   @Column(name = "ES_REMODELACION")
+   private Boolean esRemodelacion;
+
+   private float lat;
+
+   private float lng;
+
+   @ManyToOne
+   @JoinColumn(name = "ID_CLIENTE")
+   private Cliente cliente;
+
+   private BigDecimal presupuesto;
+
+   private Estado estado;
 
 }

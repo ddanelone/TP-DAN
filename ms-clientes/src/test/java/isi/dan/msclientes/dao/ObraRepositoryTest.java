@@ -1,4 +1,5 @@
 package isi.dan.msclientes.dao;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,67 +33,66 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ObraRepositoryTest {
 
-    Logger log = LoggerFactory.getLogger(ObraRepositoryTest.class);
+   Logger log = LoggerFactory.getLogger(ObraRepositoryTest.class);
 
-    @Container
-    public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
+   @Container
+   public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
+         .withDatabaseName("testdb")
+         .withUsername("test")
+         .withPassword("test");
 
-    @Autowired
-    private ObraRepository obraRepository;
+   @Autowired
+   private ObraRepository obraRepository;
 
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mysqlContainer::getUsername);
-        registry.add("spring.datasource.password", mysqlContainer::getPassword);
-    }
+   @DynamicPropertySource
+   static void configureProperties(DynamicPropertyRegistry registry) {
+      registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+      registry.add("spring.datasource.username", mysqlContainer::getUsername);
+      registry.add("spring.datasource.password", mysqlContainer::getPassword);
+   }
 
-    @BeforeEach
-    void iniciarDatos(){
-        Obra obra = new Obra();
-        obra.setDireccion("Test Obra 999");
-        obra.setPresupuesto(BigDecimal.valueOf(100));
-        obraRepository.save(obra);
-    }
+   @BeforeEach
+   void iniciarDatos() {
+      Obra obra = new Obra();
+      obra.setDireccion("Test Obra 999");
+      obra.setPresupuesto(BigDecimal.valueOf(100));
+      obraRepository.save(obra);
+   }
 
-    @BeforeEach
-    void borrarDatos(){
-        obraRepository.deleteAll();
-    }
+   @BeforeEach
+   void borrarDatos() {
+      obraRepository.deleteAll();
+   }
 
-    @AfterAll
-    static void stopContainer() {
-        mysqlContainer.stop();
-    }
+   @AfterAll
+   static void stopContainer() {
+      mysqlContainer.stop();
+   }
 
-    @Test
-    void testSaveAndFindById() {
-        Obra obra = new Obra();
-        obra.setDireccion("Test Obra");
-        obraRepository.save(obra);
+   @Test
+   void testSaveAndFindById() {
+      Obra obra = new Obra();
+      obra.setDireccion("Test Obra");
+      obraRepository.save(obra);
 
-        Optional<Obra> foundObra = obraRepository.findById(obra.getId());
-        log.info("ENCONTRE: {} ",foundObra);
-        assertThat(foundObra).isPresent();
-        assertThat(foundObra.get().getDireccion()).isEqualTo("Test Obra");
-    }
+      Optional<Obra> foundObra = obraRepository.findById(obra.getId());
+      log.info("ENCONTRE: {} ", foundObra);
+      assertThat(foundObra).isPresent();
+      assertThat(foundObra.get().getDireccion()).isEqualTo("Test Obra");
+   }
 
-    @Test
-    void testFindByPresupuesto() {
-        Obra obra = new Obra();
-        obra.setDireccion("Test Obra");
-        obra.setPresupuesto(BigDecimal.valueOf(200));
-        obraRepository.save(obra);
+   @Test
+   void testFindByPresupuesto() {
+      Obra obra = new Obra();
+      obra.setDireccion("Test Obra");
+      obra.setPresupuesto(BigDecimal.valueOf(200));
+      obraRepository.save(obra);
 
-        List<Obra> resultado = obraRepository.findByPresupuestoGreaterThanEqual(BigDecimal.valueOf(50));
-        log.info("ENCONTRE: {} ",resultado);
-        assertThat(resultado.size()).isEqualTo(2);
-        assertThat(resultado.get(0).getPresupuesto()).isGreaterThan(BigDecimal.valueOf(50));
-        assertThat(resultado.get(1).getPresupuesto()).isGreaterThan(BigDecimal.valueOf(50));
-    }
+      List<Obra> resultado = obraRepository.findByPresupuestoGreaterThanEqual(BigDecimal.valueOf(50));
+      log.info("ENCONTRE: {} ", resultado);
+      assertThat(resultado.size()).isEqualTo(2);
+      assertThat(resultado.get(0).getPresupuesto()).isGreaterThan(BigDecimal.valueOf(50));
+      assertThat(resultado.get(1).getPresupuesto()).isGreaterThan(BigDecimal.valueOf(50));
+   }
 
 }
-

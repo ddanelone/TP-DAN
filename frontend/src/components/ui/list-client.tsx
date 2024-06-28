@@ -39,7 +39,8 @@ export const ListClient = ({
                   Nombre: {client.nombre} <br />
                   D.N.I.: {client.dni} <br />
                   C.U.I.T.: {client.cuit} <br />
-                  Correo Electrónico: {client.correoElectronico}
+                  Correo Electrónico: {client.correoElectronico} <br />
+                  Máxima Cantidad Obras: {client.cantidad_obras}
                   <br />
                   <Badge className="mt-2" variant={"outline"}>
                     Máximo Autorizado: {client.maximoDescubierto}

@@ -1,5 +1,4 @@
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
-import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { User } from "@/interfaces/user.interface";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
