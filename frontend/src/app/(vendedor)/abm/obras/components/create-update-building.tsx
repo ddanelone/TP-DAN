@@ -25,6 +25,7 @@ import {
   getAllClients,
   getCoordinates,
   updateObra,
+  validarObra,
 } from "@/lib/auth";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { Building } from "@/interfaces/building.interface";
@@ -99,7 +100,7 @@ export function CreateUpdateBuilding({
     resolver: zodResolver(formSchema),
     defaultValues: buildingToUpdate || {
       calle: "",
-      estado: Estados.HABILITADA,
+      estado: Estados.PENDIENTE,
       altura: "",
       ciudad: "",
       provincia: "",
@@ -123,10 +124,26 @@ export function CreateUpdateBuilding({
     }
   };
 
-  /* ========== Crear o actualizar una Obra ========== */
+  /* ========== Validar estado de una Obra ========== */
+  const buildingStatusValidator = async (
+    idCliente?: number,
+    obra?: Building
+  ) => {
+    try {
+      const response = await validarObra(idCliente, obra);
+      console.log("Response: ", response);
+      return response;
+    } catch (error) {
+      console.error("Error validating building status: ", error);
+      throw error;
+    }
+  };
+
   const onSubmit = async (building: z.infer<typeof formSchema>) => {
     if (!selectedClient) {
-      alert("Debe seleccionar un cliente antes de guardar la obra.");
+      toast.error("Debe seleccionar un cliente antes de guardar la obra.", {
+        duration: 3000,
+      });
       return;
     }
 
@@ -149,6 +166,18 @@ export function CreateUpdateBuilding({
         cliente: selectedClient,
       };
 
+      const validationResponse = await buildingStatusValidator(
+        selectedClient.id,
+        newBuilding
+      );
+
+      console.log("Validation response: ", validationResponse);
+
+      if (validationResponse.status !== 200) {
+        toast.error(validationResponse.error, { duration: 3000 });
+        return;
+      }
+
       if (buildingToUpdate) {
         await updateBuilding(newBuilding);
       } else {
@@ -156,6 +185,11 @@ export function CreateUpdateBuilding({
       }
     } catch (error) {
       console.error("Error creating or updating building: ", error);
+      toast.error("¡¡¡ " + error + "!!!", {
+        duration: 4000,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 

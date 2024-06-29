@@ -128,7 +128,7 @@ function CreateUpdateBuilding(_a) {
         resolver: zod_1.zodResolver(formSchema),
         defaultValues: buildingToUpdate || {
             calle: "",
-            estado: estado_enum_interface_1.Estados.HABILITADA,
+            estado: estado_enum_interface_1.Estados.PENDIENTE,
             altura: "",
             ciudad: "",
             provincia: "",
@@ -158,14 +158,35 @@ function CreateUpdateBuilding(_a) {
             }
         });
     }); };
-    /* ========== Crear o actualizar una Obra ========== */
+    /* ========== Validar estado de una Obra ========== */
+    var buildingStatusValidator = function (idCliente, obra) { return __awaiter(_this, void 0, void 0, function () {
+        var response, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, auth_1.validarObra(idCliente, obra)];
+                case 1:
+                    response = _a.sent();
+                    console.log("Response: ", response);
+                    return [2 /*return*/, response];
+                case 2:
+                    error_3 = _a.sent();
+                    console.error("Error validating building status: ", error_3);
+                    throw error_3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
     var onSubmit = function (building) { return __awaiter(_this, void 0, void 0, function () {
-        var address, coordinates, newBuilding, error_3;
+        var address, coordinates, newBuilding, validationResponse, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (!selectedClient) {
-                        alert("Debe seleccionar un cliente antes de guardar la obra.");
+                        react_hot_toast_1["default"].error("Debe seleccionar un cliente antes de guardar la obra.", {
+                            duration: 3000
+                        });
                         return [2 /*return*/];
                     }
                     setIsLoading(true);
@@ -178,32 +199,46 @@ function CreateUpdateBuilding(_a) {
                     };
                     _a.label = 1;
                 case 1:
-                    _a.trys.push([1, 7, , 8]);
+                    _a.trys.push([1, 8, 9, 10]);
                     return [4 /*yield*/, getCoordinatesFromAPI(address)];
                 case 2:
                     coordinates = _a.sent();
                     newBuilding = __assign(__assign({}, building), { lat: coordinates.lat, lng: coordinates.lon, pais: "Argentina", cliente: selectedClient });
-                    if (!buildingToUpdate) return [3 /*break*/, 4];
-                    return [4 /*yield*/, updateBuilding(newBuilding)];
+                    return [4 /*yield*/, buildingStatusValidator(selectedClient.id, newBuilding)];
                 case 3:
+                    validationResponse = _a.sent();
+                    console.log("Validation response: ", validationResponse);
+                    if (validationResponse.status !== 200) {
+                        react_hot_toast_1["default"].error(validationResponse.error, { duration: 3000 });
+                        return [2 /*return*/];
+                    }
+                    if (!buildingToUpdate) return [3 /*break*/, 5];
+                    return [4 /*yield*/, updateBuilding(newBuilding)];
+                case 4:
                     _a.sent();
-                    return [3 /*break*/, 6];
-                case 4: return [4 /*yield*/, createBuilding(newBuilding)];
-                case 5:
+                    return [3 /*break*/, 7];
+                case 5: return [4 /*yield*/, createBuilding(newBuilding)];
+                case 6:
                     _a.sent();
-                    _a.label = 6;
-                case 6: return [3 /*break*/, 8];
-                case 7:
-                    error_3 = _a.sent();
-                    console.error("Error creating or updating building: ", error_3);
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    _a.label = 7;
+                case 7: return [3 /*break*/, 10];
+                case 8:
+                    error_4 = _a.sent();
+                    console.error("Error creating or updating building: ", error_4);
+                    react_hot_toast_1["default"].error("¡¡¡ " + error_4 + "!!!", {
+                        duration: 4000
+                    });
+                    return [3 /*break*/, 10];
+                case 9:
+                    setIsLoading(false);
+                    return [7 /*endfinally*/];
+                case 10: return [2 /*return*/];
             }
         });
     }); };
     /* ========== Crear una nueva Obra ========== */
     var createBuilding = function (building) { return __awaiter(_this, void 0, void 0, function () {
-        var error_4;
+        var error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -218,8 +253,8 @@ function CreateUpdateBuilding(_a) {
                     setSelectedClient(null);
                     return [3 /*break*/, 4];
                 case 2:
-                    error_4 = _a.sent();
-                    react_hot_toast_1["default"].error(error_4.message, { duration: 2000 });
+                    error_5 = _a.sent();
+                    react_hot_toast_1["default"].error(error_5.message, { duration: 2000 });
                     return [3 /*break*/, 4];
                 case 3:
                     setIsLoading(false);
@@ -230,7 +265,7 @@ function CreateUpdateBuilding(_a) {
     }); };
     /* ========== Actualizar una Obra ========== */
     var updateBuilding = function (building) { return __awaiter(_this, void 0, void 0, function () {
-        var error_5;
+        var error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -248,8 +283,8 @@ function CreateUpdateBuilding(_a) {
                     setSelectedClient(null);
                     return [3 /*break*/, 5];
                 case 3:
-                    error_5 = _a.sent();
-                    react_hot_toast_1["default"].error(error_5.message, { duration: 2000 });
+                    error_6 = _a.sent();
+                    react_hot_toast_1["default"].error(error_6.message, { duration: 2000 });
                     return [3 /*break*/, 5];
                 case 4:
                     setIsLoading(false);

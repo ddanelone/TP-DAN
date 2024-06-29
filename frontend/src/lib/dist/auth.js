@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -613,6 +613,7 @@ exports.deleteObra = function (id) { return __awaiter(void 0, void 0, void 0, fu
         }
     });
 }); };
+/* ========== Obtener latitud y longitud pasando la dirección como body ========== */
 exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, Promise, function () {
     var response, error_26;
     return __generator(this, function (_a) {
@@ -626,6 +627,24 @@ exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, P
             case 2:
                 error_26 = _a.sent();
                 throw new Error(error_26.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+/* ========== Aplicar reglas de negocio previo a asignar una obra ========== */
+exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_27;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/obras/cliente/validar-obra/" + idCliente, obraData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_27 = _a.sent();
+                throw new Error(error_27.response.data.message);
             case 3: return [2 /*return*/];
         }
     });

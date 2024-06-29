@@ -1,6 +1,7 @@
 package isi.dan.msclientes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class ObraController {
 
    @Autowired
    private GeocodingService geocodingService;
+
+   @Value("${obras.cantidad_maxima_habilitadas}")
+   private int cantidadMaximaObrasHabilitadas;
 
    @GetMapping
    public List<Obra> getAll() {
@@ -88,5 +92,10 @@ public class ObraController {
       } catch (Exception e) {
          return ResponseEntity.status(500).body(null);
       }
+   }
+
+   @PostMapping("/cliente/validar-obra/{idCliente}")
+   public ResponseEntity<Map<String, Object>> validarObra(@PathVariable Integer idCliente, @RequestBody Obra obra) {
+      return obraService.validarObra(idCliente, obra, cantidadMaximaObrasHabilitadas);
    }
 }

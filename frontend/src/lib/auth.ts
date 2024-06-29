@@ -439,12 +439,26 @@ export const deleteObra = async (id?: number) => {
   }
 };
 
+/* ========== Obtener latitud y longitud pasando la dirección como body ========== */
 export const getCoordinates = async (
   address: Address
 ): Promise<Coordinates> => {
   try {
     const response = await api.post("/obras/coordenadas", address);
     return response.data as Coordinates;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+/* ========== Aplicar reglas de negocio previo a asignar una obra ========== */
+export const validarObra = async (idCliente?: number, obraData?: Building) => {
+  try {
+    const response = await api.post(
+      `/obras/cliente/validar-obra/${idCliente}`,
+      obraData
+    );
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.message);
   }
