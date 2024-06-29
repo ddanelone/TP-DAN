@@ -2,70 +2,74 @@ import { Button } from "@/components/ui/button";
 import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Costumer } from "@/interfaces/costumer.interface";
-import { ConfirmDeletionClient } from "@/app/(vendedor)/abm/clientes/components/confirmDeletionClient";
-import { CreateUpdateClient } from "@/app/(vendedor)/abm/clientes/components/create-update-client";
+import { Building } from "@/interfaces/building.interface";
+import { CreateUpdateBuilding } from "@/app/(vendedor)/abm/obras/components/create-update-building";
+import { ConfirmDeletionBuilding } from "@/app/(vendedor)/abm/obras/components/confirm-deletion-building";
 
-interface ListClientProps {
+interface ListBuildingProps {
   isLoading: boolean;
-  clients: Costumer[];
-  getClients: () => Promise<void>;
-  deleteClient: (client: Costumer) => Promise<void>;
+  buildings: Building[];
+  getBuildings: () => Promise<void>;
+  deleteBuilding: (building: Building) => Promise<void>;
 }
 
-export const ListClient = ({
+export const ListBuilding = ({
   isLoading,
-  clients,
-  getClients,
-  deleteClient,
-}: ListClientProps) => {
+  buildings,
+  getBuildings,
+  deleteBuilding,
+}: ListBuildingProps) => {
   return (
     <div className="w-full block md:hidden">
       {/* Utiliza w-full para ocupar todo el ancho disponible */}
       {!isLoading &&
-        clients &&
-        clients.map((client) => (
+        buildings &&
+        buildings.map((building) => (
           <div
-            key={client.id}
+            key={building.id}
             className="flex items-center mb-6 justify-between border border-solid border-gray-300 rounded-xl p-6"
           >
             <div className="flex justify-start items-center">
               <div className="ml-6">
-                <h3 className="font-semibold">{client.apellido}</h3>
+                <h3 className="font-semibold">
+                  Cliente: {building.cliente?.nombre},{" "}
+                  {building.cliente?.apellido}
+                </h3>
                 <div className="text-sm">
-                  Nombre: {client.nombre} <br />
-                  D.N.I.: {client.dni} <br />
-                  C.U.I.T.: {client.cuit} <br />
-                  Correo Electrónico: {client.correoElectronico} <br />
-                  Máxima Cantidad Obras: {client.cantidad_obras}
+                  Calle: {building.calle}
+                  Altura: {building.altura} <br />
+                  Ciudad: {building.ciudad} <br />
+                  Presupuesto: {building.presupuesto} <br />
+                  Latitud: {building.lat} <br />
+                  Longitud: {building.lng}
                   <br />
                   <Badge className="mt-2" variant={"outline"}>
-                    Máximo Autorizado: {client.maximoDescubierto}
+                    Estado: {building.estado}
                   </Badge>
                 </div>
               </div>
             </div>
             <div className="ml-2">
-              {getClients && (
-                <CreateUpdateClient
-                  clientToUpdate={client}
-                  getClients={getClients}
+              {getBuildings && (
+                <CreateUpdateBuilding
+                  buildingToUpdate={building}
+                  getBuildings={getBuildings}
                 >
                   <Button className="w-8 h-8 p-0">
                     <SquarePen className="w-5 h-5" />
                   </Button>
-                </CreateUpdateClient>
+                </CreateUpdateBuilding>
               )}
 
-              {deleteClient && (
-                <ConfirmDeletionClient
-                  deleteClient={deleteClient}
-                  client={client}
+              {deleteBuilding && (
+                <ConfirmDeletionBuilding
+                  deleteBuilding={deleteBuilding}
+                  building={building}
                 >
                   <Button className="ml-4" variant={"destructive"}>
                     <Trash2 />
                   </Button>
-                </ConfirmDeletionClient>
+                </ConfirmDeletionBuilding>
               )}
             </div>
           </div>
@@ -85,7 +89,7 @@ export const ListClient = ({
             </div>
           </div>
         ))}
-      {!isLoading && clients.length === 0 && (
+      {!isLoading && buildings.length === 0 && (
         <div className="text-gray-200 my-20">
           <div className="flex justify-center">
             <LayoutList className="w-[120px] h-[120px]" />
@@ -97,4 +101,4 @@ export const ListClient = ({
   );
 };
 
-export default ListClient;
+export default ListBuilding;

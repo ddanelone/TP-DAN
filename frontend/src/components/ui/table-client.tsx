@@ -7,12 +7,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
+import {
+  Building2Icon,
+  LayoutList,
+  ShoppingCart,
+  SquarePen,
+  Trash2,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "./button";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { CreateUpdateClient } from "@/app/(vendedor)/abm/clientes/components/create-update-client";
 import { ConfirmDeletionClient } from "@/app/(vendedor)/abm/clientes/components/confirmDeletionClient";
+import { CreateUpdateBuilding } from "@/app/(vendedor)/abm/obras/components/create-update-building";
 
 interface TableClientProps {
   isLoading: boolean;
@@ -59,13 +66,24 @@ export function TableClient({
                   {client.cantidad_obras}
                 </TableCell>
                 <TableCell className="text-center">
+                  {/* ========== Gestionar las obras ========== */}
+                  {/* ========== ACA TENGO QUE REDIRIGIR A OBRAS, NO IMPLEMENTAR UN COMPLEMENTO ========== */}
+                  <CreateUpdateBuilding
+                    clientToUpdate={client}
+                    getClients={getClients}
+                  >
+                    <Button className="bg-yellow-500 text-white">
+                      <Building2Icon />
+                    </Button>
+                  </CreateUpdateBuilding>
+
                   {/* ========== Actualizar Cliente ========== */}
 
                   <CreateUpdateClient
                     clientToUpdate={client}
                     getClients={getClients}
                   >
-                    <Button>
+                    <Button className="ml-4">
                       <SquarePen />
                     </Button>
                   </CreateUpdateClient>

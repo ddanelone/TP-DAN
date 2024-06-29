@@ -8,6 +8,7 @@ var skeleton_1 = require("@/components/ui/skeleton");
 var button_1 = require("./button");
 var create_update_client_1 = require("@/app/(vendedor)/abm/clientes/components/create-update-client");
 var confirmDeletionClient_1 = require("@/app/(vendedor)/abm/clientes/components/confirmDeletionClient");
+var create_update_building_1 = require("@/app/(vendedor)/abm/obras/components/create-update-building");
 function TableClient(_a) {
     var isLoading = _a.isLoading, clients = _a.clients, getClients = _a.getClients, deleteClient = _a.deleteClient;
     return (react_1["default"].createElement("div", { className: "hidden md:block" },
@@ -32,8 +33,11 @@ function TableClient(_a) {
                         react_1["default"].createElement(table_1.TableCell, { className: "w-[ 50px]" }, client.maximoDescubierto),
                         react_1["default"].createElement(table_1.TableCell, { className: "w-[ 50px]" }, client.cantidad_obras),
                         react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
+                            react_1["default"].createElement(create_update_building_1.CreateUpdateBuilding, { clientToUpdate: client, getClients: getClients },
+                                react_1["default"].createElement(button_1.Button, { className: "bg-yellow-500 text-white" },
+                                    react_1["default"].createElement(lucide_react_1.Building2Icon, null))),
                             react_1["default"].createElement(create_update_client_1.CreateUpdateClient, { clientToUpdate: client, getClients: getClients },
-                                react_1["default"].createElement(button_1.Button, null,
+                                react_1["default"].createElement(button_1.Button, { className: "ml-4" },
                                     react_1["default"].createElement(lucide_react_1.SquarePen, null))),
                             react_1["default"].createElement(confirmDeletionClient_1.ConfirmDeletionClient, { deleteClient: deleteClient, client: client },
                                 react_1["default"].createElement(button_1.Button, { className: "ml-4", variant: "destructive" },

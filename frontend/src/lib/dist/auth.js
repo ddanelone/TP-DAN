@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -506,6 +506,126 @@ exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, 
             case 2:
                 error_19 = _a.sent();
                 throw new Error(error_19.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+/* ==========  OBRAS ========== */
+exports.getAllObras = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_20;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/obras")];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_20 = _a.sent();
+                throw new Error(error_20.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getEstadosObras = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_21;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/obras/estados")];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_21 = _a.sent();
+                throw new Error(error_21.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getObraById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_22;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/obras/" + id)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_22 = _a.sent();
+                throw new Error(error_22.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.createObra = function (obraData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_23;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/obras", obraData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_23 = _a.sent();
+                throw new Error(error_23.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.updateObra = function (id, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_24;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].put("/obras/" + id, obraData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_24 = _a.sent();
+                throw new Error(error_24.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.deleteObra = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_25;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"]["delete"]("/obras/" + id)];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_25 = _a.sent();
+                throw new Error(error_25.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, Promise, function () {
+    var response, error_26;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/obras/coordenadas", address)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_26 = _a.sent();
+                throw new Error(error_26.response.data.message);
             case 3: return [2 /*return*/];
         }
     });

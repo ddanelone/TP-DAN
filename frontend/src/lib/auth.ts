@@ -5,6 +5,9 @@ import { getFromLocalstorage } from "@/action/get-from-localstorage";
 import { Product } from "@/interfaces/product-interface";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
+import { Building } from "@/interfaces/building.interface";
+import { Coordinates } from "@/interfaces/coordinate.interface";
+import { Address } from "@/interfaces/address.interface";
 
 /* ========== Usuarios  ========== */
 
@@ -377,6 +380,71 @@ export const deleteAuthorizedUser = async (id?: number) => {
       },
     };
     await api.delete(`/clientes/usuarios-habilitados/${id}`, config);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+/* ==========  OBRAS ========== */
+export const getAllObras = async () => {
+  try {
+    const response = await api.get("/obras");
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getEstadosObras = async () => {
+  try {
+    const response = await api.get("/obras/estados");
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getObraById = async (id?: number) => {
+  try {
+    const response = await api.get(`/obras/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const createObra = async (obraData: Building) => {
+  try {
+    const response = await api.post("/obras", obraData);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const updateObra = async (id?: number, obraData?: Building) => {
+  try {
+    const response = await api.put(`/obras/${id}`, obraData);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const deleteObra = async (id?: number) => {
+  try {
+    await api.delete(`/obras/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getCoordinates = async (
+  address: Address
+): Promise<Coordinates> => {
+  try {
+    const response = await api.post("/obras/coordenadas", address);
+    return response.data as Coordinates;
   } catch (error: any) {
     throw new Error(error.response.data.message);
   }

@@ -24,7 +24,7 @@ export function SelectCategoryes({
       value={selectedCategory || ""}
       onValueChange={(value) => onCategoryChange(value as Category)}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full">
         <SelectValue
           placeholder="Seleccione..."
           defaultValue={selectedCategory || ""}
