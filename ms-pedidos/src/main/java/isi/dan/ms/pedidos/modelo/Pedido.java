@@ -10,9 +10,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-@Document(collection = "pedidos")
 @Data
+@Document(collection = "pedidos")
 public class Pedido {
+   public static final String SEQUENCE_NAME = "pedidos_sequence";
+
    @Id
    private String id;
    private Instant fecha;
@@ -27,5 +29,4 @@ public class Pedido {
 
    @Field("detalle")
    private List<DetallePedido> detalle;
-
 }

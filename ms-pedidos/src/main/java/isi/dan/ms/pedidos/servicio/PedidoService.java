@@ -35,6 +35,9 @@ public class PedidoService {
    @Autowired
    private RestTemplate restTemplate;
 
+   @Autowired
+   private SequenceGeneratorService sequenceGeneratorService;
+
    Logger log = LoggerFactory.getLogger(PedidoService.class);
 
    public Pedido savePedido(Pedido pedido) {
@@ -42,6 +45,9 @@ public class PedidoService {
          log.info("Enviando {}", dp.getProducto().getId() + ";" + dp.getCantidad());
          rabbitTemplate.convertAndSend(RabbitMQConfig.STOCK_UPDATE_QUEUE,
                dp.getProducto().getId() + ";" + dp.getCantidad());
+      }
+      if (pedido.getNumeroPedido() == null) {
+         pedido.setNumeroPedido((int) sequenceGeneratorService.generateSequence(Pedido.SEQUENCE_NAME));
       }
       return pedidoRepository.save(pedido);
    }
