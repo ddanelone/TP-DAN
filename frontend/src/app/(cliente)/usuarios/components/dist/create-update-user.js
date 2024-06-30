@@ -58,7 +58,6 @@ var zod_1 = require("@hookform/resolvers/zod");
 var react_1 = require("react");
 var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
-var use_user_1 = require("@/hooks/use-user");
 var button_1 = require("@/components/ui/button");
 var auth_1 = require("@/lib/auth");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -66,7 +65,6 @@ function CreateUpdateUser(_a) {
     var _this = this;
     var _b, _c, _d, _e;
     var children = _a.children, userToUpdate = _a.userToUpdate, getUsers = _a.getUsers;
-    var user = use_user_1.useUser();
     var _f = react_1.useState(false), isLoading = _f[0], setIsLoading = _f[1];
     var _g = react_1.useState(false), open = _g[0], setOpen = _g[1];
     var _h = react_1.useState([]), users = _h[0], setUsers = _h[1];

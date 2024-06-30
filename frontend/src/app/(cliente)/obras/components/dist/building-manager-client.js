@@ -40,38 +40,41 @@ exports.__esModule = true;
 var badge_1 = require("@/components/ui/badge");
 var use_user_1 = require("@/hooks/use-user");
 var react_1 = require("react");
-var button_1 = require("@/components/ui/button");
-var lucide_react_1 = require("lucide-react");
-var react_hot_toast_1 = require("react-hot-toast");
-var table_client_1 = require("@/components/ui/table-client");
+var table_building_1 = require("@/components/ui/table-building");
+var list_building_1 = require("@/components/ui/list-building");
 var auth_1 = require("@/lib/auth");
-var create_update_client_1 = require("./create-update-client");
-var list_client_1 = require("@/components/ui/list-client");
+var get_from_localstorage_1 = require("@/action/get-from-localstorage");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
-var navigation_1 = require("next/navigation");
-var CustomerManager = function () {
+var react_hot_toast_1 = require("react-hot-toast");
+var BuildingManagerClient = function () {
     var user = use_user_1.useUser();
-    var _a = react_1.useState([]), clients = _a[0], setClients = _a[1];
+    var _a = react_1.useState([]), buildings = _a[0], setBuildings = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
-    var router = navigation_1.useRouter();
-    /* ========== Traer todos los Clientes a la Tabla  ========== */
-    var getClients = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res, error_1;
+    var _c = react_1.useState(), client = _c[0], setClient = _c[1];
+    var _d = react_1.useState(false), isFiltered = _d[0], setIsFiltered = _d[1];
+    var getMyClientData = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var emailUser, res, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    emailUser = user === null || user === void 0 ? void 0 : user.email;
                     setIsLoading(true);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.getAllClients()];
+                    return [4 /*yield*/, auth_1.getClientByEmail(emailUser)];
                 case 2:
-                    res = (_a.sent());
+                    res = _a.sent();
                     console.log(res);
-                    setClients(res);
+                    if (res) {
+                        set_in_localstorage_1.setInLocalstorage("idClient", res.id);
+                    }
                     return [3 /*break*/, 5];
                 case 3:
                     error_1 = _a.sent();
+                    react_hot_toast_1["default"].error("No se pudo recupear los datos de Cliente asociado con este Usuario.", {
+                        duration: 2000
+                    });
                     console.error(error_1);
                     return [3 /*break*/, 5];
                 case 4:
@@ -81,9 +84,8 @@ var CustomerManager = function () {
             }
         });
     }); };
-    /* ========== Borrar un Cliente de la base de datos ========== */
-    var deleteCostumer = function (client) { return __awaiter(void 0, void 0, void 0, function () {
-        var newClients, error_2;
+    var getBuildings = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var res, idLocalClient_1, filteredBuildings, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -91,18 +93,24 @@ var CustomerManager = function () {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.deleteClient(client === null || client === void 0 ? void 0 : client.id)];
+                    return [4 /*yield*/, auth_1.getAllObras()];
                 case 2:
-                    _a.sent();
-                    react_hot_toast_1["default"].success("Cliente eliminado correctamente");
-                    newClients = clients.filter(function (i) { return i.id !== client.id; });
-                    setClients(newClients);
+                    res = (_a.sent());
+                    console.log(res);
+                    idLocalClient_1 = get_from_localstorage_1.getFromLocalstorage("idClient");
+                    if (idLocalClient_1) {
+                        filteredBuildings = res.filter(function (building) { var _a; return ((_a = building.cliente) === null || _a === void 0 ? void 0 : _a.id) === idLocalClient_1; });
+                        setBuildings(filteredBuildings);
+                        setClient(idLocalClient_1);
+                        setIsFiltered(true);
+                    }
+                    else {
+                        setBuildings(res);
+                    }
                     return [3 /*break*/, 5];
                 case 3:
                     error_2 = _a.sent();
-                    react_hot_toast_1["default"].error("No se pudo eliminar el Cliente: " + error_2.message, {
-                        duration: 2000
-                    });
+                    console.error(error_2);
                     return [3 /*break*/, 5];
                 case 4:
                     setIsLoading(false);
@@ -111,27 +119,29 @@ var CustomerManager = function () {
             }
         });
     }); };
-    /* ========== Setear un Cliente en el localStorage ========== */
-    var viewBuildingsClients = function (client) {
-        setIsLoading(true);
-        set_in_localstorage_1.setInLocalstorage("cliente", client);
-        router.push("/abm/obras");
+    var removeFilter = function () {
+        localStorage.removeItem("cliente");
+        setClient(undefined);
+        setIsFiltered(false);
+        getBuildings();
     };
     react_1.useEffect(function () {
-        if (user)
-            getClients();
+        if (user) {
+            getMyClientData().then(function () {
+                getBuildings();
+            });
+        }
     }, [user]);
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex justify-between items-center m-4 mb-8" },
             React.createElement("div", null,
-                React.createElement("h1", { className: "text-2xl ml-1" }, "Administraci\u00F3n de Clientes"),
-                React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES")),
-            React.createElement(create_update_client_1.CreateUpdateClient, { getClients: getClients },
-                React.createElement(button_1.Button, { className: "px-6" },
-                    "Crear",
-                    React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" })))),
+                React.createElement("h1", { className: "text-2xl ml-1" }, "Visualizaci\u00F3n de Obras"),
+                React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA CLIENTES"))),
         React.createElement("div", { className: "m-4" },
-            React.createElement(table_client_1.TableClient, { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer, viewBuildingsClients: viewBuildingsClients }),
-            React.createElement(list_client_1["default"], { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer, viewBuildingsClients: viewBuildingsClients }))));
+            React.createElement(table_building_1.TableBuilding, { isLoading: isLoading, buildings: buildings }),
+            React.createElement(list_building_1["default"], { isLoading: isLoading, buildings: buildings }))));
 };
-exports["default"] = CustomerManager;
+exports["default"] = BuildingManagerClient;
+function setAuthUsers(authorizedUsers) {
+    throw new Error("Function not implemented.");
+}

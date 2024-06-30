@@ -12,27 +12,35 @@ import { Building } from "@/interfaces/building.interface";
 import { deleteObra, getAllObras } from "@/lib/auth";
 import { CreateUpdateBuilding } from "./create-update-building";
 import { Costumer } from "@/interfaces/costumer.interface";
+import { useRouter } from "next/navigation";
+import { getFromLocalstorage } from "@/action/get-from-localstorage";
 
 const BuildingManager = () => {
   const user = useUser();
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [client, setClient] = useState<Costumer | undefined>();
+  const [isFiltered, setIsFiltered] = useState<boolean>(false);
+  const router = useRouter();
 
-  /* ========== Traer todas las obras a la Tabla  ========== */
   const getBuildings = async () => {
     setIsLoading(true);
-
     try {
       const res = (await getAllObras()) as Building[];
       console.log(res);
 
-      // Verifica si hay al menos una obra y si tiene al menos un cliente
-      if (res.length > 0 && res[0].cliente) {
-        setClient(res[0].cliente);
+      const localClient = getFromLocalstorage("cliente");
+      if (localClient) {
+        localClient as Costumer;
+        const filteredBuildings = res.filter(
+          (building) => building.cliente?.id === localClient.id
+        );
+        setBuildings(filteredBuildings);
+        setClient(localClient);
+        setIsFiltered(true);
+      } else {
+        setBuildings(res);
       }
-
-      setBuildings(res);
     } catch (error) {
       console.error(error);
     } finally {
@@ -40,18 +48,12 @@ const BuildingManager = () => {
     }
   };
 
-  /* ========== Borrar una obra de la base de datos ========== */
   const deleteBuilding = async (building: Building) => {
     setIsLoading(true);
-
     try {
       await deleteObra(building?.id);
-
       toast.success("Obra eliminada correctamente");
-
-      /* ========== Borro el cliente eliminado de la tabla ========== */
       const newBuildings = buildings.filter((i) => i.id !== building.id);
-
       setBuildings(newBuildings);
     } catch (error: any) {
       toast.error("No se pudo eliminar la Obra: " + error.message, {
@@ -60,6 +62,13 @@ const BuildingManager = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const removeFilter = () => {
+    localStorage.removeItem("cliente");
+    setClient(undefined);
+    setIsFiltered(false);
+    getBuildings();
   };
 
   useEffect(() => {
@@ -71,17 +80,26 @@ const BuildingManager = () => {
       <div className="flex justify-between items-center m-4 mb-8">
         <div>
           <h1 className="text-2xl ml-1">Administración de Obras</h1>
-
           <Badge className="mt-2 text-[14px]" variant={"outline"}>
             SECCIÓN EXCLUSIVA PARA VENDEDORES
           </Badge>
         </div>
-        <CreateUpdateBuilding getBuildings={getBuildings} isLoading={isLoading}>
-          <Button className="px-6">
-            Crear
-            <CirclePlus className="ml-2 w-[20px]" />
-          </Button>
-        </CreateUpdateBuilding>
+        <div className="flex">
+          {isFiltered && (
+            <Button className="mr-4" onClick={removeFilter}>
+              Quitar filtro
+            </Button>
+          )}
+          <CreateUpdateBuilding
+            getBuildings={getBuildings}
+            isLoading={isLoading}
+          >
+            <Button className="px-6">
+              Crear
+              <CirclePlus className="ml-2 w-[20px]" />
+            </Button>
+          </CreateUpdateBuilding>
+        </div>
       </div>
       <div className="m-4">
         <TableBuilding

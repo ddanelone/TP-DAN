@@ -7,25 +7,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Building2Icon,
-  LayoutList,
-  ShoppingCart,
-  SquarePen,
-  Trash2,
-} from "lucide-react";
+import { Building2Icon, LayoutList, SquarePen, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "./button";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { CreateUpdateClient } from "@/app/(vendedor)/abm/clientes/components/create-update-client";
 import { ConfirmDeletionClient } from "@/app/(vendedor)/abm/clientes/components/confirmDeletionClient";
-import { CreateUpdateBuilding } from "@/app/(vendedor)/abm/obras/components/create-update-building";
+import { ConfirmNavigationClient } from "@/app/(vendedor)/abm/clientes/components/confirm-building-client-nav";
 
 interface TableClientProps {
   isLoading: boolean;
   clients: Costumer[];
   getClients: () => Promise<void>;
   deleteClient: (client: Costumer) => Promise<void>;
+  viewBuildingsClients: (client: Costumer) => void;
 }
 
 export function TableClient({
@@ -33,6 +28,7 @@ export function TableClient({
   clients,
   getClients,
   deleteClient,
+  viewBuildingsClients,
 }: TableClientProps) {
   return (
     <div className="hidden md:block">
@@ -67,15 +63,14 @@ export function TableClient({
                 </TableCell>
                 <TableCell className="text-center">
                   {/* ========== Gestionar las obras ========== */}
-                  {/* ========== ACA TENGO QUE REDIRIGIR A OBRAS, NO IMPLEMENTAR UN COMPLEMENTO ========== */}
-                  <CreateUpdateBuilding
-                    clientToUpdate={client}
-                    getClients={getClients}
+                  <ConfirmNavigationClient
+                    client={client}
+                    viewBuildingsClients={viewBuildingsClients}
                   >
                     <Button className="bg-yellow-500 text-white">
                       <Building2Icon />
                     </Button>
-                  </CreateUpdateBuilding>
+                  </ConfirmNavigationClient>
 
                   {/* ========== Actualizar Cliente ========== */}
 

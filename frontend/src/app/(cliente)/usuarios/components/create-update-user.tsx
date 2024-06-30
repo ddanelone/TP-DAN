@@ -17,11 +17,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
-
 import { useUser } from "@/hooks/use-user";
 import { Button } from "@/components/ui/button";
 import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
-import { createAuthorizedUser, updateAuthorizedUser } from "@/lib/auth";
+import { createAuthorizedUser } from "@/lib/auth";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 
 interface CreateUpdateUserProps {
@@ -35,7 +34,6 @@ export function CreateUpdateUser({
   userToUpdate,
   getUsers,
 }: CreateUpdateUserProps) {
-  const user = useUser();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [users, setUsers] = useState<AuthorizedUser[]>([]);

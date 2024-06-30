@@ -53,6 +53,8 @@ export function SheetSearchClient({
     setIsSheetOpen(false); // Cerrar el Sheet al seleccionar un cliente
   };
 
+  const hasSearchCriteria = apellido || nombre || dni;
+
   return (
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
       <SheetTrigger asChild>
@@ -111,12 +113,16 @@ export function SheetSearchClient({
           </Button>
         </SheetFooter>
         <br />
-        <ListClientBuilding
-          isLoading={isLoading}
-          clients={filteredClients}
-          onSelectClient={handleSelectClient}
-        />
+        {hasSearchCriteria && (
+          <ListClientBuilding
+            isLoading={isLoading}
+            clients={filteredClients}
+            onSelectClient={handleSelectClient}
+          />
+        )}
       </SheetContent>
     </Sheet>
   );
 }
+
+export default SheetSearchClient;

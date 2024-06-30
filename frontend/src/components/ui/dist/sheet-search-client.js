@@ -29,6 +29,7 @@ function SheetSearchClient(_a) {
         console.log("Client en sheet-search-client ", client);
         setIsSheetOpen(false); // Cerrar el Sheet al seleccionar un cliente
     };
+    var hasSearchCriteria = apellido || nombre || dni;
     return (React.createElement(sheet_1.Sheet, { open: isSheetOpen, onOpenChange: setIsSheetOpen },
         React.createElement(sheet_1.SheetTrigger, { asChild: true },
             React.createElement(button_1.Button, { variant: "outline", onClick: function () { return setIsSheetOpen(true); } }, buildingToUpdate ? "Actualizar Cliente" : "Asignar a Cliente")),
@@ -49,6 +50,7 @@ function SheetSearchClient(_a) {
             React.createElement(sheet_1.SheetFooter, null,
                 React.createElement(button_1.Button, { type: "button", onClick: function () { return setIsSheetOpen(false); } }, "Cancelar")),
             React.createElement("br", null),
-            React.createElement(list_client_building_1["default"], { isLoading: isLoading, clients: filteredClients, onSelectClient: handleSelectClient }))));
+            hasSearchCriteria && (React.createElement(list_client_building_1["default"], { isLoading: isLoading, clients: filteredClients, onSelectClient: handleSelectClient })))));
 }
 exports.SheetSearchClient = SheetSearchClient;
+exports["default"] = SheetSearchClient;

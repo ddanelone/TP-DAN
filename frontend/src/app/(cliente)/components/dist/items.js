@@ -91,17 +91,25 @@ var Items = function () {
     }, [user]);
     /* ========== Agregar un item al carrito ========== */
     var addItemToCart = function (item) {
-        setCart(function (prevCart) { return __spreadArrays(prevCart, [item]); });
-        react_hot_toast_1["default"].success("Producto agregado al carrito");
-        console.log("En el carrito, ahora: ", cart);
+        var existingItem = cart.find(function (cartItem) { return cartItem.id === item.id; });
+        if (existingItem) {
+            react_hot_toast_1["default"].error("El producto ya está en el carrito", { duration: 2500 });
+        }
+        else {
+            setCart(function (prevCart) { return __spreadArrays(prevCart, [item]); });
+            react_hot_toast_1["default"].success("Producto agregado al carrito");
+        }
     };
-    /* ========== Agregar un item al carrito ========== */
+    /* ========== Eliminar un item del carrito ========== */
     var removeItemFromCart = function (item) {
         setCart(cart.filter(function (cartItem) { return cartItem.id !== item.id; }));
     };
-    /* Ya tengo el carrito cargado! Faltaría ver la lógica para concretar la compra
-    con los requerimientos del TP.
-     Comprar debería llevarlo a la pestaña de "Pedidos" o algo así, después vemos*/
+    /* ========== Lógica para concretar la compra ========== */
+    var handlePurchase = function () {
+        console.log("Comprando los productos en el carrito:", cart);
+        react_hot_toast_1["default"].success("Compra realizada correctamente", { duration: 2500 });
+        setCart([]);
+    };
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex justify-between items-center m-4 mb-8" },
             React.createElement("div", null,

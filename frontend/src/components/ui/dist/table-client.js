@@ -8,9 +8,9 @@ var skeleton_1 = require("@/components/ui/skeleton");
 var button_1 = require("./button");
 var create_update_client_1 = require("@/app/(vendedor)/abm/clientes/components/create-update-client");
 var confirmDeletionClient_1 = require("@/app/(vendedor)/abm/clientes/components/confirmDeletionClient");
-var create_update_building_1 = require("@/app/(vendedor)/abm/obras/components/create-update-building");
+var confirm_building_client_nav_1 = require("@/app/(vendedor)/abm/clientes/components/confirm-building-client-nav");
 function TableClient(_a) {
-    var isLoading = _a.isLoading, clients = _a.clients, getClients = _a.getClients, deleteClient = _a.deleteClient;
+    var isLoading = _a.isLoading, clients = _a.clients, getClients = _a.getClients, deleteClient = _a.deleteClient, viewBuildingsClients = _a.viewBuildingsClients;
     return (react_1["default"].createElement("div", { className: "hidden md:block" },
         react_1["default"].createElement(table_1.Table, null,
             react_1["default"].createElement(table_1.TableHeader, null,
@@ -33,7 +33,7 @@ function TableClient(_a) {
                         react_1["default"].createElement(table_1.TableCell, { className: "w-[ 50px]" }, client.maximoDescubierto),
                         react_1["default"].createElement(table_1.TableCell, { className: "w-[ 50px]" }, client.cantidad_obras),
                         react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
-                            react_1["default"].createElement(create_update_building_1.CreateUpdateBuilding, { clientToUpdate: client, getClients: getClients },
+                            react_1["default"].createElement(confirm_building_client_nav_1.ConfirmNavigationClient, { client: client, viewBuildingsClients: viewBuildingsClients },
                                 react_1["default"].createElement(button_1.Button, { className: "bg-yellow-500 text-white" },
                                     react_1["default"].createElement(lucide_react_1.Building2Icon, null))),
                             react_1["default"].createElement(create_update_client_1.CreateUpdateClient, { clientToUpdate: client, getClients: getClients },

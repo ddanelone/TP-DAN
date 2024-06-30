@@ -11,11 +11,15 @@ import { deleteClient, getAllClients } from "@/lib/auth";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { CreateUpdateClient } from "./create-update-client";
 import ListClient from "@/components/ui/list-client";
+import { setInLocalstorage } from "@/action/set-in-localstorage";
+import { useRouter } from "next/navigation";
 
 const CustomerManager = () => {
   const user = useUser();
   const [clients, setClients] = useState<Costumer[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const router = useRouter();
 
   /* ========== Traer todos los Clientes a la Tabla  ========== */
   const getClients = async () => {
@@ -56,6 +60,16 @@ const CustomerManager = () => {
     }
   };
 
+  /* ========== Setear un Cliente en el localStorage ========== */
+
+  const viewBuildingsClients = (client: Costumer) => {
+    setIsLoading(true);
+
+    setInLocalstorage("cliente", client);
+
+    router.push("/abm/obras");
+  };
+
   useEffect(() => {
     if (user) getClients();
   }, [user]);
@@ -83,12 +97,14 @@ const CustomerManager = () => {
           clients={clients}
           getClients={getClients}
           deleteClient={deleteCostumer}
+          viewBuildingsClients={viewBuildingsClients}
         />
         <ListClient
           isLoading={isLoading}
           clients={clients}
           getClients={getClients}
           deleteClient={deleteCostumer}
+          viewBuildingsClients={viewBuildingsClients}
         />
       </div>
     </>

@@ -225,7 +225,7 @@ function CreateUpdateBuilding(_a) {
                 case 8:
                     error_4 = _a.sent();
                     console.error("Error creating or updating building: ", error_4);
-                    react_hot_toast_1["default"].error("¡¡¡ " + error_4 + "!!!", {
+                    react_hot_toast_1["default"].error("¡¡¡ " + error_4 + " !!!", {
                         duration: 4000
                     });
                     return [3 /*break*/, 10];

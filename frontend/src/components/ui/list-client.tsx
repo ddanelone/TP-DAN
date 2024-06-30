@@ -1,16 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
+import { Building2Icon, LayoutList, SquarePen, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { ConfirmDeletionClient } from "@/app/(vendedor)/abm/clientes/components/confirmDeletionClient";
 import { CreateUpdateClient } from "@/app/(vendedor)/abm/clientes/components/create-update-client";
+import { ConfirmNavigationClient } from "@/app/(vendedor)/abm/clientes/components/confirm-building-client-nav";
 
 interface ListClientProps {
   isLoading: boolean;
   clients: Costumer[];
   getClients: () => Promise<void>;
   deleteClient: (client: Costumer) => Promise<void>;
+  viewBuildingsClients: (client: Costumer) => void;
 }
 
 export const ListClient = ({
@@ -18,6 +20,7 @@ export const ListClient = ({
   clients,
   getClients,
   deleteClient,
+  viewBuildingsClients,
 }: ListClientProps) => {
   return (
     <div className="w-full block md:hidden">
@@ -46,6 +49,17 @@ export const ListClient = ({
               </div>
             </div>
             <div className="ml-2">
+              {viewBuildingsClients && (
+                <ConfirmNavigationClient
+                  client={client}
+                  viewBuildingsClients={viewBuildingsClients}
+                >
+                  <Button className="bg-yellow-500 text-white">
+                    <Building2Icon />
+                  </Button>
+                </ConfirmNavigationClient>
+              )}
+
               {getClients && (
                 <CreateUpdateClient
                   clientToUpdate={client}

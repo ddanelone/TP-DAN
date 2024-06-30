@@ -15,7 +15,6 @@ import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
 import { TableAuthorizateUser } from "@/components/ui/table-authorizate-user";
 import ListAuthorizateUser from "@/components/ui/list-authorizate-user";
 import { CreateUpdateUser } from "./create-update-user";
-import { Costumer } from "@/interfaces/costumer.interface";
 import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 

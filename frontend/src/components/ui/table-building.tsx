@@ -18,8 +18,8 @@ import { Building } from "@/interfaces/building.interface";
 interface TableBuildingProps {
   isLoading: boolean;
   buildings: Building[];
-  getBuildings: () => Promise<void>;
-  deleteBuilding: (building: Building) => Promise<void>;
+  getBuildings?: () => Promise<void>;
+  deleteBuilding?: (building: Building) => Promise<void>;
 }
 
 export function TableBuilding({
@@ -50,7 +50,9 @@ export function TableBuilding({
             <TableHead>Estado</TableHead>
             <TableHead className="w-[25px]">Latitud</TableHead>
             <TableHead className="w-[25px]">Longitud</TableHead>
-            <TableHead className="text-center w-[250px]">Acciones</TableHead>
+            {getBuildings && deleteBuilding && (
+              <TableHead className="text-center w-[250px]">Acciones</TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -69,23 +71,29 @@ export function TableBuilding({
                 <TableCell className="w-[50px]">{building.lng}</TableCell>
                 <TableCell className="text-center">
                   {/* ========== Actualizar Obra ========== */}
-                  <CreateUpdateBuilding
-                    buildingToUpdate={building}
-                    getBuildings={getBuildings}
-                  >
-                    <Button className="ml-4">
-                      <SquarePen />
-                    </Button>
-                  </CreateUpdateBuilding>
+                  {getBuildings && (
+                    <CreateUpdateBuilding
+                      isLoading={isLoading}
+                      buildingToUpdate={building}
+                      getBuildings={getBuildings}
+                    >
+                      <Button className="ml-4">
+                        <SquarePen />
+                      </Button>
+                    </CreateUpdateBuilding>
+                  )}
+
                   {/* ========== Eliminar Obra  ========== */}
-                  <ConfirmDeletionBuilding
-                    deleteBuilding={deleteBuilding}
-                    building={building}
-                  >
-                    <Button className="ml-4" variant={"destructive"}>
-                      <Trash2 />
-                    </Button>
-                  </ConfirmDeletionBuilding>
+                  {deleteBuilding && (
+                    <ConfirmDeletionBuilding
+                      deleteBuilding={deleteBuilding}
+                      building={building}
+                    >
+                      <Button className="ml-4" variant={"destructive"}>
+                        <Trash2 />
+                      </Button>
+                    </ConfirmDeletionBuilding>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

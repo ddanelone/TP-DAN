@@ -185,7 +185,7 @@ export function CreateUpdateBuilding({
       }
     } catch (error) {
       console.error("Error creating or updating building: ", error);
-      toast.error("¡¡¡ " + error + "!!!", {
+      toast.error("¡¡¡ " + error + " !!!", {
         duration: 4000,
       });
     } finally {

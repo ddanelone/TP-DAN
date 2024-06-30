@@ -26,7 +26,7 @@ function TableBuilding(_a) {
                     react_1["default"].createElement(table_1.TableHead, null, "Estado"),
                     react_1["default"].createElement(table_1.TableHead, { className: "w-[25px]" }, "Latitud"),
                     react_1["default"].createElement(table_1.TableHead, { className: "w-[25px]" }, "Longitud"),
-                    react_1["default"].createElement(table_1.TableHead, { className: "text-center w-[250px]" }, "Acciones"))),
+                    getBuildings && deleteBuilding && (react_1["default"].createElement(table_1.TableHead, { className: "text-center w-[250px]" }, "Acciones")))),
             react_1["default"].createElement(table_1.TableBody, null,
                 !isLoading &&
                     buildings &&
@@ -43,12 +43,12 @@ function TableBuilding(_a) {
                             react_1["default"].createElement(table_1.TableCell, { className: "w-[50px]" }, building.lat),
                             react_1["default"].createElement(table_1.TableCell, { className: "w-[50px]" }, building.lng),
                             react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
-                                react_1["default"].createElement(create_update_building_1.CreateUpdateBuilding, { buildingToUpdate: building, getBuildings: getBuildings },
+                                getBuildings && (react_1["default"].createElement(create_update_building_1.CreateUpdateBuilding, { isLoading: isLoading, buildingToUpdate: building, getBuildings: getBuildings },
                                     react_1["default"].createElement(button_1.Button, { className: "ml-4" },
-                                        react_1["default"].createElement(lucide_react_1.SquarePen, null))),
-                                react_1["default"].createElement(confirm_deletion_building_1.ConfirmDeletionBuilding, { deleteBuilding: deleteBuilding, building: building },
+                                        react_1["default"].createElement(lucide_react_1.SquarePen, null)))),
+                                deleteBuilding && (react_1["default"].createElement(confirm_deletion_building_1.ConfirmDeletionBuilding, { deleteBuilding: deleteBuilding, building: building },
                                     react_1["default"].createElement(button_1.Button, { className: "ml-4", variant: "destructive" },
-                                        react_1["default"].createElement(lucide_react_1.Trash2, null))))));
+                                        react_1["default"].createElement(lucide_react_1.Trash2, null)))))));
                     }),
                 isLoading &&
                     [1, 1, 1, 1, 1].map(function (e, i) { return (react_1["default"].createElement(table_1.TableRow, { key: i },

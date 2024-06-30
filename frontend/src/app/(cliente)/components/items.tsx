@@ -39,19 +39,27 @@ const Items = () => {
 
   /* ========== Agregar un item al carrito ========== */
   const addItemToCart = (item: Product) => {
-    setCart((prevCart) => [...prevCart, item]);
-    toast.success("Producto agregado al carrito");
-    console.log("En el carrito, ahora: ", cart);
+    const existingItem = cart.find((cartItem) => cartItem.id === item.id);
+
+    if (existingItem) {
+      toast.error("El producto ya está en el carrito", { duration: 2500 });
+    } else {
+      setCart((prevCart) => [...prevCart, item]);
+      toast.success("Producto agregado al carrito");
+    }
   };
 
-  /* ========== Agregar un item al carrito ========== */
+  /* ========== Eliminar un item del carrito ========== */
   const removeItemFromCart = (item: Product) => {
     setCart(cart.filter((cartItem) => cartItem.id !== item.id));
   };
 
-  /* Ya tengo el carrito cargado! Faltaría ver la lógica para concretar la compra
-  con los requerimientos del TP.
-   Comprar debería llevarlo a la pestaña de "Pedidos" o algo así, después vemos*/
+  /* ========== Lógica para concretar la compra ========== */
+  const handlePurchase = () => {
+    console.log("Comprando los productos en el carrito:", cart);
+    toast.success("Compra realizada correctamente", { duration: 2500 });
+    setCart([]);
+  };
 
   return (
     <>
@@ -76,7 +84,6 @@ const Items = () => {
         </BuyCart>
       </div>
       <TableView items={items} isLoading={isLoading} addItem={addItemToCart} />
-
       <ListView items={items} isLoading={isLoading} addItem={addItemToCart} />
     </>
   );

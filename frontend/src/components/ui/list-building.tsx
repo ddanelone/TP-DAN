@@ -9,8 +9,8 @@ import { ConfirmDeletionBuilding } from "@/app/(vendedor)/abm/obras/components/c
 interface ListBuildingProps {
   isLoading: boolean;
   buildings: Building[];
-  getBuildings: () => Promise<void>;
-  deleteBuilding: (building: Building) => Promise<void>;
+  getBuildings?: () => Promise<void>;
+  deleteBuilding?: (building: Building) => Promise<void>;
 }
 
 export const ListBuilding = ({
@@ -52,6 +52,7 @@ export const ListBuilding = ({
             <div className="ml-2">
               {getBuildings && (
                 <CreateUpdateBuilding
+                  isLoading={isLoading}
                   buildingToUpdate={building}
                   getBuildings={getBuildings}
                 >

@@ -49,7 +49,7 @@ exports.ListBuilding = function (_a) {
                                     "Estado: ",
                                     building.estado)))),
                     React.createElement("div", { className: "ml-2" },
-                        getBuildings && (React.createElement(create_update_building_1.CreateUpdateBuilding, { buildingToUpdate: building, getBuildings: getBuildings },
+                        getBuildings && (React.createElement(create_update_building_1.CreateUpdateBuilding, { isLoading: isLoading, buildingToUpdate: building, getBuildings: getBuildings },
                             React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
                                 React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" })))),
                         deleteBuilding && (React.createElement(confirm_deletion_building_1.ConfirmDeletionBuilding, { deleteBuilding: deleteBuilding, building: building },

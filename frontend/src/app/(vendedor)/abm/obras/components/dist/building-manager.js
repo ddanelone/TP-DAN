@@ -47,14 +47,17 @@ var table_building_1 = require("@/components/ui/table-building");
 var list_building_1 = require("@/components/ui/list-building");
 var auth_1 = require("@/lib/auth");
 var create_update_building_1 = require("./create-update-building");
+var navigation_1 = require("next/navigation");
+var get_from_localstorage_1 = require("@/action/get-from-localstorage");
 var BuildingManager = function () {
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), buildings = _a[0], setBuildings = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
     var _c = react_1.useState(), client = _c[0], setClient = _c[1];
-    /* ========== Traer todas las obras a la Tabla  ========== */
+    var _d = react_1.useState(false), isFiltered = _d[0], setIsFiltered = _d[1];
+    var router = navigation_1.useRouter();
     var getBuildings = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res, error_1;
+        var res, localClient_1, filteredBuildings, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -66,11 +69,17 @@ var BuildingManager = function () {
                 case 2:
                     res = (_a.sent());
                     console.log(res);
-                    // Verifica si hay al menos una obra y si tiene al menos un cliente
-                    if (res.length > 0 && res[0].cliente) {
-                        setClient(res[0].cliente);
+                    localClient_1 = get_from_localstorage_1.getFromLocalstorage("cliente");
+                    if (localClient_1) {
+                        localClient_1;
+                        filteredBuildings = res.filter(function (building) { var _a; return ((_a = building.cliente) === null || _a === void 0 ? void 0 : _a.id) === localClient_1.id; });
+                        setBuildings(filteredBuildings);
+                        setClient(localClient_1);
+                        setIsFiltered(true);
                     }
-                    setBuildings(res);
+                    else {
+                        setBuildings(res);
+                    }
                     return [3 /*break*/, 5];
                 case 3:
                     error_1 = _a.sent();
@@ -83,7 +92,6 @@ var BuildingManager = function () {
             }
         });
     }); };
-    /* ========== Borrar una obra de la base de datos ========== */
     var deleteBuilding = function (building) { return __awaiter(void 0, void 0, void 0, function () {
         var newBuildings, error_2;
         return __generator(this, function (_a) {
@@ -113,6 +121,12 @@ var BuildingManager = function () {
             }
         });
     }); };
+    var removeFilter = function () {
+        localStorage.removeItem("cliente");
+        setClient(undefined);
+        setIsFiltered(false);
+        getBuildings();
+    };
     react_1.useEffect(function () {
         if (user)
             getBuildings();
@@ -122,10 +136,12 @@ var BuildingManager = function () {
             React.createElement("div", null,
                 React.createElement("h1", { className: "text-2xl ml-1" }, "Administraci\u00F3n de Obras"),
                 React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES")),
-            React.createElement(create_update_building_1.CreateUpdateBuilding, { getBuildings: getBuildings, isLoading: isLoading },
-                React.createElement(button_1.Button, { className: "px-6" },
-                    "Crear",
-                    React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" })))),
+            React.createElement("div", { className: "flex" },
+                isFiltered && (React.createElement(button_1.Button, { className: "mr-4", onClick: removeFilter }, "Quitar filtro")),
+                React.createElement(create_update_building_1.CreateUpdateBuilding, { getBuildings: getBuildings, isLoading: isLoading },
+                    React.createElement(button_1.Button, { className: "px-6" },
+                        "Crear",
+                        React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" }))))),
         React.createElement("div", { className: "m-4" },
             React.createElement(table_building_1.TableBuilding, { isLoading: isLoading, buildings: buildings, getBuildings: getBuildings, deleteBuilding: deleteBuilding }),
             React.createElement(list_building_1["default"], { isLoading: isLoading, buildings: buildings, getBuildings: getBuildings, deleteBuilding: deleteBuilding }))));
