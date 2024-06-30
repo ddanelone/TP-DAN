@@ -23,6 +23,8 @@ public class Pedido {
    private Cliente cliente;
    private BigDecimal total;
 
+   private Estado estado;
+
    @Field("detalle")
    private List<DetallePedido> detalle;
 

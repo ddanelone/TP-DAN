@@ -4,9 +4,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.netflix.discovery.converters.Auto;
-
 import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dao.PedidoRepository;
 import isi.dan.ms.pedidos.feignClients.ClienteFeignClient;
@@ -61,43 +58,64 @@ public class PedidoService {
       pedidoRepository.deleteById(id);
    }
 
-   // Método para agregar un cliente a un pedido
    public Pedido addClienteToPedido(String pedidoId, Cliente cliente) {
       Pedido pedido = getPedidoById(pedidoId);
       if (pedido != null) {
-         Cliente savedCliente = clienteFeignClient.guardarCliente(cliente);
-         pedido.setCliente(savedCliente);
-         return pedidoRepository.save(pedido);
+         try {
+            Cliente savedCliente = clienteFeignClient.guardarCliente(cliente);
+            pedido.setCliente(savedCliente);
+            return pedidoRepository.save(pedido);
+         } catch (Exception e) {
+            log.error("Error al agregar cliente al pedido: {}", e.getMessage());
+         }
       }
       return null;
    }
 
-   // Método para agregar un producto al detalle de un pedido
    public Pedido addProductoToDetalle(String pedidoId, DetallePedido detalle) {
       Pedido pedido = getPedidoById(pedidoId);
+
+      log.info("DetallePedido recibido: {}", detalle);
+      log.info("Pedido id: {}", pedidoId);
+      log.info("Pedido: {}", pedido);
+
       if (pedido != null) {
-         System.out.println("detalle.getProducto():" + detalle.getProducto());
-         // Hasta acá llega.
-         Producto savedProducto = productoFeignClient.agregarProducto(detalle.getProducto());
-         System.out.println("savedProducto:" + savedProducto);
-         detalle.setProducto(savedProducto);
-         System.out.println("detalle:" + detalle);
-         pedido.getDetalle().add(detalle);
-         System.out.println("pedido:" + pedido);
-         return pedidoRepository.save(pedido);
+         try {
+            Producto savedProducto = productoFeignClient.agregarProducto(detalle.getProducto());
+            detalle.setProducto(savedProducto);
+            pedido.getDetalle().add(detalle);
+            Pedido updatedPedido = pedidoRepository.save(pedido);
+            if (updatedPedido != null) {
+               log.info("Pedido después de agregar detalle: {}", updatedPedido);
+            } else {
+               log.warn("No se pudo actualizar el pedido");
+            }
+            return updatedPedido;
+         } catch (Exception e) {
+            log.error("Error al agregar producto al detalle del pedido: {}", e.getMessage());
+         }
       }
       return null;
    }
 
    public Cliente obtenerClientePorPedidoId(Integer clienteId) {
       String url = "http://ms-clientes/api/clientes/" + clienteId;
-      return restTemplate.getForObject(url, Cliente.class);
+      try {
+         return restTemplate.getForObject(url, Cliente.class);
+      } catch (Exception e) {
+         log.error("Error al obtener cliente por ID: {}", e.getMessage());
+         return null;
+      }
    }
 
    public List<Producto> obtenerProductosPorIds(List<String> productoIds) {
       String ids = String.join(",", productoIds);
       String url = "http://ms-productos/api/productos?ids=" + ids;
-      return restTemplate.getForObject(url, List.class);
+      try {
+         return restTemplate.getForObject(url, List.class);
+      } catch (Exception e) {
+         log.error("Error al obtener productos por IDs: {}", e.getMessage());
+         return null;
+      }
    }
-
 }

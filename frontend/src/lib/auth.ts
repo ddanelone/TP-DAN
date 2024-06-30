@@ -463,3 +463,76 @@ export const validarObra = async (idCliente?: number, obraData?: Building) => {
     throw new Error(error.response.data.message);
   }
 };
+
+/* ========== GESTION DE PEDIDOS ========== */
+
+export const getAllPedidos = async () => {
+  try {
+    const response = await api.get("/pedidos");
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getPedidoById = async (id: string) => {
+  try {
+    const response = await api.get(`/pedidos/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const createPedido = async (pedidoData: any) => {
+  try {
+    const response = await api.post("/pedidos", pedidoData);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const deletePedido = async (id: string) => {
+  try {
+    await api.delete(`/pedidos/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const addClienteToPedido = async (id: string, clienteData: any) => {
+  try {
+    const response = await api.post(`/pedidos/${id}/cliente`, clienteData);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const addProductoToDetalle = async (id: string, detalleData: any) => {
+  try {
+    const response = await api.post(`/pedidos/${id}/detalle`, detalleData);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getClienteByPedidoId = async (pedidoId: string) => {
+  try {
+    const response = await api.get(`/pedidos/clientes/${pedidoId}`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getProductosByPedidoId = async (pedidoId: string) => {
+  try {
+    const response = await api.get(`/pedidos/productos/${pedidoId}`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.getProductosByPedidoId = exports.getClienteByPedidoId = exports.addProductoToDetalle = exports.addClienteToPedido = exports.deletePedido = exports.createPedido = exports.getPedidoById = exports.getAllPedidos = exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -645,6 +645,143 @@ exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, 
             case 2:
                 error_27 = _a.sent();
                 throw new Error(error_27.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+/* ========== GESTION DE PEDIDOS ========== */
+exports.getAllPedidos = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_28;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/pedidos")];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_28 = _a.sent();
+                throw new Error(error_28.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getPedidoById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_29;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/" + id)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_29 = _a.sent();
+                throw new Error(error_29.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_30;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/pedidos", pedidoData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_30 = _a.sent();
+                throw new Error(error_30.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.deletePedido = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_31;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"]["delete"]("/pedidos/" + id)];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_31 = _a.sent();
+                throw new Error(error_31.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.addClienteToPedido = function (id, clienteData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_32;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/cliente", clienteData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_32 = _a.sent();
+                throw new Error(error_32.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.addProductoToDetalle = function (id, detalleData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_33;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/detalle", detalleData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_33 = _a.sent();
+                throw new Error(error_33.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getClienteByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_34;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/clientes/" + pedidoId)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_34 = _a.sent();
+                throw new Error(error_34.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_35;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/productos/" + pedidoId)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_35 = _a.sent();
+                throw new Error(error_35.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
