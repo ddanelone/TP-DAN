@@ -7,6 +7,7 @@ public class Cliente {
 
    private Integer id;
    private String nombre;
+   private String apellido;
    private String correoElectronico;
    private String cuit;
 

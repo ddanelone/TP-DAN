@@ -48,7 +48,7 @@ export const createUser = async (user: {
   }
 };
 
-// updateUser function in React
+// updateUser
 export const updateUser = async (userId: number, user: User): Promise<User> => {
   try {
     // Obtén el token del local storage
@@ -185,6 +185,17 @@ export const deleteProductById = async (productId?: number): Promise<void> => {
 
     // Realiza la solicitud para eliminar el producto por ID
     await api.delete(`/productos/${productId}`, config);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+/* ========== Validar Stock de Producto ========== */
+
+export const checkStockProducto = async (pedidoId: string) => {
+  try {
+    const response = await api.get(`/productos/{id}/verificar-stock`);
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.message);
   }
@@ -493,7 +504,7 @@ export const createPedido = async (pedidoData: any) => {
   }
 };
 
-export const deletePedido = async (id: string) => {
+export const deletePedido = async (id?: string) => {
   try {
     await api.delete(`/pedidos/${id}`);
   } catch (error: any) {

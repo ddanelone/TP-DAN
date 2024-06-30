@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getProductosByPedidoId = exports.getClienteByPedidoId = exports.addProductoToDetalle = exports.addClienteToPedido = exports.deletePedido = exports.createPedido = exports.getPedidoById = exports.getAllPedidos = exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.getProductosByPedidoId = exports.getClienteByPedidoId = exports.addProductoToDetalle = exports.addClienteToPedido = exports.deletePedido = exports.createPedido = exports.getPedidoById = exports.getAllPedidos = exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.checkStockProducto = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -87,7 +87,7 @@ exports.createUser = function (user) { return __awaiter(void 0, void 0, Promise,
         }
     });
 }); };
-// updateUser function in React
+// updateUser
 exports.updateUser = function (userId, user) { return __awaiter(void 0, void 0, Promise, function () {
     var token, config, response, updatedUserData, error_3;
     return __generator(this, function (_a) {
@@ -244,10 +244,28 @@ exports.deleteProductById = function (productId) { return __awaiter(void 0, void
         }
     });
 }); };
+/* ========== Validar Stock de Producto ========== */
+exports.checkStockProducto = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_9;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/productos/{id}/verificar-stock")];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_9 = _a.sent();
+                throw new Error(error_9.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 /* ==========  CLIENTES ========== */
 // Función para obtener la lista de clientes
 exports.getAllClients = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_9;
+    var token, config, response, error_10;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -263,15 +281,15 @@ exports.getAllClients = function () { return __awaiter(void 0, void 0, void 0, f
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_9 = _a.sent();
-                throw new Error(error_9.response.data.message);
+                error_10 = _a.sent();
+                throw new Error(error_10.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para obtener un cliente por ID
 exports.getClientById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_10;
+    var token, config, response, error_11;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -287,15 +305,15 @@ exports.getClientById = function (id) { return __awaiter(void 0, void 0, void 0,
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_10 = _a.sent();
-                throw new Error(error_10.response.data.message);
+                error_11 = _a.sent();
+                throw new Error(error_11.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para obtener un cliente por ID
 exports.getClientByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_11;
+    var token, config, response, error_12;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -311,15 +329,15 @@ exports.getClientByEmail = function (email) { return __awaiter(void 0, void 0, v
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_11 = _a.sent();
-                throw new Error(error_11.response.data.message);
+                error_12 = _a.sent();
+                throw new Error(error_12.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para crear un nuevo cliente
 exports.createClient = function (clientData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_12;
+    var token, config, response, error_13;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -335,15 +353,15 @@ exports.createClient = function (clientData) { return __awaiter(void 0, void 0, 
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_12 = _a.sent();
-                throw new Error(error_12.response.data.message);
+                error_13 = _a.sent();
+                throw new Error(error_13.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para actualizar un cliente existente
 exports.updateClient = function (id, clientData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_13;
+    var token, config, response, error_14;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -359,15 +377,15 @@ exports.updateClient = function (id, clientData) { return __awaiter(void 0, void
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_13 = _a.sent();
-                throw new Error(error_13.response.data.message);
+                error_14 = _a.sent();
+                throw new Error(error_14.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para eliminar un cliente
 exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, error_14;
+    var token, config, error_15;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -383,8 +401,8 @@ exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, 
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                error_14 = _a.sent();
-                throw new Error(error_14.response.data.message);
+                error_15 = _a.sent();
+                throw new Error(error_15.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
@@ -392,7 +410,7 @@ exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, 
 /* ========== USUARIOS HABILITADOS PARA OPERAR POR UN CLIENTE ========== */
 // Función para obtener la lista de usuarios habilitados
 exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_15;
+    var token, config, response, error_16;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -408,15 +426,15 @@ exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, v
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_15 = _a.sent();
-                throw new Error(error_15.response.data.message);
+                error_16 = _a.sent();
+                throw new Error(error_16.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para obtener un usuario habilitado por ID
 exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_16;
+    var token, config, response, error_17;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -432,15 +450,15 @@ exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0,
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_16 = _a.sent();
-                throw new Error(error_16.response.data.message);
+                error_17 = _a.sent();
+                throw new Error(error_17.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para crear un nuevo usuario habilitado
 exports.createAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_17;
+    var token, config, response, error_18;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -456,15 +474,15 @@ exports.createAuthorizedUser = function (id, userData) { return __awaiter(void 0
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_17 = _a.sent();
-                throw new Error(error_17.response.data.message);
+                error_18 = _a.sent();
+                throw new Error(error_18.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para actualizar un usuario habilitado existente
 exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_18;
+    var token, config, response, error_19;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -480,15 +498,15 @@ exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_18 = _a.sent();
-                throw new Error(error_18.response.data.message);
+                error_19 = _a.sent();
+                throw new Error(error_19.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
 // Función para eliminar un usuario habilitado
 exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, error_19;
+    var token, config, error_20;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -504,37 +522,20 @@ exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, 
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                error_19 = _a.sent();
-                throw new Error(error_19.response.data.message);
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-/* ==========  OBRAS ========== */
-exports.getAllObras = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var response, error_20;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/obras")];
-            case 1:
-                response = _a.sent();
-                return [2 /*return*/, response.data];
-            case 2:
                 error_20 = _a.sent();
                 throw new Error(error_20.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.getEstadosObras = function () { return __awaiter(void 0, void 0, void 0, function () {
+/* ==========  OBRAS ========== */
+exports.getAllObras = function () { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_21;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/obras/estados")];
+                return [4 /*yield*/, axios_1["default"].get("/obras")];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -545,13 +546,13 @@ exports.getEstadosObras = function () { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-exports.getObraById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getEstadosObras = function () { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_22;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/obras/" + id)];
+                return [4 /*yield*/, axios_1["default"].get("/obras/estados")];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -562,13 +563,13 @@ exports.getObraById = function (id) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); };
-exports.createObra = function (obraData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getObraById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_23;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/obras", obraData)];
+                return [4 /*yield*/, axios_1["default"].get("/obras/" + id)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -579,13 +580,13 @@ exports.createObra = function (obraData) { return __awaiter(void 0, void 0, void
         }
     });
 }); };
-exports.updateObra = function (id, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.createObra = function (obraData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_24;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].put("/obras/" + id, obraData)];
+                return [4 /*yield*/, axios_1["default"].post("/obras", obraData)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -596,8 +597,25 @@ exports.updateObra = function (id, obraData) { return __awaiter(void 0, void 0, 
         }
     });
 }); };
+exports.updateObra = function (id, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_25;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].put("/obras/" + id, obraData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_25 = _a.sent();
+                throw new Error(error_25.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 exports.deleteObra = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_25;
+    var error_26;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -607,38 +625,20 @@ exports.deleteObra = function (id) { return __awaiter(void 0, void 0, void 0, fu
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                error_25 = _a.sent();
-                throw new Error(error_25.response.data.message);
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-/* ========== Obtener latitud y longitud pasando la dirección como body ========== */
-exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, Promise, function () {
-    var response, error_26;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/obras/coordenadas", address)];
-            case 1:
-                response = _a.sent();
-                return [2 /*return*/, response.data];
-            case 2:
                 error_26 = _a.sent();
                 throw new Error(error_26.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
-/* ========== Aplicar reglas de negocio previo a asignar una obra ========== */
-exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+/* ========== Obtener latitud y longitud pasando la dirección como body ========== */
+exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, Promise, function () {
     var response, error_27;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/obras/cliente/validar-obra/" + idCliente, obraData)];
+                return [4 /*yield*/, axios_1["default"].post("/obras/coordenadas", address)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -649,14 +649,14 @@ exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, 
         }
     });
 }); };
-/* ========== GESTION DE PEDIDOS ========== */
-exports.getAllPedidos = function () { return __awaiter(void 0, void 0, void 0, function () {
+/* ========== Aplicar reglas de negocio previo a asignar una obra ========== */
+exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_28;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/pedidos")];
+                return [4 /*yield*/, axios_1["default"].post("/obras/cliente/validar-obra/" + idCliente, obraData)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -667,13 +667,14 @@ exports.getAllPedidos = function () { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); };
-exports.getPedidoById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+/* ========== GESTION DE PEDIDOS ========== */
+exports.getAllPedidos = function () { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_29;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/pedidos/" + id)];
+                return [4 /*yield*/, axios_1["default"].get("/pedidos")];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -684,13 +685,13 @@ exports.getPedidoById = function (id) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getPedidoById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_30;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/pedidos", pedidoData)];
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/" + id)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -701,8 +702,25 @@ exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, 
         }
     });
 }); };
+exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_31;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/pedidos", pedidoData)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_31 = _a.sent();
+                throw new Error(error_31.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 exports.deletePedido = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_31;
+    var error_32;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -712,36 +730,19 @@ exports.deletePedido = function (id) { return __awaiter(void 0, void 0, void 0, 
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                error_31 = _a.sent();
-                throw new Error(error_31.response.data.message);
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.addClienteToPedido = function (id, clienteData) { return __awaiter(void 0, void 0, void 0, function () {
-    var response, error_32;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/cliente", clienteData)];
-            case 1:
-                response = _a.sent();
-                return [2 /*return*/, response.data];
-            case 2:
                 error_32 = _a.sent();
                 throw new Error(error_32.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.addProductoToDetalle = function (id, detalleData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.addClienteToPedido = function (id, clienteData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_33;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/detalle", detalleData)];
+                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/cliente", clienteData)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -752,13 +753,13 @@ exports.addProductoToDetalle = function (id, detalleData) { return __awaiter(voi
         }
     });
 }); };
-exports.getClienteByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+exports.addProductoToDetalle = function (id, detalleData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_34;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/pedidos/clientes/" + pedidoId)];
+                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/detalle", detalleData)];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -769,8 +770,25 @@ exports.getClienteByPedidoId = function (pedidoId) { return __awaiter(void 0, vo
         }
     });
 }); };
-exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getClienteByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_35;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/clientes/" + pedidoId)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_35 = _a.sent();
+                throw new Error(error_35.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_36;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -780,8 +798,8 @@ exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, 
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_35 = _a.sent();
-                throw new Error(error_35.response.data.message);
+                error_36 = _a.sent();
+                throw new Error(error_36.response.data.message);
             case 3: return [2 /*return*/];
         }
     });
