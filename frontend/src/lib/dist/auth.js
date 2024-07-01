@@ -804,14 +804,6 @@ exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, 
         }
     });
 }); };
-//Cambiar el estado de un pedido
-/*PUT /pedidos/{id}/estado
-Content-Type: application/json
-{
-   "nuevoEstado": "APROBADO",
-   "usuarioCambio": "admin"
-   }
-   */
 exports.newStatusOrder = function (pedidoId, orderHistory) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_37;
     return __generator(this, function (_a) {

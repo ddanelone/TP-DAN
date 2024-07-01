@@ -10,11 +10,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Product } from "@/interfaces/product-interface";
 import { formatPrice } from "@/action/format-price";
 import { Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { Order } from "@/interfaces/order.interface";
+import { Status } from "@/interfaces/order-state-interface";
+import { Costumer } from "@/interfaces/costumer.interface";
+import { createPedido, getClientByEmail } from "@/lib/auth";
+import { useUser } from "@/hooks/use-user";
 
 interface BuyCartProps {
   children: React.ReactNode;
@@ -23,20 +30,125 @@ interface BuyCartProps {
 }
 
 export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
+  const user = useUser();
   const [open, setOpen] = useState<boolean>(false);
+  const router = useRouter();
+  const [client, setClient] = useState<Costumer | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const getMyClientData = async () => {
+    const emailUser = user?.email;
+    setIsLoading(true);
+
+    try {
+      const res = await getClientByEmail(emailUser);
+      if (res) {
+        setClient(res);
+      }
+    } catch (error) {
+      toast.error(
+        "No se pudo recuperar los datos de Cliente asociado con este Usuario.",
+        {
+          duration: 2000,
+        }
+      );
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleRemoveItem = (item: Product) => {
     removeItem(item);
   };
 
-  const handlePurchase = () => {
-    // Lógica para manejar la compra (por ahora solo cierra el diálogo)
-    setOpen(false);
+  const handlePurchase = async () => {
+    if (cartItems.length === 0) {
+      toast.error("El carrito está vacío. No se puede realizar la compra.");
+      return;
+    }
+
+    if (!client) {
+      toast.error(
+        "No se pudo recuperar los datos del cliente. Inténtalo nuevamente."
+      );
+      return;
+    } else {
+      console.log("Maximo Descubierto: ", client.maximoDescubierto);
+      if (
+        client?.maximoDescubierto !== undefined &&
+        client.maximoDescubierto <
+          cartItems.reduce((acc, item) => acc + item.precio * item.cantidad!, 0)
+      ) {
+        toast.error(
+          "No puede hacer este pedido porque no tiene suficiente crédito autorizado."
+        );
+        return;
+      }
+    }
+
+    const newOrder: Order = {
+      fecha: new Date(),
+      numeroPedido: undefined,
+      usuario: user ? user.email : undefined,
+      observaciones: "",
+      cliente: {
+        id: client.id,
+        nombre: client.nombre,
+        apellido: client.apellido,
+        correoElectronico: client.correoElectronico,
+        dni: client.dni,
+        cuit: client.cuit,
+      },
+      total: cartItems.reduce(
+        (acc, item) => acc + item.precio * item.cantidad!,
+        0
+      ),
+      estado: Status.PENDIENTE,
+      detalle: cartItems.map((item) => ({
+        cantidad: item.cantidad!,
+        producto: item as Product, // Aseguramos que item es de tipo Product
+        precioUnitario: item.precio,
+        descuento: 0, // Asumimos que no hay descuento
+        precioFinal: item.precio * item.cantidad!,
+      })),
+      historialEstado: [],
+    };
+
+    setIsLoading(true);
+    try {
+      // Enviar el pedido al servidor
+      console.log("Orden a persistir :", newOrder);
+      await createPedido(newOrder);
+      // Mostrar mensaje de éxito
+      toast.success("Pedido realizado con éxito.");
+
+      // Borrar el contenido del carrito
+      //clearCart();
+
+      // Navegar a /pedidos
+      router.push("/pedidos");
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        "Hubo un problema al realizar el pedido. Inténtalo nuevamente."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (user) {
+      getMyClientData().then(() => {
+        console.log("Cliente recuperado");
+      });
+    }
+  }, [user]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

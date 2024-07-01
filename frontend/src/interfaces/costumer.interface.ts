@@ -7,7 +7,7 @@ export interface Costumer {
   dni: string;
   correoElectronico: string;
   cuit: string;
-  maximoDescubierto: number;
-  cantidad_obras: number;
+  maximoDescubierto?: number;
+  cantidad_obras?: number;
   usuariosHabilitados?: AuthorizedUser[];
 }

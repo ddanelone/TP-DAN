@@ -549,15 +549,6 @@ export const getProductosByPedidoId = async (pedidoId: string) => {
   }
 };
 
-//Cambiar el estado de un pedido
-/*PUT /pedidos/{id}/estado
-Content-Type: application/json
-{
-   "nuevoEstado": "APROBADO",
-   "usuarioCambio": "admin"
-   }
-   */
-
 export const newStatusOrder = async (pedidoId?: string, orderHistory?: any) => {
   try {
     const response = await api.put(`/pedidos/${pedidoId}/estado`, orderHistory);
