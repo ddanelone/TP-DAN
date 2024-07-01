@@ -40,7 +40,13 @@ export const ListView = ({
                   Descripción: {item.descripcion} <br />
                   Categoría: {item.categoria} <br />
                   Stock Actual: {item.stockActual} <br />
-                  Stock Mínimo: {item.stockMinimo} <br />
+                </div>
+                {getItems && (
+                  <div className="text-sm">
+                    Stock Mínimo: {item.stockMinimo} <br />
+                  </div>
+                )}
+                <div className="text-sm">
                   Precio: {formatPrice(item.precio)} <br />
                   <Badge className="mt-2" variant={"outline"}>
                     Total: {formatPrice(item.precio * 1000)}

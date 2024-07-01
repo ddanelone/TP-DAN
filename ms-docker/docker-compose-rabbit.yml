@@ -8,6 +8,15 @@ services:
     networks:
       - backend-net
 
+  ### Zipkin
+  zipkin:
+    image: openzipkin/zipkin:2.24.2
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - backend-net
+
 networks:
   backend-net:
     external: true
