@@ -47,7 +47,6 @@ const BuildingManagerClient = () => {
     setIsLoading(true);
     try {
       const res = (await getAllObras()) as Building[];
-      console.log(res);
 
       const idLocalClient = getFromLocalstorage("idClient");
       if (idLocalClient) {

@@ -68,10 +68,6 @@ const Orders = () => {
             </Badge>
           )}
         </div>
-        <Button className="px-6">
-          ¿Hacer Algo?
-          <CirclePlus className="ml-2 w-[20px]" />
-        </Button>
       </div>
       <TableOrders
         deleteOrder={deleteOrder}

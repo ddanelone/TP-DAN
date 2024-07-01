@@ -12,42 +12,27 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Order } from "@/interfaces/order.interface";
-import { OrderDetails } from "@/interfaces/order-detail.interface";
-import { TableOrderDetail } from "./table-detail-order";
+import { ListHistoryOrders } from "@/app/(vendedor)/abm/components/list-history-order";
 
 interface StatusHistoryViewProps {
   children: React.ReactNode;
-  orderToView: Order;
-  orderDetail: OrderDetails[];
-  getOrders: () => Promise<void>;
-  isLoading: boolean;
+  order: Order;
 }
 
-export function DialogOrderDetail({
-  children,
-  orderToView,
-  orderDetail,
-  getOrders,
-  isLoading,
-}: StatusHistoryViewProps) {
+export function StatusHistoryView({ children, order }: StatusHistoryViewProps) {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="max-w-full w-full">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Pedido</DialogTitle>
-            <DialogDescription>Detalle de su Orden</DialogDescription>
+            <DialogTitle>Historial de Estados</DialogTitle>
+            <DialogDescription>Evolución del Pedido</DialogDescription>
           </DialogHeader>
           <div className="w-full block">
-            <TableOrderDetail
-              orderToView={orderToView}
-              orderDetail={orderToView.detalle}
-              getOrders={getOrders}
-              isLoading={isLoading}
-            ></TableOrderDetail>
+            <ListHistoryOrders order={order} />
           </div>
           <DialogFooter>
             <Button onClick={() => setOpen(false)}>Cerrar</Button>
@@ -58,4 +43,4 @@ export function DialogOrderDetail({
   );
 }
 
-export default DialogOrderDetail;
+export default StatusHistoryView;

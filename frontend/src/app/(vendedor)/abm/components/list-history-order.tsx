@@ -20,7 +20,7 @@ export const ListHistoryOrders = ({ order }: ListHistoryOrderProps) => {
 
   return (
     <>
-      <div className="w-full block">
+      <div className="w-full block h-96 overflow-y-auto">
         <div className="flex justify-start items-center">
           <div className="ml-6">
             <h3 className="font-semibold">

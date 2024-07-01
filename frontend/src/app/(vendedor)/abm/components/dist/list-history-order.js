@@ -12,7 +12,7 @@ exports.ListHistoryOrders = function (_a) {
             React.createElement("p", null, "No hay historial de estados disponible.")));
     }
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: "w-full block" },
+        React.createElement("div", { className: "w-full block h-96 overflow-y-auto" },
             React.createElement("div", { className: "flex justify-start items-center" },
                 React.createElement("div", { className: "ml-6" },
                     React.createElement("h3", { className: "font-semibold" },

@@ -21,6 +21,7 @@ import {
 import { useUser } from "@/hooks/use-user";
 import { signOutAccount } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import { getFromLocalstorage } from "@/action/get-from-localstorage";
 
 export function ProfileDropdown() {
   const user = useUser();
@@ -28,6 +29,11 @@ export function ProfileDropdown() {
   const router = useRouter();
 
   const salir = () => {
+    const idClient = getFromLocalstorage("idClient");
+    if (idClient) {
+      localStorage.removeItem("idClient");
+    }
+
     signOutAccount();
     router.push("/");
   };

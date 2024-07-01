@@ -39,8 +39,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var use_user_1 = require("@/hooks/use-user");
 var react_1 = require("react");
-var button_1 = require("@/components/ui/button");
-var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
 var badge_1 = require("@/components/ui/badge");
 var auth_1 = require("@/lib/auth");
@@ -112,10 +110,7 @@ var Orders = function () {
         React.createElement("div", { className: "flex justify-between items-center m-4 mb-8" },
             React.createElement("div", null,
                 React.createElement("h1", { className: "text-2xl ml-1" }, "Gestor de Pedidos"),
-                orders.length > 0 && (React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES"))),
-            React.createElement(button_1.Button, { className: "px-6" },
-                "\u00BFHacer Algo?",
-                React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" }))),
+                orders.length > 0 && (React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES")))),
         React.createElement(table_orders_1.TableOrders, { deleteOrder: deleteOrder, getOrders: getOrders, orders: orders, isLoading: isLoading }),
         React.createElement(list_orders_1["default"], { deleteOrder: deleteOrder, getOrders: getOrders, orders: orders, isLoading: isLoading })));
 };

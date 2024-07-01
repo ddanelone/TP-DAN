@@ -9,7 +9,7 @@ var badge_1 = require("@/components/ui/badge");
 var confirm_deletion_order_1 = require("@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order");
 var update_status_order_1 = require("@/app/(vendedor)/abm/pedidos/components/update-status-order");
 var format_date_1 = require("@/action/format-date");
-var status_history_view_1 = require("@/app/(vendedor)/abm/pedidos/components/status-history-view");
+var status_history_view_1 = require("./status-history-view");
 exports.ListOrders = function (_a) {
     var orders = _a.orders, getOrders = _a.getOrders, deleteOrder = _a.deleteOrder, isLoading = _a.isLoading;
     return (React.createElement("div", { className: "w-full block md:hidden" },
@@ -41,7 +41,7 @@ exports.ListOrders = function (_a) {
                                 "Total: ",
                                 format_price_1.formatPrice(order.total))))),
                 React.createElement("div", { className: "ml-2" },
-                    getOrders && (React.createElement(status_history_view_1["default"], { order: order, getOrders: getOrders },
+                    getOrders && (React.createElement(status_history_view_1["default"], { order: order },
                         React.createElement(button_1.Button, null,
                             React.createElement(lucide_react_1.Calendar, null)))),
                     getOrders && (React.createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },

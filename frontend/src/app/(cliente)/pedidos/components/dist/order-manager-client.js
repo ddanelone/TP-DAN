@@ -37,18 +37,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var badge_1 = require("@/components/ui/badge");
 var use_user_1 = require("@/hooks/use-user");
 var react_1 = require("react");
-var table_building_1 = require("@/components/ui/table-building");
-var list_building_1 = require("@/components/ui/list-building");
-var auth_1 = require("@/lib/auth");
-var get_from_localstorage_1 = require("@/action/get-from-localstorage");
-var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var react_hot_toast_1 = require("react-hot-toast");
-var BuildingManagerClient = function () {
+var badge_1 = require("@/components/ui/badge");
+var auth_1 = require("@/lib/auth");
+var table_orders_1 = require("@/components/ui/table-orders");
+var list_orders_1 = require("@/components/ui/list-orders");
+var set_in_localstorage_1 = require("@/action/set-in-localstorage");
+var get_from_localstorage_1 = require("@/action/get-from-localstorage");
+var OrdersClient = function () {
     var user = use_user_1.useUser();
-    var _a = react_1.useState([]), buildings = _a[0], setBuildings = _a[1];
+    var _a = react_1.useState([]), orders = _a[0], setOrders = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
     var _c = react_1.useState(), client = _c[0], setClient = _c[1];
     var _d = react_1.useState(false), isFiltered = _d[0], setIsFiltered = _d[1];
@@ -72,7 +72,7 @@ var BuildingManagerClient = function () {
                     return [3 /*break*/, 5];
                 case 3:
                     error_1 = _a.sent();
-                    react_hot_toast_1["default"].error("No se pudo recupear los datos de Cliente asociado con este Usuario.", {
+                    react_hot_toast_1["default"].error("No se pudo recuperar los datos de Cliente asociado con este Usuario.", {
                         duration: 2000
                     });
                     console.error(error_1);
@@ -84,8 +84,8 @@ var BuildingManagerClient = function () {
             }
         });
     }); };
-    var getBuildings = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res, idLocalClient_1, filteredBuildings, error_2;
+    var getOrders = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var res, idLocalClient_1, filteredOrders, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -93,18 +93,19 @@ var BuildingManagerClient = function () {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.getAllObras()];
+                    return [4 /*yield*/, auth_1.getAllPedidos()];
                 case 2:
-                    res = (_a.sent());
+                    res = _a.sent();
+                    console.log(res);
                     idLocalClient_1 = get_from_localstorage_1.getFromLocalstorage("idClient");
                     if (idLocalClient_1) {
-                        filteredBuildings = res.filter(function (building) { var _a; return ((_a = building.cliente) === null || _a === void 0 ? void 0 : _a.id) === idLocalClient_1; });
-                        setBuildings(filteredBuildings);
+                        filteredOrders = res.filter(function (order) { var _a; return ((_a = order.cliente) === null || _a === void 0 ? void 0 : _a.id) === idLocalClient_1; });
+                        setOrders(filteredOrders);
                         setClient(idLocalClient_1);
                         setIsFiltered(true);
                     }
                     else {
-                        setBuildings(res);
+                        setOrders(res);
                     }
                     return [3 /*break*/, 5];
                 case 3:
@@ -118,29 +119,46 @@ var BuildingManagerClient = function () {
             }
         });
     }); };
-    var removeFilter = function () {
-        localStorage.removeItem("cliente");
-        setClient(undefined);
-        setIsFiltered(false);
-        getBuildings();
-    };
+    var deleteOrder = function (order) { return __awaiter(void 0, void 0, void 0, function () {
+        var res, newOrders, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    setIsLoading(true);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, 4, 5]);
+                    return [4 /*yield*/, auth_1.deletePedido(order === null || order === void 0 ? void 0 : order.id)];
+                case 2:
+                    res = _a.sent();
+                    react_hot_toast_1["default"].success("Pedido eliminado correctamente");
+                    newOrders = orders.filter(function (i) { return i.id !== order.id; });
+                    setOrders(newOrders);
+                    return [3 /*break*/, 5];
+                case 3:
+                    error_3 = _a.sent();
+                    react_hot_toast_1["default"].error(error_3.message, { duration: 2500 });
+                    return [3 /*break*/, 5];
+                case 4:
+                    setIsLoading(false);
+                    return [7 /*endfinally*/];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); };
     react_1.useEffect(function () {
         if (user) {
             getMyClientData().then(function () {
-                getBuildings();
+                getOrders();
             });
         }
     }, [user]);
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex justify-between items-center m-4 mb-8" },
             React.createElement("div", null,
-                React.createElement("h1", { className: "text-2xl ml-1" }, "Visualizaci\u00F3n de Obras"),
-                React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA CLIENTES"))),
-        React.createElement("div", { className: "m-4" },
-            React.createElement(table_building_1.TableBuilding, { isLoading: isLoading, buildings: buildings }),
-            React.createElement(list_building_1["default"], { isLoading: isLoading, buildings: buildings }))));
+                React.createElement("h1", { className: "text-2xl ml-1" }, "Gestor de Pedidos"),
+                orders.length > 0 && (React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA COMPRADORES")))),
+        React.createElement(table_orders_1.TableOrders, { orders: orders, isLoading: isLoading }),
+        React.createElement(list_orders_1["default"], { orders: orders, isLoading: isLoading })));
 };
-exports["default"] = BuildingManagerClient;
-function setAuthUsers(authorizedUsers) {
-    throw new Error("Function not implemented.");
-}
+exports["default"] = OrdersClient;

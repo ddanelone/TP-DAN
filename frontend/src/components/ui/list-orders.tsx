@@ -7,7 +7,7 @@ import { Order } from "@/interfaces/order.interface";
 import { ConfirmDeletionOrder } from "@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order";
 import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/update-status-order";
 import { formatDate } from "@/action/format-date";
-import StatusHistoryView from "@/app/(vendedor)/abm/pedidos/components/status-history-view";
+import StatusHistoryView from "./status-history-view";
 
 interface ListOrderProps {
   orders: Order[];
@@ -51,7 +51,7 @@ export const ListOrders = ({
             <div className="ml-2">
               {/* ========== Historial de Orden ========== */}
               {getOrders && (
-                <StatusHistoryView order={order} getOrders={getOrders}>
+                <StatusHistoryView order={order}>
                   <Button>
                     <Calendar />
                   </Button>

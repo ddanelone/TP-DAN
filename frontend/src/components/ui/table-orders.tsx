@@ -13,7 +13,6 @@ import {
   Calendar,
   FileText,
   LayoutList,
-  ShoppingCart,
   SquarePen,
   Trash2,
 } from "lucide-react";
@@ -21,9 +20,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Order } from "@/interfaces/order.interface";
 import { ConfirmDeletionOrder } from "@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order";
 import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/update-status-order";
-import { StatusHistoryView } from "@/app/(vendedor)/abm/pedidos/components/status-history-view";
 import { formatDate } from "@/action/format-date";
-import DialogOrderDetail from "@/app/(vendedor)/abm/pedidos/components/dialog-order-detail";
+import StatusHistoryView from "./status-history-view";
+import DialogOrderDetail from "./dialog-order-detail";
 
 interface TableOrderProps {
   orders: Order[];
@@ -44,12 +43,12 @@ export function TableOrders({
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">N° Pedido</TableHead>
-            <TableHead>Fecha</TableHead>
-            <TableHead>Nombre</TableHead>
-            <TableHead>Apellido</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>Estado</TableHead>
-            <TableHead className="text-center w-[250px]">Acciones</TableHead>
+            <TableHead className="w-[100px]">Fecha</TableHead>
+            <TableHead className="w-[250px]">Nombre</TableHead>
+            <TableHead className="w-[250px]">Apellido</TableHead>
+            <TableHead className="w-[100px]">Total</TableHead>
+            <TableHead className="w-[100px]">Estado</TableHead>
+            <TableHead className="text-center w-[300px]">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -68,13 +67,12 @@ export function TableOrders({
                 <TableCell>{order.estado}</TableCell>
                 <TableCell className="text-center">
                   {/* ========== Historial de la Orden ========== */}
-                  {getOrders && (
-                    <StatusHistoryView order={order} getOrders={getOrders}>
-                      <Button className="ml-4 mt-4">
-                        <Calendar />
-                      </Button>
-                    </StatusHistoryView>
-                  )}
+
+                  <StatusHistoryView order={order}>
+                    <Button className="ml-4 mt-4">
+                      <Calendar />
+                    </Button>
+                  </StatusHistoryView>
                   {/* ========== Actualizar Estado de Orden ========== */}
                   {getOrders && (
                     <UpdateStatusOrder
@@ -87,18 +85,16 @@ export function TableOrders({
                     </UpdateStatusOrder>
                   )}
                   {/* ========== Ver Detalle de Orden ========== */}
-                  {getOrders && (
-                    <DialogOrderDetail
-                      orderToView={order}
-                      orderDetail={order.detalle}
-                      getOrders={getOrders}
-                      isLoading={isLoading}
-                    >
-                      <Button className="ml-4 mt-4">
-                        <FileText />
-                      </Button>
-                    </DialogOrderDetail>
-                  )}
+                  <DialogOrderDetail
+                    orderToView={order}
+                    orderDetail={order.detalle}
+                    isLoading={isLoading}
+                  >
+                    <Button className="ml-4 mt-4">
+                      <FileText />
+                    </Button>
+                  </DialogOrderDetail>
+
                   {/* ========== Eliminar Orden  ========== */}
                   {deleteOrder && (
                     <ConfirmDeletionOrder
