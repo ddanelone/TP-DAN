@@ -8,7 +8,9 @@ var table_1 = require("@/components/ui/table");
 var lucide_react_1 = require("lucide-react");
 var skeleton_1 = require("@/components/ui/skeleton");
 var confirm_deletion_order_1 = require("@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order");
-var convert_instant_to_date_1 = require("@/action/convert-instant-to-date");
+var update_status_order_1 = require("@/app/(vendedor)/abm/pedidos/components/update-status-order");
+var status_history_view_1 = require("@/app/(vendedor)/abm/pedidos/components/status-history-view");
+var format_date_1 = require("@/action/format-date");
 function TableOrders(_a) {
     var orders = _a.orders, getOrders = _a.getOrders, deleteOrder = _a.deleteOrder, isLoading = _a.isLoading;
     return (react_1["default"].createElement("div", { className: "hidden md:block" },
@@ -28,18 +30,20 @@ function TableOrders(_a) {
                     orders.map(function (order) { return (react_1["default"].createElement(table_1.TableRow, { key: order.numeroPedido },
                         react_1["default"].createElement(table_1.TableCell, null, order.numeroPedido),
                         react_1["default"].createElement(table_1.TableCell, null,
-                            react_1["default"].createElement(convert_instant_to_date_1["default"], { order: order })),
+                            order.fecha ? format_date_1.formatDate(new Date(order.fecha)) : "N/A",
+                            " ",
+                            react_1["default"].createElement("br", null)),
                         react_1["default"].createElement(table_1.TableCell, null, order.cliente.nombre),
                         react_1["default"].createElement(table_1.TableCell, null, order.cliente.apellido),
                         react_1["default"].createElement(table_1.TableCell, null, format_price_1.formatPrice(order.total)),
                         react_1["default"].createElement(table_1.TableCell, null, order.estado),
                         react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
-                            getOrders && (
-                            //   <CreateUpdateItem itemToUpdate={item} getItems={getItems}>
-                            react_1["default"].createElement(button_1.Button, null,
-                                react_1["default"].createElement(lucide_react_1.SquarePen, null))
-                            //   </CreateUpdateItem>
-                            ),
+                            getOrders && (react_1["default"].createElement(status_history_view_1.StatusHistoryView, { order: order, getOrders: getOrders },
+                                react_1["default"].createElement(button_1.Button, null,
+                                    react_1["default"].createElement(lucide_react_1.Calendar, null)))),
+                            getOrders && (react_1["default"].createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
+                                react_1["default"].createElement(button_1.Button, { className: "ml-4" },
+                                    react_1["default"].createElement(lucide_react_1.SquarePen, null)))),
                             deleteOrder && (react_1["default"].createElement(confirm_deletion_order_1.ConfirmDeletionOrder, { deleteOrder: deleteOrder, order: order },
                                 react_1["default"].createElement(button_1.Button, { className: "ml-4", variant: "destructive" },
                                     react_1["default"].createElement(lucide_react_1.Trash2, null))))))); }),

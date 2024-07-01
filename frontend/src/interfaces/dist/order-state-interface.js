@@ -8,4 +8,5 @@ var Status;
     Status["ENVIADO"] = "ENVIADO";
     Status["ENTREGADO"] = "ENTREGADO";
     Status["CANCELADO"] = "CANCELADO";
+    Status["APROBADO"] = "APROBADO";
 })(Status = exports.Status || (exports.Status = {}));

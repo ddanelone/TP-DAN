@@ -5,7 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Order } from "@/interfaces/order.interface";
 import { ConfirmDeletionOrder } from "@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order";
-import DateConverter from "@/action/convert-instant-to-date";
+import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/update-status-order";
+import { formatDate } from "@/action/format-date";
 
 interface ListOrderProps {
   orders: Order[];
@@ -34,7 +35,9 @@ export const ListOrders = ({
               <div className="ml-6">
                 <h3 className="font-semibold">{order.numeroPedido}</h3>
                 <div className="text-sm">
-                  Fecha: <DateConverter order={order}></DateConverter> <br />
+                  Fecha: Fecha Cambio:{" "}
+                  {order.fecha ? formatDate(new Date(order.fecha)) : "N/A"}{" "}
+                  <br />
                   Cliente Nombre: {order.cliente.nombre} <br />
                   Apellido: {order.cliente.apellido} <br />
                   Estado: {order.estado} <br />
@@ -46,11 +49,11 @@ export const ListOrders = ({
             </div>
             <div className="ml-2">
               {getOrders && (
-                //  <CreateUpdateItem itemToUpdate={item} getItems={getItems}>
-                <Button className="w-8 h-8 p-0">
-                  <SquarePen className="w-5 h-5" />
-                </Button>
-                //  </CreateUpdateItem>
+                <UpdateStatusOrder orderToUpdate={order} getOrders={getOrders}>
+                  <Button className="w-8 h-8 p-0">
+                    <SquarePen className="w-5 h-5" />
+                  </Button>
+                </UpdateStatusOrder>
               )}
 
               {deleteOrder && (

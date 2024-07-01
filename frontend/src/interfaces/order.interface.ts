@@ -1,5 +1,6 @@
 import { Costumer } from "./costumer.interface";
 import { OrderDetails } from "./order-detail.interface";
+import { OrderHistory } from "./order-history.interface";
 import { Status } from "./order-state-interface";
 
 export interface Order {
@@ -13,4 +14,6 @@ export interface Order {
   estado: Status;
 
   detalle: OrderDetails[];
+
+  historialEstado: OrderHistory[];
 }

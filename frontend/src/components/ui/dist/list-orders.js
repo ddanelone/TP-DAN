@@ -7,7 +7,8 @@ var lucide_react_1 = require("lucide-react");
 var skeleton_1 = require("@/components/ui/skeleton");
 var badge_1 = require("@/components/ui/badge");
 var confirm_deletion_order_1 = require("@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order");
-var convert_instant_to_date_1 = require("@/action/convert-instant-to-date");
+var update_status_order_1 = require("@/app/(vendedor)/abm/pedidos/components/update-status-order");
+var format_date_1 = require("@/action/format-date");
 exports.ListOrders = function (_a) {
     var orders = _a.orders, getOrders = _a.getOrders, deleteOrder = _a.deleteOrder, isLoading = _a.isLoading;
     return (React.createElement("div", { className: "w-full block md:hidden" },
@@ -18,8 +19,9 @@ exports.ListOrders = function (_a) {
                     React.createElement("div", { className: "ml-6" },
                         React.createElement("h3", { className: "font-semibold" }, order.numeroPedido),
                         React.createElement("div", { className: "text-sm" },
-                            "Fecha: ",
-                            React.createElement(convert_instant_to_date_1["default"], { order: order }),
+                            "Fecha: Fecha Cambio:",
+                            " ",
+                            order.fecha ? format_date_1.formatDate(new Date(order.fecha)) : "N/A",
                             " ",
                             React.createElement("br", null),
                             "Cliente Nombre: ",
@@ -38,12 +40,9 @@ exports.ListOrders = function (_a) {
                                 "Total: ",
                                 format_price_1.formatPrice(order.total))))),
                 React.createElement("div", { className: "ml-2" },
-                    getOrders && (
-                    //  <CreateUpdateItem itemToUpdate={item} getItems={getItems}>
-                    React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
-                        React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" }))
-                    //  </CreateUpdateItem>
-                    ),
+                    getOrders && (React.createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
+                        React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
+                            React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" })))),
                     deleteOrder && (React.createElement(confirm_deletion_order_1.ConfirmDeletionOrder, { deleteOrder: deleteOrder, order: order },
                         React.createElement(button_1.Button, { className: "w-8 h-8 p-0", variant: "destructive" },
                             React.createElement(lucide_react_1.Trash2, { className: "w-5 h-5" }))))))); }),

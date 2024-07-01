@@ -2,20 +2,12 @@
 
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
-import { Product } from "@/interfaces/product-interface";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 
-import {
-  deletePedido,
-  deleteProductById,
-  getAllPedidos,
-  getProducts,
-} from "@/lib/auth";
-import { TableView } from "@/components/ui/table-view";
-import ListView from "@/components/ui/list-view";
+import { deletePedido, getAllPedidos } from "@/lib/auth";
 import { Order } from "@/interfaces/order.interface";
 import { TableOrders } from "@/components/ui/table-orders";
 import ListOrders from "@/components/ui/list-orders";
@@ -76,7 +68,7 @@ const Orders = () => {
           )}
         </div>
         <Button className="px-6">
-          HACER ALGO?
+          ¿Hacer Algo?
           <CirclePlus className="ml-2 w-[20px]" />
         </Button>
       </div>

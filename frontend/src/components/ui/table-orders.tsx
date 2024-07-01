@@ -9,11 +9,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
+import {
+  Calendar,
+  LayoutList,
+  ShoppingCart,
+  SquarePen,
+  Trash2,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Order } from "@/interfaces/order.interface";
 import { ConfirmDeletionOrder } from "@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order";
-import DateConverter from "@/action/convert-instant-to-date";
+import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/update-status-order";
+import { StatusHistoryView } from "@/app/(vendedor)/abm/pedidos/components/status-history-view";
+import { formatDate } from "@/action/format-date";
 
 interface TableOrderProps {
   orders: Order[];
@@ -49,7 +57,8 @@ export function TableOrders({
               <TableRow key={order.numeroPedido}>
                 <TableCell>{order.numeroPedido}</TableCell>
                 <TableCell>
-                  <DateConverter order={order}></DateConverter>
+                  {order.fecha ? formatDate(new Date(order.fecha)) : "N/A"}{" "}
+                  <br />
                 </TableCell>
                 <TableCell>{order.cliente.nombre}</TableCell>
                 <TableCell>{order.cliente.apellido}</TableCell>
@@ -58,11 +67,22 @@ export function TableOrders({
                 <TableCell className="text-center">
                   {/* ========== Actualizar producto ========== */}
                   {getOrders && (
-                    //   <CreateUpdateItem itemToUpdate={item} getItems={getItems}>
-                    <Button>
-                      <SquarePen />
-                    </Button>
-                    //   </CreateUpdateItem>
+                    <StatusHistoryView order={order} getOrders={getOrders}>
+                      <Button>
+                        <Calendar />
+                      </Button>
+                    </StatusHistoryView>
+                  )}
+                  {/* ========== Actualizar producto ========== */}
+                  {getOrders && (
+                    <UpdateStatusOrder
+                      orderToUpdate={order}
+                      getOrders={getOrders}
+                    >
+                      <Button className="ml-4">
+                        <SquarePen />
+                      </Button>
+                    </UpdateStatusOrder>
                   )}
                   {/* ========== Eliminar producto  ========== */}
                   {deleteOrder && (
@@ -104,7 +124,6 @@ export function TableOrders({
       </Table>
 
       {/* ========== No hay productos para mostrar ========== */}
-
       {!isLoading && orders.length === 0 && (
         <div className="text-gray-200 my-20">
           <div className="flex justify-center">

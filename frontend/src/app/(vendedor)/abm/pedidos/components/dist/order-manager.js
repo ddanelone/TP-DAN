@@ -114,7 +114,7 @@ var Orders = function () {
                 React.createElement("h1", { className: "text-2xl ml-1" }, "Gestor de Pedidos"),
                 orders.length > 0 && (React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES"))),
             React.createElement(button_1.Button, { className: "px-6" },
-                "HACER ALGO?",
+                "\u00BFHacer Algo?",
                 React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" }))),
         React.createElement(table_orders_1.TableOrders, { deleteOrder: deleteOrder, getOrders: getOrders, orders: orders, isLoading: isLoading }),
         React.createElement(list_orders_1["default"], { deleteOrder: deleteOrder, getOrders: getOrders, orders: orders, isLoading: isLoading })));

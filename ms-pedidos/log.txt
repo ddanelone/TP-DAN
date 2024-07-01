@@ -38,5 +38,13 @@ http://localhost:8080/api/productos/3/verificar-stock
 "cantidadDeseada": 100
 }
 
+PARA PEDIDOS DE CAMBIO DE ESTADO
+PUT /pedidos/{id}/estado
+Content-Type: application/json
+
+{
+    "nuevoEstado": "APROBADO",
+    "usuarioCambio": "admin"
+}
 
 

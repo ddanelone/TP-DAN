@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,7 +27,14 @@ public class Pedido {
    private BigDecimal total;
 
    private Estado estado;
+   private List<EstadoCambio> historialEstado = new ArrayList<>();
 
    @Field("detalle")
    private List<DetallePedido> detalle;
+
+   // Método para añadir un cambio de estado al historial
+   public void addEstadoCambio(Estado nuevoEstado, String usuario) {
+      EstadoCambio estadoCambio = new EstadoCambio(nuevoEstado, Instant.now(), usuario);
+      historialEstado.add(estadoCambio);
+   }
 }

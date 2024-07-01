@@ -42,29 +42,13 @@ export function NavigationMenuTopSale() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Pedidos</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {pedidos.map((pedido) => (
-                <li key={pedido.title}>
-                  <Link href={pedido.href} legacyBehavior passHref>
-                    <a className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                      <div className="text-sm font-medium leading-none">
-                        {pedido.title}
-                      </div>
-                    </a>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </NavigationMenuContent>
+          <Link href="/abm/pedidos" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Pedidos
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   );
 }
-
-const pedidos = [
-  { title: "Consultar", href: "/abm/pedidos" },
-  { title: "Actualizar", href: "/abm/pedidos" },
-];

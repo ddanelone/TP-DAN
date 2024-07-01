@@ -4,4 +4,5 @@ export enum Status {
   ENVIADO = "ENVIADO",
   ENTREGADO = "ENTREGADO",
   CANCELADO = "CANCELADO",
+  APROBADO = "APROBADO",
 }

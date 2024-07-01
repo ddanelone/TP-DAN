@@ -8,6 +8,7 @@ import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
 import { Building } from "@/interfaces/building.interface";
 import { Coordinates } from "@/interfaces/coordinate.interface";
 import { Address } from "@/interfaces/address.interface";
+import { OrderHistory } from "@/interfaces/order-history.interface";
 
 /* ========== Usuarios  ========== */
 
@@ -542,6 +543,24 @@ export const getClienteByPedidoId = async (pedidoId: string) => {
 export const getProductosByPedidoId = async (pedidoId: string) => {
   try {
     const response = await api.get(`/pedidos/productos/${pedidoId}`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+//Cambiar el estado de un pedido
+/*PUT /pedidos/{id}/estado
+Content-Type: application/json
+{
+   "nuevoEstado": "APROBADO",
+   "usuarioCambio": "admin"
+   }
+   */
+
+export const newStatusOrder = async (pedidoId?: string, orderHistory?: any) => {
+  try {
+    const response = await api.put(`/pedidos/${pedidoId}/estado`, orderHistory);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.message);

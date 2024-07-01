@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getProductosByPedidoId = exports.getClienteByPedidoId = exports.addProductoToDetalle = exports.addClienteToPedido = exports.deletePedido = exports.createPedido = exports.getPedidoById = exports.getAllPedidos = exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.checkStockProducto = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.newStatusOrder = exports.getProductosByPedidoId = exports.getClienteByPedidoId = exports.addProductoToDetalle = exports.addClienteToPedido = exports.deletePedido = exports.createPedido = exports.getPedidoById = exports.getAllPedidos = exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.checkStockProducto = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -800,6 +800,31 @@ exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, 
             case 2:
                 error_36 = _a.sent();
                 throw new Error(error_36.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+//Cambiar el estado de un pedido
+/*PUT /pedidos/{id}/estado
+Content-Type: application/json
+{
+   "nuevoEstado": "APROBADO",
+   "usuarioCambio": "admin"
+   }
+   */
+exports.newStatusOrder = function (pedidoId, orderHistory) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_37;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].put("/pedidos/" + pedidoId + "/estado", orderHistory)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_37 = _a.sent();
+                throw new Error(error_37.response.data.message);
             case 3: return [2 /*return*/];
         }
     });

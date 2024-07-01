@@ -12,6 +12,7 @@ import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dto.StockUpdateDTO;
 import isi.dan.ms.pedidos.modelo.Cliente;
 import isi.dan.ms.pedidos.modelo.DetallePedido;
+import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
 import isi.dan.ms.pedidos.modelo.Pedido;
 import isi.dan.ms.pedidos.modelo.Producto;
 import isi.dan.ms.pedidos.servicio.PedidoService;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -133,4 +135,20 @@ public class PedidoController {
       log.error("Error al guardar producto para pedido {}: {}", id, e.getMessage());
       return new ResponseEntity("No se pudo guardar el producto para el pedido", HttpStatus.OK);
    }
+
+   // Método para actualizar el ESTADO del pedido
+   @PutMapping("/{id}/estado")
+   public ResponseEntity<Pedido> updatePedidoEstado(@PathVariable String id, @RequestBody EstadoCambioRequest request) {
+      Pedido pedido = pedidoService.getPedidoById(id);
+
+      if (pedido != null) {
+         pedido.setEstado(request.getNuevoEstado());
+         pedido.addEstadoCambio(request.getNuevoEstado(), request.getUsuarioCambio());
+         Pedido updatedPedido = pedidoService.savePedido(pedido);
+         return ResponseEntity.ok(updatedPedido);
+      } else {
+         return ResponseEntity.notFound().build();
+      }
+   }
+
 }
