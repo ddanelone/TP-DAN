@@ -92,7 +92,7 @@ function BuyCart(_a) {
         removeItem(item);
     };
     var handlePurchase = function () { return __awaiter(_this, void 0, void 0, function () {
-        var newOrder, error_2;
+        var _i, cartItems_1, item, error_2, newOrder, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -105,7 +105,6 @@ function BuyCart(_a) {
                         return [2 /*return*/];
                     }
                     else {
-                        console.log("Maximo Descubierto: ", client.maximoDescubierto);
                         if ((client === null || client === void 0 ? void 0 : client.maximoDescubierto) !== undefined &&
                             client.maximoDescubierto <
                                 cartItems.reduce(function (acc, item) { return acc + item.precio * item.cantidad; }, 0)) {
@@ -113,6 +112,31 @@ function BuyCart(_a) {
                             return [2 /*return*/];
                         }
                     }
+                    setIsLoading(true);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 9, 10, 11]);
+                    _i = 0, cartItems_1 = cartItems;
+                    _a.label = 2;
+                case 2:
+                    if (!(_i < cartItems_1.length)) return [3 /*break*/, 7];
+                    item = cartItems_1[_i];
+                    _a.label = 3;
+                case 3:
+                    _a.trys.push([3, 5, , 6]);
+                    return [4 /*yield*/, auth_1.checkStockProducto(item.id, item.cantidad)];
+                case 4:
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_2 = _a.sent();
+                    react_hot_toast_1["default"].error(error_2.message, { duration: 2500 });
+                    setIsLoading(false);
+                    return [2 /*return*/];
+                case 6:
+                    _i++;
+                    return [3 /*break*/, 2];
+                case 7:
                     newOrder = {
                         fecha: new Date(),
                         numeroPedido: undefined,
@@ -137,31 +161,23 @@ function BuyCart(_a) {
                         }); }),
                         historialEstado: []
                     };
-                    setIsLoading(true);
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, 4, 5]);
-                    // Enviar el pedido al servidor
                     console.log("Orden a persistir :", newOrder);
                     return [4 /*yield*/, auth_1.createPedido(newOrder)];
-                case 2:
+                case 8:
                     _a.sent();
                     // Mostrar mensaje de éxito
                     react_hot_toast_1["default"].success("Pedido realizado con éxito.");
-                    // Borrar el contenido del carrito
-                    //clearCart();
-                    // Navegar a /pedidos
                     router.push("/pedidos");
-                    return [3 /*break*/, 5];
-                case 3:
-                    error_2 = _a.sent();
-                    console.error(error_2);
+                    return [3 /*break*/, 11];
+                case 9:
+                    error_3 = _a.sent();
+                    console.error(error_3);
                     react_hot_toast_1["default"].error("Hubo un problema al realizar el pedido. Inténtalo nuevamente.");
-                    return [3 /*break*/, 5];
-                case 4:
+                    return [3 /*break*/, 11];
+                case 10:
                     setIsLoading(false);
                     return [7 /*endfinally*/];
-                case 5: return [2 /*return*/];
+                case 11: return [2 /*return*/];
             }
         });
     }); };
@@ -170,9 +186,7 @@ function BuyCart(_a) {
     };
     react_1.useEffect(function () {
         if (user) {
-            getMyClientData().then(function () {
-                console.log("Cliente recuperado");
-            });
+            getMyClientData();
         }
     }, [user]);
     return (React.createElement(dialog_1.Dialog, { open: open, onOpenChange: setOpen },
@@ -207,6 +221,8 @@ function BuyCart(_a) {
                             format_price_1.formatPrice(cartItems.reduce(function (acc, item) { return acc + item.precio * item.cantidad; }, 0)))),
                     React.createElement("div", { className: "flex space-x-2" },
                         React.createElement(button_1.Button, { className: "bg-gray-200 text-gray-800 hover:bg-gray-300", onClick: handleClose }, "Agregar m\u00E1s productos"),
-                        React.createElement(button_1.Button, { className: "bg-blue-600 text-white hover:bg-blue-700", onClick: handlePurchase }, "Crear Pedido")))))));
+                        React.createElement(button_1.Button, { className: "bg-blue-600 text-white hover:bg-blue-700", onClick: handlePurchase },
+                            isLoading && (React.createElement(lucide_react_1.LoaderCircle, { className: "mr-2 h-4 w-4 animate-spin" })),
+                            "Crear Pedido")))))));
 }
 exports.BuyCart = BuyCart;

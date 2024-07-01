@@ -245,19 +245,27 @@ exports.deleteProductById = function (productId) { return __awaiter(void 0, void
     });
 }); };
 /* ========== Validar Stock de Producto ========== */
-exports.checkStockProducto = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+exports.checkStockProducto = function (id, cantidad) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_9;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/productos/{id}/verificar-stock")];
+                return [4 /*yield*/, axios_1["default"].post("/productos/" + id + "/verificar-stock", {
+                        cantidadDeseada: cantidad
+                    })];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
                 error_9 = _a.sent();
-                throw new Error(error_9.response.data.message);
+                if (error_9.response && error_9.response.status === 400) {
+                    throw new Error(error_9.response.data);
+                }
+                else {
+                    throw new Error("Error al verificar el stock del producto");
+                }
+                return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });

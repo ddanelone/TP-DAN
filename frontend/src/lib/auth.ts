@@ -193,15 +193,20 @@ export const deleteProductById = async (productId?: number): Promise<void> => {
 
 /* ========== Validar Stock de Producto ========== */
 
-export const checkStockProducto = async (pedidoId: string) => {
+export const checkStockProducto = async (id?: number, cantidad?: number) => {
   try {
-    const response = await api.get(`/productos/{id}/verificar-stock`);
+    const response = await api.post(`/productos/${id}/verificar-stock`, {
+      cantidadDeseada: cantidad,
+    });
     return response.data;
   } catch (error: any) {
-    throw new Error(error.response.data.message);
+    if (error.response && error.response.status === 400) {
+      throw new Error(error.response.data);
+    } else {
+      throw new Error("Error al verificar el stock del producto");
+    }
   }
 };
-
 /* ==========  CLIENTES ========== */
 
 // Función para obtener la lista de clientes

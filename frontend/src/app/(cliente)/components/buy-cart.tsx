@@ -13,14 +13,14 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Product } from "@/interfaces/product-interface";
 import { formatPrice } from "@/action/format-price";
-import { Trash2 } from "lucide-react";
+import { LoaderCircle, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Order } from "@/interfaces/order.interface";
 import { Status } from "@/interfaces/order-state-interface";
 import { Costumer } from "@/interfaces/costumer.interface";
-import { createPedido, getClientByEmail } from "@/lib/auth";
+import { checkStockProducto, createPedido, getClientByEmail } from "@/lib/auth";
 import { useUser } from "@/hooks/use-user";
 
 interface BuyCartProps {
@@ -74,7 +74,6 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
       );
       return;
     } else {
-      console.log("Maximo Descubierto: ", client.maximoDescubierto);
       if (
         client?.maximoDescubierto !== undefined &&
         client.maximoDescubierto <
@@ -87,46 +86,51 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
       }
     }
 
-    const newOrder: Order = {
-      fecha: new Date(),
-      numeroPedido: undefined,
-      usuario: user ? user.email : undefined,
-      observaciones: "",
-      cliente: {
-        id: client.id,
-        nombre: client.nombre,
-        apellido: client.apellido,
-        correoElectronico: client.correoElectronico,
-        dni: client.dni,
-        cuit: client.cuit,
-      },
-      total: cartItems.reduce(
-        (acc, item) => acc + item.precio * item.cantidad!,
-        0
-      ),
-      estado: Status.PENDIENTE,
-      detalle: cartItems.map((item) => ({
-        cantidad: item.cantidad!,
-        producto: item as Product, // Aseguramos que item es de tipo Product
-        precioUnitario: item.precio,
-        descuento: 0, // Asumimos que no hay descuento
-        precioFinal: item.precio * item.cantidad!,
-      })),
-      historialEstado: [],
-    };
-
     setIsLoading(true);
     try {
-      // Enviar el pedido al servidor
+      for (const item of cartItems) {
+        try {
+          await checkStockProducto(item.id, item.cantidad!);
+        } catch (error: any) {
+          toast.error(error.message, { duration: 2500 });
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      const newOrder: Order = {
+        fecha: new Date(),
+        numeroPedido: undefined,
+        usuario: user ? user.email : undefined,
+        observaciones: "",
+        cliente: {
+          id: client.id,
+          nombre: client.nombre,
+          apellido: client.apellido,
+          correoElectronico: client.correoElectronico,
+          dni: client.dni,
+          cuit: client.cuit,
+        },
+        total: cartItems.reduce(
+          (acc, item) => acc + item.precio * item.cantidad!,
+          0
+        ),
+        estado: Status.PENDIENTE,
+        detalle: cartItems.map((item) => ({
+          cantidad: item.cantidad!,
+          producto: item as Product, // Aseguramos que item es de tipo Product
+          precioUnitario: item.precio,
+          descuento: 0, // Hardcodeamos el descuento
+          precioFinal: item.precio * item.cantidad!,
+        })),
+        historialEstado: [],
+      };
+
       console.log("Orden a persistir :", newOrder);
       await createPedido(newOrder);
       // Mostrar mensaje de éxito
       toast.success("Pedido realizado con éxito.");
 
-      // Borrar el contenido del carrito
-      //clearCart();
-
-      // Navegar a /pedidos
       router.push("/pedidos");
     } catch (error) {
       console.error(error);
@@ -144,9 +148,7 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
 
   useEffect(() => {
     if (user) {
-      getMyClientData().then(() => {
-        console.log("Cliente recuperado");
-      });
+      getMyClientData();
     }
   }, [user]);
 
@@ -222,6 +224,9 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
                 className="bg-blue-600 text-white hover:bg-blue-700"
                 onClick={handlePurchase}
               >
+                {isLoading && (
+                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 Crear Pedido
               </Button>
             </div>
