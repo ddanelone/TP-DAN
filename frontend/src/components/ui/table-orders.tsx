@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import {
   Calendar,
+  FileText,
   LayoutList,
   ShoppingCart,
   SquarePen,
@@ -22,6 +23,7 @@ import { ConfirmDeletionOrder } from "@/app/(vendedor)/abm/pedidos/components/co
 import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/update-status-order";
 import { StatusHistoryView } from "@/app/(vendedor)/abm/pedidos/components/status-history-view";
 import { formatDate } from "@/action/format-date";
+import DialogOrderDetail from "@/app/(vendedor)/abm/pedidos/components/dialog-order-detail";
 
 interface TableOrderProps {
   orders: Order[];
@@ -65,32 +67,45 @@ export function TableOrders({
                 <TableCell>{formatPrice(order.total)}</TableCell>
                 <TableCell>{order.estado}</TableCell>
                 <TableCell className="text-center">
-                  {/* ========== Actualizar producto ========== */}
+                  {/* ========== Historial de la Orden ========== */}
                   {getOrders && (
                     <StatusHistoryView order={order} getOrders={getOrders}>
-                      <Button>
+                      <Button className="ml-4 mt-4">
                         <Calendar />
                       </Button>
                     </StatusHistoryView>
                   )}
-                  {/* ========== Actualizar producto ========== */}
+                  {/* ========== Actualizar Estado de Orden ========== */}
                   {getOrders && (
                     <UpdateStatusOrder
                       orderToUpdate={order}
                       getOrders={getOrders}
                     >
-                      <Button className="ml-4">
+                      <Button className="ml-4 mt-4">
                         <SquarePen />
                       </Button>
                     </UpdateStatusOrder>
                   )}
-                  {/* ========== Eliminar producto  ========== */}
+                  {/* ========== Ver Detalle de Orden ========== */}
+                  {getOrders && (
+                    <DialogOrderDetail
+                      orderToView={order}
+                      orderDetail={order.detalle}
+                      getOrders={getOrders}
+                      isLoading={isLoading}
+                    >
+                      <Button className="ml-4 mt-4">
+                        <FileText />
+                      </Button>
+                    </DialogOrderDetail>
+                  )}
+                  {/* ========== Eliminar Orden  ========== */}
                   {deleteOrder && (
                     <ConfirmDeletionOrder
                       deleteOrder={deleteOrder}
                       order={order}
                     >
-                      <Button className="ml-4" variant={"destructive"}>
+                      <Button className="ml-4 mt-4" variant={"destructive"}>
                         <Trash2 />
                       </Button>
                     </ConfirmDeletionOrder>

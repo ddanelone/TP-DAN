@@ -11,6 +11,7 @@ import { deletePedido, getAllPedidos } from "@/lib/auth";
 import { Order } from "@/interfaces/order.interface";
 import { TableOrders } from "@/components/ui/table-orders";
 import ListOrders from "@/components/ui/list-orders";
+import { OrderDetails } from "@/interfaces/order-detail.interface";
 
 const Orders = () => {
   const user = useUser();

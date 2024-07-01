@@ -1,12 +1,13 @@
 import { formatPrice } from "@/action/format-price";
 import { Button } from "@/components/ui/button";
-import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
+import { Calendar, LayoutList, SquarePen, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Order } from "@/interfaces/order.interface";
 import { ConfirmDeletionOrder } from "@/app/(vendedor)/abm/pedidos/components/confirm-deletion-order";
 import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/update-status-order";
 import { formatDate } from "@/action/format-date";
+import StatusHistoryView from "@/app/(vendedor)/abm/pedidos/components/status-history-view";
 
 interface ListOrderProps {
   orders: Order[];
@@ -48,6 +49,16 @@ export const ListOrders = ({
               </div>
             </div>
             <div className="ml-2">
+              {/* ========== Historial de Orden ========== */}
+              {getOrders && (
+                <StatusHistoryView order={order} getOrders={getOrders}>
+                  <Button>
+                    <Calendar />
+                  </Button>
+                </StatusHistoryView>
+              )}
+
+              {/* ========== Actualizar orden ========== */}
               {getOrders && (
                 <UpdateStatusOrder orderToUpdate={order} getOrders={getOrders}>
                   <Button className="w-8 h-8 p-0">
@@ -56,6 +67,7 @@ export const ListOrders = ({
                 </UpdateStatusOrder>
               )}
 
+              {/* ========== Eliminar una orden ========== */}
               {deleteOrder && (
                 <ConfirmDeletionOrder deleteOrder={deleteOrder} order={order}>
                   <Button className="w-8 h-8 p-0" variant={"destructive"}>
