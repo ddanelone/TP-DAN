@@ -14,6 +14,12 @@ import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.UsuarioHabilitado;
 import jakarta.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+
 @Service
 public class UsuarioHabilitadoService {
 
@@ -26,40 +32,55 @@ public class UsuarioHabilitadoService {
    @Autowired
    private MessageSenderService messageSenderService;
 
+   @Autowired
+   private ObservationRegistry observationRegistry;
+
+   private Logger log = LoggerFactory.getLogger(UsuarioHabilitadoService.class);
+
    public UsuarioHabilitado save(UsuarioHabilitado usuarioHabilitado) {
-      UsuarioHabilitado savedUser = usuarioHabilitadoRepository.save(usuarioHabilitado);
-      messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, savedUser);
-      return savedUser;
+      return Observation.createNotStarted("usuarioHabilitado.save", observationRegistry)
+            .observe(() -> {
+               UsuarioHabilitado savedUser = usuarioHabilitadoRepository.save(usuarioHabilitado);
+               messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, savedUser);
+               return savedUser;
+            });
    }
 
    public List<UsuarioHabilitado> findAll() {
-      return usuarioHabilitadoRepository.findAll();
+      return Observation.createNotStarted("usuarioHabilitado.findAll", observationRegistry)
+            .observe(() -> usuarioHabilitadoRepository.findAll());
    }
 
    public Optional<UsuarioHabilitado> findById(Integer id) {
-      return usuarioHabilitadoRepository.findById(id);
+      return Observation.createNotStarted("usuarioHabilitado.findById", observationRegistry)
+            .observe(() -> usuarioHabilitadoRepository.findById(id));
    }
 
    public void deleteById(Integer id) {
-      usuarioHabilitadoRepository.deleteById(id);
+      Observation.createNotStarted("usuarioHabilitado.deleteById", observationRegistry)
+            .observe(() -> usuarioHabilitadoRepository.deleteById(id));
    }
 
    public UsuarioHabilitado update(UsuarioHabilitado usuarioHabilitado) {
-      return usuarioHabilitadoRepository.save(usuarioHabilitado);
+      return Observation.createNotStarted("usuarioHabilitado.update", observationRegistry)
+            .observe(() -> usuarioHabilitadoRepository.save(usuarioHabilitado));
    }
 
    public Cliente updateClienteUsuariosHabilitados(Integer clienteId, List<UsuarioHabilitado> usuariosHabilitados) {
-      Optional<Cliente> clienteOptional = clienteRepository.findById(clienteId);
-      if (!clienteOptional.isPresent()) {
-         throw new EntityNotFoundException("Cliente no encontrado");
-      }
+      return Observation.createNotStarted("cliente.updateUsuariosHabilitados", observationRegistry)
+            .observe(() -> {
+               Optional<Cliente> clienteOptional = clienteRepository.findById(clienteId);
+               if (!clienteOptional.isPresent()) {
+                  throw new EntityNotFoundException("Cliente no encontrado");
+               }
 
-      Cliente cliente = clienteOptional.get();
-      cliente.getUsuariosHabilitados().clear();
-      for (UsuarioHabilitado usuario : usuariosHabilitados) {
-         usuario.setCliente(cliente);
-         cliente.addUsuarioHabilitado(usuario);
-      }
-      return clienteRepository.save(cliente);
+               Cliente cliente = clienteOptional.get();
+               cliente.getUsuariosHabilitados().clear();
+               for (UsuarioHabilitado usuario : usuariosHabilitados) {
+                  usuario.setCliente(cliente);
+                  cliente.addUsuarioHabilitado(usuario);
+               }
+               return clienteRepository.save(cliente);
+            });
    }
 }
