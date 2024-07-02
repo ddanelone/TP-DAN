@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
@@ -41,6 +42,9 @@ public class PedidoService {
 
    @Autowired
    private SequenceGeneratorService sequenceGeneratorService;
+
+   @Autowired
+   private WebClient webClient; // Inyectamos WebClient
 
    Logger log = LoggerFactory.getLogger(PedidoService.class);
 

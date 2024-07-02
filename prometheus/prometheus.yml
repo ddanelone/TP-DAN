@@ -1,0 +1,57 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "gateway-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["gateway-server:8080"]
+
+  - job_name: "eureka-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["gateway-server:8791"]
+
+  # Ojo para las replicas hay que configurar diferente el targets
+  - job_name: "ms-clientes"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["ms-clientes:8080"]
+
+  - job_name: "ms-productos"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["ms-productos:8080"]
+
+  - job_name: "ms-pedidos"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["ms-pedidos:8080"]
+
+  - job_name: "ms-usuarios"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["ms-usuarios:8080"]
+
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
