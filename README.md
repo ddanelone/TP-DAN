@@ -1,5 +1,7 @@
 |# tp-dan-2024# TP-DAN
 
+# RAMA A CLONAR: ZIPKIN
+
 1. Levantar el ms-docker que es el microservicio de RabittQM
 2. Levantar el config-service (tiene las configuraciones remotas de los demás MS)
 3. eureka-service porque tiene que registrar a los demás microservicios
