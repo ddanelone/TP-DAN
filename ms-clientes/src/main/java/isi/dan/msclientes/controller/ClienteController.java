@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
@@ -27,6 +30,8 @@ public class ClienteController {
 
    @Autowired
    private MessageSenderService messageSenderService;
+
+   private static final Logger log = LoggerFactory.getLogger(ClienteController.class);
 
    @GetMapping
    public List<Cliente> getAll() {
@@ -42,6 +47,7 @@ public class ClienteController {
    @PostMapping
    public Cliente create(@RequestBody Cliente cliente) {
       messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, cliente);
+
       return clienteService.save(cliente);
    }
 
