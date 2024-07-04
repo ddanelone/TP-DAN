@@ -47,7 +47,7 @@ function TableBuilding(_a) {
                                     react_1["default"].createElement(button_1.Button, { className: "ml-4" },
                                         react_1["default"].createElement(lucide_react_1.SquarePen, null)))),
                                 deleteBuilding && (react_1["default"].createElement(confirm_deletion_building_1.ConfirmDeletionBuilding, { deleteBuilding: deleteBuilding, building: building },
-                                    react_1["default"].createElement(button_1.Button, { className: "ml-4", variant: "destructive" },
+                                    react_1["default"].createElement(button_1.Button, { className: "ml-4 mt-4", variant: "destructive" },
                                         react_1["default"].createElement(lucide_react_1.Trash2, null)))))));
                     }),
                 isLoading &&

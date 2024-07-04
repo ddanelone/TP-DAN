@@ -68,8 +68,13 @@ public class ObraService {
                Map<String, Object> response = new HashMap<>();
 
                if (obra.getEstado() == Estado.HABILITADA) {
-                  long obrasHabilitadasCount = obrasCliente.stream().filter(o -> o.getEstado() == Estado.HABILITADA)
+                  long obrasHabilitadasCount = obrasCliente.stream()
+                        .filter(o -> o.getEstado() == Estado.HABILITADA)
                         .count();
+                  // log.info("obrasCliente: " + obrasCliente.toString());
+                  // log.info("Cantidad de obras habilitadas: " + obrasHabilitadasCount);
+                  // log.info("Cantidad máxima de obras habilitadas: " +
+                  // cantidadMaximaObrasHabilitadas);
                   if (obrasHabilitadasCount >= cantidadMaximaObrasHabilitadas) {
                      response.put("status", 400);
                      response.put("message",
@@ -79,7 +84,8 @@ public class ObraService {
                }
 
                if (obra.getEstado() == Estado.FINALIZADA) {
-                  Optional<Obra> obraPendiente = obrasCliente.stream().filter(o -> o.getEstado() == Estado.PENDIENTE)
+                  Optional<Obra> obraPendiente = obrasCliente.stream()
+                        .filter(o -> o.getEstado() == Estado.PENDIENTE)
                         .findFirst();
                   if (obraPendiente.isPresent()) {
                      Obra obraParaHabilitar = obraPendiente.get();
@@ -91,15 +97,12 @@ public class ObraService {
                   }
                }
 
-               if (obra.getEstado() == Estado.PENDIENTE) {
-                  response.put("status", 200);
-                  response.put("message", "Obra pendiente validada");
-                  return ResponseEntity.ok(response);
-               }
+               // Agregar lógica para otros estados como PENDIENTE, etc.
 
                response.put("status", 200);
                response.put("message", "Obra validada");
                return ResponseEntity.ok(response);
             });
    }
+
 }

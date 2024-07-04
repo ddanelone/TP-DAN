@@ -10,7 +10,6 @@ import {
 import { LayoutList, SquarePen, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "./button";
-import { Costumer } from "@/interfaces/costumer.interface";
 import { CreateUpdateBuilding } from "@/app/(vendedor)/abm/obras/components/create-update-building";
 import { ConfirmDeletionBuilding } from "@/app/(vendedor)/abm/obras/components/confirm-deletion-building";
 import { Building } from "@/interfaces/building.interface";
@@ -89,7 +88,7 @@ export function TableBuilding({
                       deleteBuilding={deleteBuilding}
                       building={building}
                     >
-                      <Button className="ml-4" variant={"destructive"}>
+                      <Button className="ml-4 mt-4" variant={"destructive"}>
                         <Trash2 />
                       </Button>
                     </ConfirmDeletionBuilding>

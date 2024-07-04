@@ -3,5 +3,8 @@
 exports.__esModule = true;
 exports.getFromLocalstorage = void 0;
 exports.getFromLocalstorage = function (key) {
-    return JSON.parse(localStorage.getItem(key));
+    var value = localStorage.getItem(key);
+    if (!value)
+        return null;
+    return JSON.parse(value);
 };
