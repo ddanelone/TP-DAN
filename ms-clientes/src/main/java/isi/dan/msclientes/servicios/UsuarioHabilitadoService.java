@@ -10,6 +10,7 @@ import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.conf.RabbitMQConfig;
 import isi.dan.msclientes.dao.ClienteRepository;
 import isi.dan.msclientes.dao.UsuarioHabilitadoRepository;
+import isi.dan.msclientes.excepcion.ResourceNotFoundException;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.UsuarioHabilitado;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,6 +41,12 @@ public class UsuarioHabilitadoService {
    public UsuarioHabilitado save(UsuarioHabilitado usuarioHabilitado) {
       return Observation.createNotStarted("usuarioHabilitado.save", observationRegistry)
             .observe(() -> {
+               Optional<UsuarioHabilitado> usuarioGuardado = usuarioHabilitadoRepository
+                     .findByCorreoElectronico(usuarioHabilitado.getCorreoElectronico());
+               if (usuarioGuardado.isPresent()) {
+                  throw new ResourceNotFoundException(
+                        "Usuario con ese correo electrónico ya existe");
+               }
                UsuarioHabilitado savedUser = usuarioHabilitadoRepository.save(usuarioHabilitado);
                messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, savedUser);
                return savedUser;

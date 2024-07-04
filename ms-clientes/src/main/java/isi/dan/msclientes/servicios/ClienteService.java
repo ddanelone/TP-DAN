@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import isi.dan.msclientes.dao.ClienteRepository;
+import isi.dan.msclientes.excepcion.ResourceNotFoundException;
 import isi.dan.msclientes.model.Cliente;
 
 import java.math.BigDecimal;
@@ -42,10 +43,17 @@ public class ClienteService {
    public Cliente save(Cliente cliente) {
       return Observation.createNotStarted("cliente.save", observationRegistry)
             .observe(() -> {
+               Optional<Cliente> clienteGuardado = clienteRepository
+                     .findByCorreoElectronico(cliente.getCorreoElectronico());
+               if (clienteGuardado.isPresent()) {
+                  throw new ResourceNotFoundException(
+                        "Cliente con correo electrónico ya existe");
+               }
                if (cliente.getMaximoDescubierto() == null
                      || cliente.getMaximoDescubierto().compareTo(BigDecimal.ZERO) == 0) {
                   cliente.setMaximoDescubierto(defaultMaximoDescubierto);
                }
+
                return clienteRepository.save(cliente);
             });
    }

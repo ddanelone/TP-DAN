@@ -78,11 +78,10 @@
          <artifactId>junit-jupiter</artifactId>
          <scope>test</scope>
       </dependency>
-      <!-- <dependency>
-         <groupId>org.testcontainers</groupId>
-         <artifactId>mongodb</artifactId>
-         <scope>test</scope>
-      </dependency> -->
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-databind</artifactId>
+      </dependency>
       <dependency>
          <groupId>org.testcontainers</groupId>
          <artifactId>rabbitmq</artifactId>
@@ -129,6 +128,29 @@
          <artifactId>zipkin-reporter-brave</artifactId>
       </dependency>
 
+      <!-- {/* ========== Testing ========== */} -->
+      <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+      <dependency>
+         <groupId>org.junit.jupiter</groupId>
+         <artifactId>junit-jupiter-api</artifactId>
+         <version>5.11.0-M2</version>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- Dependencia para H2 -->
+      <dependency>
+         <groupId>com.h2database</groupId>
+         <artifactId>h2</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- Dependencia para Spring Test DBUnit -->
+      <dependency>
+         <groupId>com.github.springtestdbunit</groupId>
+         <artifactId>spring-test-dbunit</artifactId>
+         <version>1.3.0</version>
+         <scope>test</scope>
+      </dependency>
 
    </dependencies>
 
@@ -145,6 +167,64 @@
                   </exclude>
                </excludes>
             </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.12</version>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>prepare-agent</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <id>report</id>
+                  <phase>test</phase>
+                  <goals>
+                     <goal>report</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+               <execution>
+                  <phase>verify</phase>
+                  <goals>
+                     <goal>check</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>4.8.5.0</version>
+            <executions>
+               <execution>
+                  <phase>verify</phase>
+                  <goals>
+                     <goal>spotbugs</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.22.0</version>
+            <executions>
+               <execution>
+                  <phase>verify</phase>
+                  <goals>
+                     <goal>check</goal>
+                  </goals>
+               </execution>
+            </executions>
          </plugin>
       </plugins>
    </build>

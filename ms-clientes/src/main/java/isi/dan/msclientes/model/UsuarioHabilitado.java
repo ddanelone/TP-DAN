@@ -10,12 +10,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Builder;
 import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "MS_CLI_USUARIO_HABILITADO")
-@Data
+@Builder
 public class UsuarioHabilitado {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,6 @@
 package isi.dan.msclientes.dao;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +53,11 @@ public class ObraRepositoryTest {
    @BeforeEach
    void iniciarDatos() {
       Obra obra = new Obra();
-      obra.setDireccion("Test Obra 999");
+      obra.setCalle("calle 2");
+      obra.setCiudad("ciudad 2");
+      obra.setAltura("2222");
+      obra.setProvincia("provincia 2");
+      obra.setPais("pais 2");
       obra.setPresupuesto(BigDecimal.valueOf(100));
       obraRepository.save(obra);
    }
@@ -72,19 +75,31 @@ public class ObraRepositoryTest {
    @Test
    void testSaveAndFindById() {
       Obra obra = new Obra();
-      obra.setDireccion("Test Obra");
+      obra.setCalle("calle 1");
+      obra.setCiudad("ciudad 1");
+      obra.setAltura("1111");
+      obra.setProvincia("provincia 1");
+      obra.setPais("pais 1");
       obraRepository.save(obra);
 
       Optional<Obra> foundObra = obraRepository.findById(obra.getId());
       log.info("ENCONTRE: {} ", foundObra);
       assertThat(foundObra).isPresent();
-      assertThat(foundObra.get().getDireccion()).isEqualTo("Test Obra");
+      assertThat(foundObra.get().getCalle()).isEqualTo("calle 1");
+      assertThat(foundObra.get().getCiudad()).isEqualTo("ciudad 1");
+      assertThat(foundObra.get().getAltura()).isEqualTo("1111");
+      assertThat(foundObra.get().getProvincia()).isEqualTo("provincia 1");
+      assertThat(foundObra.get().getPais()).isEqualTo("pais 1");
    }
 
    @Test
    void testFindByPresupuesto() {
       Obra obra = new Obra();
-      obra.setDireccion("Test Obra");
+      obra.setCalle("calle 1");
+      obra.setCiudad("ciudad 1");
+      obra.setAltura("1111");
+      obra.setProvincia("provincia 1");
+      obra.setPais("pais 1");
       obra.setPresupuesto(BigDecimal.valueOf(200));
       obraRepository.save(obra);
 
