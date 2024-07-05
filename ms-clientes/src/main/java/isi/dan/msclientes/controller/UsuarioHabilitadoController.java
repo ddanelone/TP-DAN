@@ -21,6 +21,9 @@ import isi.dan.msclientes.model.UsuarioHabilitado;
 import isi.dan.msclientes.servicios.UsuarioHabilitadoService;
 import jakarta.persistence.EntityNotFoundException;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+
 @RestController
 @RequestMapping("/api/clientes/usuarios-habilitados")
 public class UsuarioHabilitadoController {
@@ -31,12 +34,16 @@ public class UsuarioHabilitadoController {
    private static final Logger log = LoggerFactory.getLogger(UsuarioHabilitadoController.class);
 
    @GetMapping
+   @Timed(value = "getAllUsuariosHabilitados.time", description = "Time taken to return all usuarios habilitados")
+   @Counted(value = "getAllUsuariosHabilitados.count", description = "Number of times the getAll method is called")
    public List<UsuarioHabilitado> getAll() {
       log.info("Fetching all usuarios habilitados");
       return usuarioHabilitadoService.findAll();
    }
 
    @GetMapping("/{id}")
+   @Timed(value = "getUsuarioHabilitadoById.time", description = "Time taken to return a usuario habilitado by id")
+   @Counted(value = "getUsuarioHabilitadoById.count", description = "Number of times the getById method is called")
    public ResponseEntity<UsuarioHabilitado> getById(@PathVariable Integer id) {
       log.info("Fetching usuario habilitado with id: {}", id);
       Optional<UsuarioHabilitado> usuarioHabilitado = usuarioHabilitadoService.findById(id);
@@ -47,12 +54,16 @@ public class UsuarioHabilitadoController {
    }
 
    @PostMapping
+   @Timed(value = "createUsuarioHabilitado.time", description = "Time taken to create a new usuario habilitado")
+   @Counted(value = "createUsuarioHabilitado.count", description = "Number of times the create method is called")
    public UsuarioHabilitado create(@RequestBody UsuarioHabilitado usuarioHabilitado) {
       log.info("Creating new usuario habilitado: {}", usuarioHabilitado);
       return usuarioHabilitadoService.save(usuarioHabilitado);
    }
 
    @PutMapping("/{id}")
+   @Timed(value = "updateUsuarioHabilitado.time", description = "Time taken to update a usuario habilitado")
+   @Counted(value = "updateUsuarioHabilitado.count", description = "Number of times the update method is called")
    public ResponseEntity<UsuarioHabilitado> update(@PathVariable final Integer id,
          @RequestBody UsuarioHabilitado usuarioHabilitado) {
       log.info("Updating usuario habilitado with id: {}", id);
@@ -65,6 +76,8 @@ public class UsuarioHabilitadoController {
    }
 
    @PutMapping("/update-usuarios-habilitados/{clienteId}")
+   @Timed(value = "updateClienteUsuariosHabilitados.time", description = "Time taken to update usuarios habilitados for a cliente")
+   @Counted(value = "updateClienteUsuariosHabilitados.count", description = "Number of times the updateClienteUsuariosHabilitados method is called")
    public ResponseEntity<Cliente> updateClienteUsuariosHabilitados(@PathVariable Integer clienteId,
          @RequestBody List<UsuarioHabilitado> usuariosHabilitados) {
       log.info("Updating usuarios habilitados for cliente with id: {}", clienteId);
@@ -79,6 +92,8 @@ public class UsuarioHabilitadoController {
    }
 
    @DeleteMapping("/{id}")
+   @Timed(value = "deleteUsuarioHabilitado.time", description = "Time taken to delete a usuario habilitado")
+   @Counted(value = "deleteUsuarioHabilitado.count", description = "Number of times the delete method is called")
    public ResponseEntity<Void> delete(@PathVariable Integer id) {
       log.info("Deleting usuario habilitado with id: {}", id);
       if (!usuarioHabilitadoService.findById(id).isPresent()) {

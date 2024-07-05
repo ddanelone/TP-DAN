@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+
 @RestController
 @RequestMapping("/api/obras")
 public class ObraController {
@@ -31,18 +34,24 @@ public class ObraController {
 
    private static final Logger log = LoggerFactory.getLogger(ObraController.class);
 
+   @Timed(value = "obra.getAll.time", description = "Time taken to return all obras")
+   @Counted(value = "obra.getAll.count", description = "Times all obras are requested")
    @GetMapping
    public List<Obra> getAll() {
       log.info("Fetching all obras");
       return obraService.findAll();
    }
 
+   @Timed(value = "obra.getEstado.time", description = "Time taken to return all estados")
+   @Counted(value = "obra.getEstado.count", description = "Times all estados are requested")
    @GetMapping("/estados")
    public List<Estado> getEstado() {
       log.info("Fetching all estados");
       return obraService.findStates();
    }
 
+   @Timed(value = "obra.getById.time", description = "Time taken to return an obra by ID")
+   @Counted(value = "obra.getById.count", description = "Times an obra is requested by ID")
    @GetMapping("/{id}")
    public ResponseEntity<Obra> getById(@PathVariable Integer id) {
       log.info("Fetching obra with id: {}", id);
@@ -53,12 +62,16 @@ public class ObraController {
       });
    }
 
+   @Timed(value = "obra.create.time", description = "Time taken to create a new obra")
+   @Counted(value = "obra.create.count", description = "Times a new obra is created")
    @PostMapping
    public Obra create(@RequestBody Obra obra) {
       log.info("Creating new obra: {}", obra);
       return obraService.save(obra);
    }
 
+   @Timed(value = "obra.update.time", description = "Time taken to update an obra")
+   @Counted(value = "obra.update.count", description = "Times an obra is updated")
    @PutMapping("/{id}")
    public ResponseEntity<Obra> update(@PathVariable Integer id, @RequestBody Obra obra) {
       log.info("Updating obra with id: {}", id);
@@ -70,6 +83,8 @@ public class ObraController {
       return ResponseEntity.ok(obraService.update(obra));
    }
 
+   @Timed(value = "obra.delete.time", description = "Time taken to delete an obra")
+   @Counted(value = "obra.delete.count", description = "Times an obra is deleted")
    @DeleteMapping("/{id}")
    public ResponseEntity<Void> delete(@PathVariable Integer id) {
       log.info("Deleting obra with id: {}", id);
@@ -81,6 +96,8 @@ public class ObraController {
       return ResponseEntity.noContent().build();
    }
 
+   @Timed(value = "obra.getCoordinates.time", description = "Time taken to get coordinates for an address")
+   @Counted(value = "obra.getCoordinates.count", description = "Times coordinates are requested for an address")
    @PostMapping("/coordenadas")
    public ResponseEntity<Map<String, Double>> getCoordinates(@RequestBody Map<String, String> address) {
       String calle = address.get("calle");
@@ -101,6 +118,8 @@ public class ObraController {
       }
    }
 
+   @Timed(value = "obra.validarObra.time", description = "Time taken to validate an obra for a cliente")
+   @Counted(value = "obra.validarObra.count", description = "Times an obra is validated for a cliente")
    @PostMapping("/cliente/validar-obra/{idCliente}")
    public ResponseEntity<Map<String, Object>> validarObra(@PathVariable Integer idCliente, @RequestBody Obra obra) {
       log.info("Validating obra for cliente with id: {}", idCliente);
