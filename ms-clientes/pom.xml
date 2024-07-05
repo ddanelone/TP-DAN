@@ -26,9 +26,16 @@
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-jdbc</artifactId>
       </dependency>
+      <!-- {/* ========== Lo modifico para usar graylog ========== */} -->
       <dependency>
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-web</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-logging</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.springframework.boot</groupId>
@@ -126,6 +133,13 @@
       <dependency>
          <groupId>io.zipkin.reporter2</groupId>
          <artifactId>zipkin-reporter-brave</artifactId>
+      </dependency>
+
+      <!-- {/* ========== Hay que cambiar también la configuracion de spring boot starter ========== */} -->
+      <dependency>
+         <groupId>de.siegmar</groupId>
+         <artifactId>logback-gelf</artifactId>
+         <version>6.0.1</version>
       </dependency>
 
       <!-- {/* ========== Testing ========== */} -->

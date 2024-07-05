@@ -1,11 +1,11 @@
 package isi.dan.msclientes.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
@@ -29,30 +29,41 @@ public class ObraController {
    @Value("${obras.cantidad_maxima_habilitadas}")
    private int cantidadMaximaObrasHabilitadas;
 
+   private static final Logger log = LoggerFactory.getLogger(ObraController.class);
+
    @GetMapping
    public List<Obra> getAll() {
+      log.info("Fetching all obras");
       return obraService.findAll();
    }
 
    @GetMapping("/estados")
    public List<Estado> getEstado() {
+      log.info("Fetching all estados");
       return obraService.findStates();
    }
 
    @GetMapping("/{id}")
    public ResponseEntity<Obra> getById(@PathVariable Integer id) {
+      log.info("Fetching obra with id: {}", id);
       Optional<Obra> obra = obraService.findById(id);
-      return obra.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+      return obra.map(ResponseEntity::ok).orElseGet(() -> {
+         log.warn("Obra not found with id: {}", id);
+         return ResponseEntity.notFound().build();
+      });
    }
 
    @PostMapping
    public Obra create(@RequestBody Obra obra) {
+      log.info("Creating new obra: {}", obra);
       return obraService.save(obra);
    }
 
    @PutMapping("/{id}")
    public ResponseEntity<Obra> update(@PathVariable Integer id, @RequestBody Obra obra) {
+      log.info("Updating obra with id: {}", id);
       if (!obraService.findById(id).isPresent()) {
+         log.warn("Obra not found with id: {}", id);
          return ResponseEntity.notFound().build();
       }
       obra.setId(id);
@@ -61,7 +72,9 @@ public class ObraController {
 
    @DeleteMapping("/{id}")
    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+      log.info("Deleting obra with id: {}", id);
       if (!obraService.findById(id).isPresent()) {
+         log.warn("Obra not found with id: {}", id);
          return ResponseEntity.notFound().build();
       }
       obraService.deleteById(id);
@@ -76,26 +89,21 @@ public class ObraController {
       String provincia = address.get("provincia");
       String pais = address.get("pais");
 
-      // Convertir el mapa a JSON y imprimirlo en la consola
-      try {
-         ObjectMapper objectMapper = new ObjectMapper();
-         String json = objectMapper.writeValueAsString(address);
-         System.out.println("Dirección recibida: " + json);
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
+      log.info("Fetching coordinates for address: {}, {}, {}, {}, {}", calle, altura, ciudad, provincia, pais);
 
       try {
          Map<String, Double> coordinates = geocodingService.getCoordinates(calle, altura, ciudad, provincia, pais);
-
          return ResponseEntity.ok(coordinates);
       } catch (Exception e) {
+         log.error("Error fetching coordinates for address: {}, {}, {}, {}, {}", calle, altura, ciudad, provincia, pais,
+               e);
          return ResponseEntity.status(500).body(null);
       }
    }
 
    @PostMapping("/cliente/validar-obra/{idCliente}")
    public ResponseEntity<Map<String, Object>> validarObra(@PathVariable Integer idCliente, @RequestBody Obra obra) {
+      log.info("Validating obra for cliente with id: {}", idCliente);
       return obraService.validarObra(idCliente, obra, cantidadMaximaObrasHabilitadas);
    }
 }
