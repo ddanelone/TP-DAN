@@ -23,8 +23,7 @@ export const ListClient = ({
   viewBuildingsClients,
 }: ListClientProps) => {
   return (
-    <div className="w-full block md:hidden">
-      {/* Utiliza w-full para ocupar todo el ancho disponible */}
+    <div className="block md:hidden">
       {!isLoading &&
         clients &&
         clients.map((client) => (
@@ -54,8 +53,8 @@ export const ListClient = ({
                   client={client}
                   viewBuildingsClients={viewBuildingsClients}
                 >
-                  <Button className="bg-yellow-500 text-white">
-                    <Building2Icon />
+                  <Button className="w-8 h-8 p-0 bg-yellow-500 text-white">
+                    <Building2Icon className="w-5 h-5" />
                   </Button>
                 </ConfirmNavigationClient>
               )}
@@ -65,7 +64,7 @@ export const ListClient = ({
                   clientToUpdate={client}
                   getClients={getClients}
                 >
-                  <Button className="w-8 h-8 p-0">
+                  <Button className="w-8 h-8 p-0 mt-4">
                     <SquarePen className="w-5 h-5" />
                   </Button>
                 </CreateUpdateClient>
@@ -76,8 +75,8 @@ export const ListClient = ({
                   deleteClient={deleteClient}
                   client={client}
                 >
-                  <Button className="ml-4" variant={"destructive"}>
-                    <Trash2 />
+                  <Button className="w-8 h-8 p-0 mt-4" variant={"destructive"}>
+                    <Trash2 className="w-5 h-5" />
                   </Button>
                 </ConfirmDeletionClient>
               )}

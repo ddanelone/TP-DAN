@@ -24,7 +24,7 @@ export const ListView = ({
   addItem,
 }: ListViewProps) => {
   return (
-    <div className="w-full block md:hidden">
+    <div className="block md:hidden">
       {/* Utiliza w-full para ocupar todo el ancho disponible */}
       {!isLoading &&
         items &&
@@ -65,7 +65,7 @@ export const ListView = ({
 
               {deleteItem && (
                 <ConfirmDeletion deleteItem={deleteItem} item={item}>
-                  <Button className="w-8 h-8 p-0" variant={"destructive"}>
+                  <Button className="w-8 h-8 p-0 mt-4" variant={"destructive"}>
                     <Trash2 className="w-5 h-5" />
                   </Button>
                 </ConfirmDeletion>
@@ -73,8 +73,8 @@ export const ListView = ({
 
               {addItem && (
                 <AddItemToCart item={item} addItem={addItem}>
-                  <Button>
-                    <ShoppingCart />
+                  <Button className="mt-4">
+                    <ShoppingCart className="w-5 h-5" />
                   </Button>
                 </AddItemToCart>
               )}

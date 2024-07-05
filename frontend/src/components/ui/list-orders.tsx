@@ -23,8 +23,7 @@ export const ListOrders = ({
   isLoading,
 }: ListOrderProps) => {
   return (
-    <div className="w-full block md:hidden">
-      {/* Utiliza w-full para ocupar todo el ancho disponible */}
+    <div className="block md:hidden">
       {!isLoading &&
         orders &&
         orders.map((order) => (
@@ -52,8 +51,8 @@ export const ListOrders = ({
               {/* ========== Historial de Orden ========== */}
               {getOrders && (
                 <StatusHistoryView order={order}>
-                  <Button>
-                    <Calendar />
+                  <Button className="w-8 h-8 p-0">
+                    <Calendar className="w-5 h-5" />
                   </Button>
                 </StatusHistoryView>
               )}
@@ -61,7 +60,7 @@ export const ListOrders = ({
               {/* ========== Actualizar orden ========== */}
               {getOrders && (
                 <UpdateStatusOrder orderToUpdate={order} getOrders={getOrders}>
-                  <Button className="w-8 h-8 p-0">
+                  <Button className="w-8 h-8 p-0 mt-4 ml-4">
                     <SquarePen className="w-5 h-5" />
                   </Button>
                 </UpdateStatusOrder>
@@ -70,7 +69,7 @@ export const ListOrders = ({
               {/* ========== Eliminar una orden ========== */}
               {deleteOrder && (
                 <ConfirmDeletionOrder deleteOrder={deleteOrder} order={order}>
-                  <Button className="w-8 h-8 p-0" variant={"destructive"}>
+                  <Button className="w-8 h-8 p-0 mt-4" variant={"destructive"}>
                     <Trash2 className="w-5 h-5" />
                   </Button>
                 </ConfirmDeletionOrder>

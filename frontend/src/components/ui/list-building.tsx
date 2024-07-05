@@ -20,8 +20,7 @@ export const ListBuilding = ({
   deleteBuilding,
 }: ListBuildingProps) => {
   return (
-    <div className="w-full block md:hidden">
-      {/* Utiliza w-full para ocupar todo el ancho disponible */}
+    <div className="block md:hidden">
       {!isLoading &&
         buildings &&
         buildings.map((building) => (
@@ -67,8 +66,8 @@ export const ListBuilding = ({
                   deleteBuilding={deleteBuilding}
                   building={building}
                 >
-                  <Button className="ml-4" variant={"destructive"}>
-                    <Trash2 />
+                  <Button className="w-8 h-8 p-0 mt-4" variant={"destructive"}>
+                    <Trash2 className="w-5 h-5" />
                   </Button>
                 </ConfirmDeletionBuilding>
               )}
