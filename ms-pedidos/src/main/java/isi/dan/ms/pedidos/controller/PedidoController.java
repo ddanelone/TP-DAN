@@ -21,8 +21,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Gauge;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -31,11 +36,21 @@ public class PedidoController {
    @Autowired
    private PedidoService pedidoService;
 
-   Logger log = LoggerFactory.getLogger(PedidoService.class);
-
    @Autowired
    private MessageSenderService messageSenderService;
 
+   private static final Logger log = LoggerFactory.getLogger(PedidoController.class);
+
+   private final AtomicInteger pedidosCount = new AtomicInteger();
+
+   @Autowired
+   public PedidoController(MeterRegistry meterRegistry) {
+      Gauge.builder("pedidos.count", pedidosCount, AtomicInteger::get)
+            .description("Número de pedidos en el sistema")
+            .register(meterRegistry);
+   }
+
+   @Timed(value = "pedidos.create.timed", description = "Tiempo de creación de pedidos")
    @PostMapping
    public ResponseEntity<Pedido> createPedido(@RequestBody Pedido pedido) {
       // Verificar stock para cada producto en el pedido
@@ -50,23 +65,28 @@ public class PedidoController {
 
       // Guardar el pedido con los detalles que tienen suficiente stock
       Pedido savedPedido = pedidoService.savePedido(pedido);
+      pedidosCount.incrementAndGet();
       return ResponseEntity.ok(savedPedido);
    }
 
+   @Timed(value = "pedidos.getAll.timed", description = "Tiempo de obtener todos los pedidos")
    @GetMapping
    public List<Pedido> getAllPedidos() {
       return pedidoService.getAllPedidos();
    }
 
+   @Timed(value = "pedidos.getById.timed", description = "Tiempo de obtener pedido por ID")
    @GetMapping("/{id}")
    public ResponseEntity<Pedido> getPedidoById(@PathVariable String id) {
       Pedido pedido = pedidoService.getPedidoById(id);
       return pedido != null ? ResponseEntity.ok(pedido) : ResponseEntity.notFound().build();
    }
 
+   @Timed(value = "pedidos.delete.timed", description = "Tiempo de eliminar pedido")
    @DeleteMapping("/{id}")
    public ResponseEntity<Void> deletePedido(@PathVariable String id) {
       pedidoService.deletePedido(id);
+      pedidosCount.decrementAndGet();
       return ResponseEntity.noContent().build();
    }
 
@@ -150,5 +170,4 @@ public class PedidoController {
          return ResponseEntity.notFound().build();
       }
    }
-
 }
