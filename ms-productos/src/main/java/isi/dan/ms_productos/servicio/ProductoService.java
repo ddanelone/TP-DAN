@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import isi.dan.ms_productos.dao.ProductoRepository;
 import isi.dan.ms_productos.modelo.Producto;
+import jakarta.annotation.PostConstruct;
 
 import java.util.List;
 
@@ -23,48 +26,71 @@ public class ProductoService {
 
    Logger log = LoggerFactory.getLogger(ProductoService.class);
 
+   @Autowired
+   private ObservationRegistry observationRegistry;
+
+   @PostConstruct
+   public void init() {
+      log.info("Microservicio de Productos iniciado y enviando logs a Graylog");
+   }
+
    public Producto saveProducto(Producto producto) {
-      Timer.Sample sample = Timer.start(meterRegistry);
-      try {
-         return productoRepository.save(producto);
-      } finally {
-         sample.stop(meterRegistry.timer("producto.save"));
-      }
+      return Observation.createNotStarted("producto.save", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  return productoRepository.save(producto);
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.save"));
+               }
+            });
    }
 
    public List<Producto> getAllProductos() {
-      Timer.Sample sample = Timer.start(meterRegistry);
-      try {
-         return productoRepository.findAll();
-      } finally {
-         sample.stop(meterRegistry.timer("producto.getAll"));
-      }
+      return Observation.createNotStarted("producto.getAll", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  return productoRepository.findAll();
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.getAll"));
+               }
+            });
    }
 
    public Producto getProductoById(Long id) {
-      Timer.Sample sample = Timer.start(meterRegistry);
-      try {
-         return productoRepository.findById(id).orElse(null);
-      } finally {
-         sample.stop(meterRegistry.timer("producto.getById"));
-      }
+      return Observation.createNotStarted("producto.getById", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  return productoRepository.findById(id).orElse(null);
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.getById"));
+               }
+            });
    }
 
    public void deleteProducto(Long id) {
-      Timer.Sample sample = Timer.start(meterRegistry);
-      try {
-         productoRepository.deleteById(id);
-      } finally {
-         sample.stop(meterRegistry.timer("producto.delete"));
-      }
+      Observation.createNotStarted("producto.delete", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  productoRepository.deleteById(id);
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.delete"));
+               }
+            });
    }
 
    public List<Producto> getProductosByIds(List<Long> ids) {
-      Timer.Sample sample = Timer.start(meterRegistry);
-      try {
-         return productoRepository.findAllById(ids);
-      } finally {
-         sample.stop(meterRegistry.timer("producto.getByIds"));
-      }
+      return Observation.createNotStarted("producto.getByIds", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  return productoRepository.findAllById(ids);
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.getByIds"));
+               }
+            });
    }
 }

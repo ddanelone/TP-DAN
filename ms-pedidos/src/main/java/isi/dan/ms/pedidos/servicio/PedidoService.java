@@ -4,7 +4,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
@@ -17,6 +16,7 @@ import isi.dan.ms.pedidos.modelo.Cliente;
 import isi.dan.ms.pedidos.modelo.DetallePedido;
 import isi.dan.ms.pedidos.modelo.Pedido;
 import isi.dan.ms.pedidos.modelo.Producto;
+import jakarta.annotation.PostConstruct;
 
 import java.util.List;
 import org.slf4j.Logger;
@@ -43,13 +43,15 @@ public class PedidoService {
    @Autowired
    private SequenceGeneratorService sequenceGeneratorService;
 
-   @Autowired
-   private WebClient webClient; // Inyectamos WebClient
-
    Logger log = LoggerFactory.getLogger(PedidoService.class);
 
    @Autowired
    private ObservationRegistry observationRegistry;
+
+   @PostConstruct
+   public void init() {
+      log.info("Microservicio de Pedidos iniciado y enviando logs a Graylog");
+   }
 
    public Pedido savePedido(Pedido pedido) {
       return Observation.createNotStarted("pedido.save", observationRegistry)
