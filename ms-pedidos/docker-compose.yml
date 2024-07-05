@@ -31,7 +31,7 @@ services:
   ms-pedidos-svc:
     image: ms-pedidos-svc:latest
     deploy:
-      replicas: 1
+      replicas: 3
       restart_policy:
         condition: on-failure
     #container_name: ms-pedidos-svc

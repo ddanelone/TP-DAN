@@ -152,19 +152,6 @@
          <artifactId>zipkin-reporter-brave</artifactId>
       </dependency>
 
-      <dependency>
-         <groupId>org.springframework.cloud</groupId>
-         <artifactId>spring-cloud-starter-sleuth</artifactId>
-         <version>3.1.11</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.springframework.cloud</groupId>
-         <artifactId>spring-cloud-sleuth-zipkin</artifactId>
-         <version>3.1.11</version>
-      </dependency>
-
-
 
       <!-- {/* ========== Hay que cambiar también la configuracion de spring boot starter ========== */} -->
       <dependency>
