@@ -23,11 +23,7 @@ interface AddItemToCartProps {
   addItem: (item: Product) => void;
 }
 
-export const AddItemToCart = ({
-  children,
-  item,
-  addItem,
-}: AddItemToCartProps) => {
+export function AddItemToCart({ children, item, addItem }: AddItemToCartProps) {
   const [open, setOpen] = useState<boolean>(false);
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -102,6 +98,8 @@ export const AddItemToCart = ({
       </DialogContent>
     </Dialog>
   );
-};
+}
+
+AddItemToCart.displayName = "AddItemToCart";
 
 export default AddItemToCart;

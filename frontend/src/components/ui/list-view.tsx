@@ -16,13 +16,13 @@ interface ListViewProps {
   addItem?: (item: Product) => void;
 }
 
-export const ListView = ({
+export function ListView({
   items,
   getItems,
   deleteItem,
   isLoading,
   addItem,
-}: ListViewProps) => {
+}: ListViewProps) {
   return (
     <div className="block md:hidden">
       {/* Utiliza w-full para ocupar todo el ancho disponible */}
@@ -106,6 +106,6 @@ export const ListView = ({
       )}
     </div>
   );
-};
+}
 
 export default ListView;

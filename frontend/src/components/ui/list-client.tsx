@@ -15,13 +15,13 @@ interface ListClientProps {
   viewBuildingsClients: (client: Costumer) => void;
 }
 
-export const ListClient = ({
+export function ListClient({
   isLoading,
   clients,
   getClients,
   deleteClient,
   viewBuildingsClients,
-}: ListClientProps) => {
+}: ListClientProps) {
   return (
     <div className="block md:hidden">
       {!isLoading &&
@@ -108,6 +108,6 @@ export const ListClient = ({
       )}
     </div>
   );
-};
+}
 
 export default ListClient;

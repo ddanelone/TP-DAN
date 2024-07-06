@@ -9,9 +9,9 @@ var badge_1 = require("@/components/ui/badge");
 var create_update_item_form_1 = require("@/app/(vendedor)/abm/components/create-update-item-form");
 var confirm_deletion_1 = require("@/app/(vendedor)/abm/components/confirm-deletion");
 var add_item_to_cart_1 = require("@/app/(cliente)/components/add-item-to-cart");
-exports.ListView = function (_a) {
+function ListView(_a) {
     var items = _a.items, getItems = _a.getItems, deleteItem = _a.deleteItem, isLoading = _a.isLoading, addItem = _a.addItem;
-    return (React.createElement("div", { className: "w-full block md:hidden" },
+    return (React.createElement("div", { className: "block md:hidden" },
         !isLoading &&
             items &&
             items.map(function (item) { return (React.createElement("div", { key: item.id, className: "flex items-center mb-6 justify-between border border-solid border-gray-300 rounded-xl p-6" },
@@ -49,11 +49,11 @@ exports.ListView = function (_a) {
                         React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
                             React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" })))),
                     deleteItem && (React.createElement(confirm_deletion_1.ConfirmDeletion, { deleteItem: deleteItem, item: item },
-                        React.createElement(button_1.Button, { className: "w-8 h-8 p-0", variant: "destructive" },
+                        React.createElement(button_1.Button, { className: "w-8 h-8 p-0 mt-4", variant: "destructive" },
                             React.createElement(lucide_react_1.Trash2, { className: "w-5 h-5" })))),
                     addItem && (React.createElement(add_item_to_cart_1["default"], { item: item, addItem: addItem },
-                        React.createElement(button_1.Button, null,
-                            React.createElement(lucide_react_1.ShoppingCart, null))))))); }),
+                        React.createElement(button_1.Button, { className: "mt-4" },
+                            React.createElement(lucide_react_1.ShoppingCart, { className: "w-5 h-5" }))))))); }),
         isLoading &&
             [1, 1, 1, 1, 1].map(function (item, i) { return (React.createElement("div", { key: i, className: "flex items-center mb-6 justify-between border border-solid border-gray-300 rounded-xl p-6" },
                 React.createElement("div", { className: "flex justify-start items-center" },
@@ -65,5 +65,6 @@ exports.ListView = function (_a) {
             React.createElement("div", { className: "flex justify-center" },
                 React.createElement(lucide_react_1.LayoutList, { className: "w-[120px] h-[120px]" })),
             React.createElement("h2", { className: "text-center" }, "No hay productos disponibles")))));
-};
-exports["default"] = exports.ListView;
+}
+exports.ListView = ListView;
+exports["default"] = ListView;

@@ -188,7 +188,7 @@ function BuyCart(_a) {
         if (user) {
             getMyClientData();
         }
-    }, [user]);
+    }, [user, getMyClientData]);
     return (React.createElement(dialog_1.Dialog, { open: open, onOpenChange: setOpen },
         React.createElement(dialog_1.DialogTrigger, { asChild: true }, children),
         React.createElement(dialog_1.DialogContent, { className: "sm:max-w-[800px]" },

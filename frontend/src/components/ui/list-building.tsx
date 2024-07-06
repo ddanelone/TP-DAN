@@ -13,12 +13,12 @@ interface ListBuildingProps {
   deleteBuilding?: (building: Building) => Promise<void>;
 }
 
-export const ListBuilding = ({
+export function ListBuilding({
   isLoading,
   buildings,
   getBuildings,
   deleteBuilding,
-}: ListBuildingProps) => {
+}: ListBuildingProps) {
   return (
     <div className="block md:hidden">
       {!isLoading &&
@@ -99,6 +99,6 @@ export const ListBuilding = ({
       )}
     </div>
   );
-};
+}
 
 export default ListBuilding;

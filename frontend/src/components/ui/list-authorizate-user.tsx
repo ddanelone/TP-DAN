@@ -13,12 +13,12 @@ interface TableAuthorizateUserProps {
   deleteUser: (userAuth: AuthorizedUser) => Promise<void>;
 }
 
-export const ListAuthorizateUser = ({
+export function ListAuthorizateUser({
   isLoading,
   userAuths,
   getUsers,
   deleteUser,
-}: TableAuthorizateUserProps) => {
+}: TableAuthorizateUserProps) {
   return (
     <div className="w-full block md:hidden">
       {/* Utiliza w-full para ocupar todo el ancho disponible */}
@@ -87,6 +87,6 @@ export const ListAuthorizateUser = ({
       )}
     </div>
   );
-};
+}
 
 export default ListAuthorizateUser;

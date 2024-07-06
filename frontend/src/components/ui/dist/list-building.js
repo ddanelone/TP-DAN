@@ -7,9 +7,9 @@ var skeleton_1 = require("@/components/ui/skeleton");
 var badge_1 = require("@/components/ui/badge");
 var create_update_building_1 = require("@/app/(vendedor)/abm/obras/components/create-update-building");
 var confirm_deletion_building_1 = require("@/app/(vendedor)/abm/obras/components/confirm-deletion-building");
-exports.ListBuilding = function (_a) {
+function ListBuilding(_a) {
     var isLoading = _a.isLoading, buildings = _a.buildings, getBuildings = _a.getBuildings, deleteBuilding = _a.deleteBuilding;
-    return (React.createElement("div", { className: "w-full block md:hidden" },
+    return (React.createElement("div", { className: "block md:hidden" },
         !isLoading &&
             buildings &&
             buildings.map(function (building) {
@@ -53,8 +53,8 @@ exports.ListBuilding = function (_a) {
                             React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
                                 React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" })))),
                         deleteBuilding && (React.createElement(confirm_deletion_building_1.ConfirmDeletionBuilding, { deleteBuilding: deleteBuilding, building: building },
-                            React.createElement(button_1.Button, { className: "ml-4", variant: "destructive" },
-                                React.createElement(lucide_react_1.Trash2, null)))))));
+                            React.createElement(button_1.Button, { className: "w-8 h-8 p-0 mt-4", variant: "destructive" },
+                                React.createElement(lucide_react_1.Trash2, { className: "w-5 h-5" })))))));
             }),
         isLoading &&
             [1, 1, 1, 1, 1].map(function (item, i) { return (React.createElement("div", { key: i, className: "flex items-center mb-6 justify-between border border-solid border-gray-300 rounded-xl p-6" },
@@ -67,5 +67,6 @@ exports.ListBuilding = function (_a) {
             React.createElement("div", { className: "flex justify-center" },
                 React.createElement(lucide_react_1.LayoutList, { className: "w-[120px] h-[120px]" })),
             React.createElement("h2", { className: "text-center" }, "No hay productos disponibles")))));
-};
-exports["default"] = exports.ListBuilding;
+}
+exports.ListBuilding = ListBuilding;
+exports["default"] = ListBuilding;

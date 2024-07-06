@@ -19,7 +19,7 @@ var label_1 = require("@/components/ui/label");
 var react_hook_form_1 = require("react-hook-form");
 var react_1 = require("react");
 var button_1 = require("@/components/ui/button");
-exports.AddItemToCart = function (_a) {
+function AddItemToCart(_a) {
     var children = _a.children, item = _a.item, addItem = _a.addItem;
     var _b = react_1.useState(false), open = _b[0], setOpen = _b[1];
     var _c = react_hook_form_1.useForm({
@@ -68,5 +68,7 @@ exports.AddItemToCart = function (_a) {
                         React.createElement(input_1.Input, { id: "totalItem", value: totalItem.toFixed(2), disabled: true })),
                     React.createElement(dialog_1.DialogFooter, null,
                         React.createElement(button_1.Button, { type: "submit" }, "Agregar")))))));
-};
-exports["default"] = exports.AddItemToCart;
+}
+exports.AddItemToCart = AddItemToCart;
+AddItemToCart.displayName = "AddItemToCart";
+exports["default"] = AddItemToCart;

@@ -1,6 +1,6 @@
 import Logo from "@/components/logo";
 import { Metadata } from "next";
-import SignInForm from "./components/sign-in.form";
+import SignInForm from "./components/sign-in-form";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -19,7 +19,7 @@ const AuthPage = () => {
           <div className="relative z-20 mt-auto">
             <p className="text-lg">Brindando soluciones desde 2021</p>
             <footer className="text-sm">
-              &copy; Cosolito-Danelone-Margitic
+              {"&copy; Cosolito-Danelone-Margitic"}
             </footer>
           </div>
         </div>

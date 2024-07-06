@@ -150,7 +150,7 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
     if (user) {
       getMyClientData();
     }
-  }, [user]);
+  }, [user, getMyClientData]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

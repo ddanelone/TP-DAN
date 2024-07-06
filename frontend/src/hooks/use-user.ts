@@ -19,6 +19,7 @@ export const useUser = () => {
     "/abm/obras",
     "/abm/clientes",
   ];
+
   const isInProtectedRoute = protectedRoutes.includes(pathName);
 
   useEffect(() => {

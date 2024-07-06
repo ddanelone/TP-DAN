@@ -10,9 +10,9 @@ var confirm_deletion_order_1 = require("@/app/(vendedor)/abm/pedidos/components/
 var update_status_order_1 = require("@/app/(vendedor)/abm/pedidos/components/update-status-order");
 var format_date_1 = require("@/action/format-date");
 var status_history_view_1 = require("./status-history-view");
-exports.ListOrders = function (_a) {
+function ListOrders(_a) {
     var orders = _a.orders, getOrders = _a.getOrders, deleteOrder = _a.deleteOrder, isLoading = _a.isLoading;
-    return (React.createElement("div", { className: "w-full block md:hidden" },
+    return (React.createElement("div", { className: "block md:hidden" },
         !isLoading &&
             orders &&
             orders.map(function (order) { return (React.createElement("div", { key: order.numeroPedido, className: "flex items-center mb-6 justify-between border border-solid border-gray-300 rounded-xl p-6" },
@@ -42,13 +42,13 @@ exports.ListOrders = function (_a) {
                                 format_price_1.formatPrice(order.total))))),
                 React.createElement("div", { className: "ml-2" },
                     getOrders && (React.createElement(status_history_view_1["default"], { order: order },
-                        React.createElement(button_1.Button, null,
-                            React.createElement(lucide_react_1.Calendar, null)))),
-                    getOrders && (React.createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
                         React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
+                            React.createElement(lucide_react_1.Calendar, { className: "w-5 h-5" })))),
+                    getOrders && (React.createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
+                        React.createElement(button_1.Button, { className: "w-8 h-8 p-0 mt-4 ml-4" },
                             React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" })))),
                     deleteOrder && (React.createElement(confirm_deletion_order_1.ConfirmDeletionOrder, { deleteOrder: deleteOrder, order: order },
-                        React.createElement(button_1.Button, { className: "w-8 h-8 p-0", variant: "destructive" },
+                        React.createElement(button_1.Button, { className: "w-8 h-8 p-0 mt-4", variant: "destructive" },
                             React.createElement(lucide_react_1.Trash2, { className: "w-5 h-5" }))))))); }),
         isLoading &&
             [1, 1, 1, 1, 1].map(function (item, i) { return (React.createElement("div", { key: i, className: "flex items-center mb-6 justify-between border border-solid border-gray-300 rounded-xl p-6" },
@@ -61,5 +61,6 @@ exports.ListOrders = function (_a) {
             React.createElement("div", { className: "flex justify-center" },
                 React.createElement(lucide_react_1.LayoutList, { className: "w-[120px] h-[120px]" })),
             React.createElement("h2", { className: "text-center" }, "No hay productos disponibles")))));
-};
-exports["default"] = exports.ListOrders;
+}
+exports.ListOrders = ListOrders;
+exports["default"] = ListOrders;

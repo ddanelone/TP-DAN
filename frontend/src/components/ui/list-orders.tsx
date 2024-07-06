@@ -16,12 +16,12 @@ interface ListOrderProps {
   isLoading: boolean;
 }
 
-export const ListOrders = ({
+export function ListOrders({
   orders,
   getOrders,
   deleteOrder,
   isLoading,
-}: ListOrderProps) => {
+}: ListOrderProps) {
   return (
     <div className="block md:hidden">
       {!isLoading &&
@@ -102,6 +102,6 @@ export const ListOrders = ({
       )}
     </div>
   );
-};
+}
 
 export default ListOrders;
