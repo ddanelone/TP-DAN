@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+
 exports.metadata = void 0;
 var navbar_1 = require("@/components/ui/navbar");
 var profile_edit_1 = require("../components/profile-edit");

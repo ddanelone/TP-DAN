@@ -1,3 +1,5 @@
+"use client";
+
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -7,7 +9,6 @@ import { deletePedido, getAllPedidos } from "@/lib/auth";
 import { Order } from "@/interfaces/order.interface";
 import { TableOrders } from "@/components/ui/table-orders";
 import ListOrders from "@/components/ui/list-orders";
-import { OrderDetails } from "@/interfaces/order-detail.interface";
 
 function Orders() {
   const user = useUser();

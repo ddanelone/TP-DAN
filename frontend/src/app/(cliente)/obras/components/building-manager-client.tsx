@@ -1,7 +1,8 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { TableBuilding } from "@/components/ui/table-building";
 import ListBuilding from "@/components/ui/list-building";
 import { Building } from "@/interfaces/building.interface";

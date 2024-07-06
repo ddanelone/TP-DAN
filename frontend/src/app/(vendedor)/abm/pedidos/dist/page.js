@@ -1,5 +1,4 @@
 "use strict";
-exports.__esModule = true;
 exports.metadata = void 0;
 var navbar_1 = require("@/components/ui/navbar");
 var order_manager_1 = require("../components/order-manager");

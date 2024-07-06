@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+
 exports.metadata = void 0;
 var recover_password_form_1 = require("../components/recover-password.form");
 exports.metadata = {

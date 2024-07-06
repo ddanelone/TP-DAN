@@ -1,3 +1,5 @@
+"use client";
+
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 import { User } from "@/interfaces/user.interface";
 import { usePathname } from "next/navigation";

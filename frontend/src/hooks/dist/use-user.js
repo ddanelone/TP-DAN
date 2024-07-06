@@ -1,3 +1,4 @@
+"use client";
 "use strict";
 exports.__esModule = true;
 exports.useUser = void 0;
