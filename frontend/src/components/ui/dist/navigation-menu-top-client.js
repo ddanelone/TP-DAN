@@ -1,4 +1,3 @@
-"use client";
 "use strict";
 exports.__esModule = true;
 exports.NavigationMenuTopClient = void 0;

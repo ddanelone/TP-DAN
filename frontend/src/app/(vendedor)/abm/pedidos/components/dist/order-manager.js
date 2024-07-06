@@ -1,4 +1,3 @@
-"use client";
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -44,11 +43,12 @@ var badge_1 = require("@/components/ui/badge");
 var auth_1 = require("@/lib/auth");
 var table_orders_1 = require("@/components/ui/table-orders");
 var list_orders_1 = require("@/components/ui/list-orders");
-var Orders = function () {
+function Orders() {
+    var _this = this;
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), orders = _a[0], setOrders = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
-    var getOrders = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var getOrders = function () { return __awaiter(_this, void 0, void 0, function () {
         var res, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -75,7 +75,7 @@ var Orders = function () {
         });
     }); };
     /* ========== Borrar un Pedido de la base de datos ========== */
-    var deleteOrder = function (order) { return __awaiter(void 0, void 0, void 0, function () {
+    var deleteOrder = function (order) { return __awaiter(_this, void 0, void 0, function () {
         var res, newOrders, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -113,5 +113,5 @@ var Orders = function () {
                 orders.length > 0 && (React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES")))),
         React.createElement(table_orders_1.TableOrders, { deleteOrder: deleteOrder, getOrders: getOrders, orders: orders, isLoading: isLoading }),
         React.createElement(list_orders_1["default"], { deleteOrder: deleteOrder, getOrders: getOrders, orders: orders, isLoading: isLoading })));
-};
+}
 exports["default"] = Orders;

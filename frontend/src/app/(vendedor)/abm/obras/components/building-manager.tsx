@@ -15,7 +15,7 @@ import { Costumer } from "@/interfaces/costumer.interface";
 import { useRouter } from "next/navigation";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 
-const BuildingManager = () => {
+function BuildingManager() {
   const user = useUser();
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -117,6 +117,6 @@ const BuildingManager = () => {
       </div>
     </>
   );
-};
+}
 
 export default BuildingManager;

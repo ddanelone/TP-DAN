@@ -3,7 +3,7 @@ exports.__esModule = true;
 exports.ListHistoryOrders = void 0;
 var badge_1 = require("@/components/ui/badge");
 var format_date_1 = require("@/action/format-date");
-exports.ListHistoryOrders = function (_a) {
+function ListHistoryOrders(_a) {
     var order = _a.order;
     console.log("Order to view:", order);
     if (!order.historialEstado || order.historialEstado.length === 0) {
@@ -50,4 +50,5 @@ exports.ListHistoryOrders = function (_a) {
                             React.createElement(badge_1.Badge, { className: "mt-2", variant: "outline" },
                                 "Estado: ",
                                 historial.estado)))))); }))));
-};
+}
+exports.ListHistoryOrders = ListHistoryOrders;

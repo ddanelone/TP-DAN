@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
@@ -17,7 +15,7 @@ import { getFromLocalstorage } from "@/action/get-from-localstorage";
 import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { useRouter } from "next/navigation";
 
-const ProfileEdit = () => {
+function ProfileEdit() {
   const user = useUser(); // Asumiendo que useUser() proporciona los datos del usuario
   const router = useRouter();
 
@@ -228,6 +226,6 @@ const ProfileEdit = () => {
       </div>
     </>
   );
-};
+}
 
 export default ProfileEdit;

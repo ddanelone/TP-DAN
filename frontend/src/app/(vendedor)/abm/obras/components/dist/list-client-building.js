@@ -4,7 +4,7 @@ exports.ListClientBuilding = void 0;
 var button_1 = require("@/components/ui/button");
 var lucide_react_1 = require("lucide-react");
 var skeleton_1 = require("@/components/ui/skeleton");
-exports.ListClientBuilding = function (_a) {
+function ListClientBuilding(_a) {
     var isLoading = _a.isLoading, clients = _a.clients, onSelectClient = _a.onSelectClient;
     return (React.createElement("div", { className: "w-full block" },
         !isLoading &&
@@ -38,5 +38,6 @@ exports.ListClientBuilding = function (_a) {
             React.createElement("div", { className: "flex justify-center" },
                 React.createElement(lucide_react_1.LayoutList, { className: "w-[120px] h-[120px]" })),
             React.createElement("h2", { className: "text-center" }, "No hay Clientes que coincidan")))));
-};
-exports["default"] = exports.ListClientBuilding;
+}
+exports.ListClientBuilding = ListClientBuilding;
+exports["default"] = ListClientBuilding;

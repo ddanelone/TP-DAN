@@ -13,7 +13,7 @@ import { deleteProductById, getProducts } from "@/lib/auth";
 import { TableView } from "@/components/ui/table-view";
 import ListView from "@/components/ui/list-view";
 
-const Items = () => {
+function Items() {
   const user = useUser();
   const [items, setItems] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -89,6 +89,6 @@ const Items = () => {
       />
     </>
   );
-};
+}
 
 export default Items;

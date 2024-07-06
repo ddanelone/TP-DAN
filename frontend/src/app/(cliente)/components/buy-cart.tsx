@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogContent,
@@ -150,7 +148,7 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
     if (user) {
       getMyClientData();
     }
-  }, [user, getMyClientData]);
+  }, [user]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

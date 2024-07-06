@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 
-const SignInForm = () => {
+function SignInForm() {
   const router = useRouter(); // Usa useRouter para la redirección
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -128,6 +128,6 @@ const SignInForm = () => {
       </p>
     </>
   );
-};
+}
 
 export default SignInForm;

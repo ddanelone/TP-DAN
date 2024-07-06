@@ -1,4 +1,3 @@
-"use client";
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -74,7 +73,8 @@ var react_hot_toast_1 = require("react-hot-toast");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var navigation_1 = require("next/navigation");
-var ProfileEdit = function () {
+function ProfileEdit() {
+    var _this = this;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     var user = use_user_1.useUser(); // Asumiendo que useUser() proporciona los datos del usuario
     var router = navigation_1.useRouter();
@@ -125,7 +125,7 @@ var ProfileEdit = function () {
         setValue("role", (_e = user === null || user === void 0 ? void 0 : user.role) !== null && _e !== void 0 ? _e : 0);
         setValue("password", (_f = user === null || user === void 0 ? void 0 : user.password) !== null && _f !== void 0 ? _f : "");
     }, [user, setValue]);
-    var onSubmit = function (formData) { return __awaiter(void 0, void 0, void 0, function () {
+    var onSubmit = function (formData) { return __awaiter(_this, void 0, void 0, function () {
         var repeatPassword, formDataWithoutRepeatPassword, userLocal, id, userUpdate, error_1, validationErrors;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -225,5 +225,5 @@ var ProfileEdit = function () {
                                 required: "Repita su contraseña"
                             }), { id: "repeatPassword", placeholder: "******", type: "password" })),
                             React.createElement("p", { className: "form-error" }, (_l = errors.repeatPassword) === null || _l === void 0 ? void 0 : _l.message))))))));
-};
+}
 exports["default"] = ProfileEdit;

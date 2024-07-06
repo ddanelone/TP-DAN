@@ -1,4 +1,3 @@
-"use client";
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -188,7 +187,7 @@ function BuyCart(_a) {
         if (user) {
             getMyClientData();
         }
-    }, [user, getMyClientData]);
+    }, [user]);
     return (React.createElement(dialog_1.Dialog, { open: open, onOpenChange: setOpen },
         React.createElement(dialog_1.DialogTrigger, { asChild: true }, children),
         React.createElement(dialog_1.DialogContent, { className: "sm:max-w-[800px]" },

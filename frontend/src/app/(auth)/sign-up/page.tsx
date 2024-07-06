@@ -25,7 +25,7 @@ const SignUp = () => {
           <div className="relative z-20 mt-auto">
             <p className="text-lg">Sistemas Empresarios Software</p>
             <footer className="text-sm">
-              {"&copy; Cosolito-Danelone-Margitic"}
+              {"Cosolito-Danelone-Margitic® "}
             </footer>
           </div>
         </div>

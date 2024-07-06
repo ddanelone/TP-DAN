@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  LayoutList,
-  ShoppingCart,
-  SquareCheck,
-  SquarePen,
-  Trash2,
-} from "lucide-react";
+import { LayoutList, SquareCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Costumer } from "@/interfaces/costumer.interface";
 
@@ -15,11 +9,11 @@ interface ListClientBuildingProps {
   onSelectClient: (client: Costumer) => void;
 }
 
-export const ListClientBuilding = ({
+export function ListClientBuilding({
   isLoading,
   clients,
   onSelectClient,
-}: ListClientBuildingProps) => {
+}: ListClientBuildingProps) {
   return (
     <div className="w-full block">
       {!isLoading &&
@@ -73,6 +67,6 @@ export const ListClientBuilding = ({
       )}
     </div>
   );
-};
+}
 
 export default ListClientBuilding;

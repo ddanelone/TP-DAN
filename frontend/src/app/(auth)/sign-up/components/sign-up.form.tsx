@@ -1,6 +1,3 @@
-// src/components/SignUpForm.tsx
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -13,10 +10,9 @@ import { createUser } from "@/lib/auth";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { User } from "@/interfaces/user.interface";
 import { useRouter } from "next/navigation";
 
-const SignUpForm = () => {
+function SignUpForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formSchema = z.object({
@@ -182,6 +178,6 @@ const SignUpForm = () => {
       </p>
     </>
   );
-};
+}
 
 export default SignUpForm;

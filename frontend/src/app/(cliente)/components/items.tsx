@@ -1,5 +1,3 @@
-"use client";
-
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
 import { Product } from "@/interfaces/product-interface";

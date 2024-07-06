@@ -47,11 +47,12 @@ var badge_1 = require("@/components/ui/badge");
 var auth_1 = require("@/lib/auth");
 var table_view_1 = require("@/components/ui/table-view");
 var list_view_1 = require("@/components/ui/list-view");
-var Items = function () {
+function Items() {
+    var _this = this;
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), items = _a[0], setItems = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
-    var getItems = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var getItems = function () { return __awaiter(_this, void 0, void 0, function () {
         var res, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -78,7 +79,7 @@ var Items = function () {
         });
     }); };
     /* ========== Borrar un item en la base de datos ========== */
-    var deleteItem = function (item) { return __awaiter(void 0, void 0, void 0, function () {
+    var deleteItem = function (item) { return __awaiter(_this, void 0, void 0, function () {
         var res, newItems, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -120,5 +121,5 @@ var Items = function () {
                     React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" })))),
         React.createElement(table_view_1.TableView, { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading }),
         React.createElement(list_view_1["default"], { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading })));
-};
+}
 exports["default"] = Items;

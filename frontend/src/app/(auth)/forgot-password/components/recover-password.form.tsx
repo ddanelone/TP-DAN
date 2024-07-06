@@ -1,6 +1,3 @@
-// src/components/RecoverPasswordForm.js
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -15,7 +12,7 @@ import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const RecoverPasswordForm = () => {
+function RecoverPasswordForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -99,6 +96,6 @@ const RecoverPasswordForm = () => {
       </p>
     </div>
   );
-};
+}
 
 export default RecoverPasswordForm;

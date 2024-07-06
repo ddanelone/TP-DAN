@@ -1,5 +1,3 @@
-"user client";
-
 import {
   Dialog,
   DialogContent,

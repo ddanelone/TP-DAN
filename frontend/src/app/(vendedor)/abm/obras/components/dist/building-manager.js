@@ -49,14 +49,15 @@ var auth_1 = require("@/lib/auth");
 var create_update_building_1 = require("./create-update-building");
 var navigation_1 = require("next/navigation");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
-var BuildingManager = function () {
+function BuildingManager() {
+    var _this = this;
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), buildings = _a[0], setBuildings = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
     var _c = react_1.useState(), client = _c[0], setClient = _c[1];
     var _d = react_1.useState(false), isFiltered = _d[0], setIsFiltered = _d[1];
     var router = navigation_1.useRouter();
-    var getBuildings = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var getBuildings = function () { return __awaiter(_this, void 0, void 0, function () {
         var res, localClient_1, filteredBuildings, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -92,7 +93,7 @@ var BuildingManager = function () {
             }
         });
     }); };
-    var deleteBuilding = function (building) { return __awaiter(void 0, void 0, void 0, function () {
+    var deleteBuilding = function (building) { return __awaiter(_this, void 0, void 0, function () {
         var newBuildings, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -145,5 +146,5 @@ var BuildingManager = function () {
         React.createElement("div", { className: "m-4" },
             React.createElement(table_building_1.TableBuilding, { isLoading: isLoading, buildings: buildings, getBuildings: getBuildings, deleteBuilding: deleteBuilding }),
             React.createElement(list_building_1["default"], { isLoading: isLoading, buildings: buildings, getBuildings: getBuildings, deleteBuilding: deleteBuilding }))));
-};
+}
 exports["default"] = BuildingManager;

@@ -1,5 +1,3 @@
-// src/components/RecoverPasswordForm.js
-"use client";
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -61,7 +59,8 @@ var react_1 = require("react");
 var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
 var navigation_1 = require("next/navigation");
-var RecoverPasswordForm = function () {
+function RecoverPasswordForm() {
+    var _this = this;
     var _a;
     var _b = react_1.useState(false), isLoading = _b[0], setIsLoading = _b[1];
     var router = navigation_1.useRouter();
@@ -81,7 +80,7 @@ var RecoverPasswordForm = function () {
     var register = form.register, handleSubmit = form.handleSubmit, formState = form.formState;
     var errors = formState.errors;
     /* ========== Recuperar contraseña ========== */
-    var onSubmit = function (user) { return __awaiter(void 0, void 0, void 0, function () {
+    var onSubmit = function (user) { return __awaiter(_this, void 0, void 0, function () {
         var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -122,5 +121,5 @@ var RecoverPasswordForm = function () {
                     "Recuperar contrase\u00F1a"))),
         React.createElement("p", { className: "text-center text-sm text-muted-foreground mt-3" },
             React.createElement(link_1["default"], { href: "/", className: "underline underline-offset-4 hover:text-primary " }, "<- Volver"))));
-};
+}
 exports["default"] = RecoverPasswordForm;

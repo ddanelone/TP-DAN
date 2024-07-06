@@ -6,7 +6,7 @@ interface ListHistoryOrderProps {
   order: Order;
 }
 
-export const ListHistoryOrders = ({ order }: ListHistoryOrderProps) => {
+export function ListHistoryOrders({ order }: ListHistoryOrderProps) {
   console.log("Order to view:", order);
 
   if (!order.historialEstado || order.historialEstado.length === 0) {
@@ -61,4 +61,4 @@ export const ListHistoryOrders = ({ order }: ListHistoryOrderProps) => {
       </div>
     </>
   );
-};
+}

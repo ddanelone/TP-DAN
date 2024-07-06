@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
@@ -14,7 +12,7 @@ import ListClient from "@/components/ui/list-client";
 import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { useRouter } from "next/navigation";
 
-const CustomerManager = () => {
+function CustomerManager() {
   const user = useUser();
   const [clients, setClients] = useState<Costumer[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -109,6 +107,6 @@ const CustomerManager = () => {
       </div>
     </>
   );
-};
+}
 
 export default CustomerManager;

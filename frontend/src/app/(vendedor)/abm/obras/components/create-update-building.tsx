@@ -1,5 +1,3 @@
-//"user client";
-
 import {
   Dialog,
   DialogContent,
@@ -15,7 +13,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { CirclePlus, LoaderCircle, UserCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useUser } from "@/hooks/use-user";

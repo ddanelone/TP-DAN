@@ -61,7 +61,8 @@ var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
 var navigation_1 = require("next/navigation");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
-var SignInForm = function () {
+function SignInForm() {
+    var _this = this;
     var _a, _b;
     var router = navigation_1.useRouter(); // Usa useRouter para la redirección
     var _c = react_1.useState(false), isLoading = _c[0], setIsLoading = _c[1];
@@ -85,7 +86,7 @@ var SignInForm = function () {
     var register = form.register, handleSubmit = form.handleSubmit, formState = form.formState;
     var errors = formState.errors;
     /* ========== Iniciar Sesión ========== */
-    var onSubmit = function (user) { return __awaiter(void 0, void 0, void 0, function () {
+    var onSubmit = function (user) { return __awaiter(_this, void 0, void 0, function () {
         var authenticatedUser, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -141,5 +142,5 @@ var SignInForm = function () {
             React.createElement(link_1["default"], { href: "/sign-up", className: "underline underline-offset-4 hover:text-primary " },
                 " ",
                 "Registrate"))));
-};
+}
 exports["default"] = SignInForm;

@@ -1,5 +1,3 @@
-// src/components/SignUpForm.tsx
-"use client";
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -61,7 +59,8 @@ var react_1 = require("react");
 var lucide_react_1 = require("lucide-react");
 var react_hot_toast_1 = require("react-hot-toast");
 var navigation_1 = require("next/navigation");
-var SignUpForm = function () {
+function SignUpForm() {
+    var _this = this;
     var _a, _b, _c, _d, _e;
     var _f = react_1.useState(false), isLoading = _f[0], setIsLoading = _f[1];
     var formSchema = z.object({
@@ -102,7 +101,7 @@ var SignUpForm = function () {
     }), register = _g.register, handleSubmit = _g.handleSubmit, formState = _g.formState;
     var errors = formState.errors;
     var router = navigation_1.useRouter();
-    var onSubmit = function (user) { return __awaiter(void 0, void 0, void 0, function () {
+    var onSubmit = function (user) { return __awaiter(_this, void 0, void 0, function () {
         var error_1, validationErrors;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -170,5 +169,5 @@ var SignUpForm = function () {
             "\u00BFYa ten\u00E9s una cuenta? ",
             "",
             React.createElement(link_1["default"], { href: "/", className: "underline underline-offset-4 hover:text-primary " }, "Ingres\u00E1"))));
-};
+}
 exports["default"] = SignUpForm;

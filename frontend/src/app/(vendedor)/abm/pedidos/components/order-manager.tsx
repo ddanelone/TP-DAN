@@ -1,9 +1,5 @@
-"use client";
-
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { CirclePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 
@@ -13,7 +9,7 @@ import { TableOrders } from "@/components/ui/table-orders";
 import ListOrders from "@/components/ui/list-orders";
 import { OrderDetails } from "@/interfaces/order-detail.interface";
 
-const Orders = () => {
+function Orders() {
   const user = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -83,6 +79,6 @@ const Orders = () => {
       />
     </>
   );
-};
+}
 
 export default Orders;

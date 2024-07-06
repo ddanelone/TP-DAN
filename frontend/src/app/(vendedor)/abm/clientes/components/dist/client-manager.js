@@ -1,4 +1,3 @@
-"use client";
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -49,13 +48,14 @@ var create_update_client_1 = require("./create-update-client");
 var list_client_1 = require("@/components/ui/list-client");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var navigation_1 = require("next/navigation");
-var CustomerManager = function () {
+function CustomerManager() {
+    var _this = this;
     var user = use_user_1.useUser();
     var _a = react_1.useState([]), clients = _a[0], setClients = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
     var router = navigation_1.useRouter();
     /* ========== Traer todos los Clientes a la Tabla  ========== */
-    var getClients = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var getClients = function () { return __awaiter(_this, void 0, void 0, function () {
         var res, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -82,7 +82,7 @@ var CustomerManager = function () {
         });
     }); };
     /* ========== Borrar un Cliente de la base de datos ========== */
-    var deleteCostumer = function (client) { return __awaiter(void 0, void 0, void 0, function () {
+    var deleteCostumer = function (client) { return __awaiter(_this, void 0, void 0, function () {
         var newClients, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -133,5 +133,5 @@ var CustomerManager = function () {
         React.createElement("div", { className: "m-4" },
             React.createElement(table_client_1.TableClient, { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer, viewBuildingsClients: viewBuildingsClients }),
             React.createElement(list_client_1["default"], { isLoading: isLoading, clients: clients, getClients: getClients, deleteClient: deleteCostumer, viewBuildingsClients: viewBuildingsClients }))));
-};
+}
 exports["default"] = CustomerManager;

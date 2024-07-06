@@ -19,7 +19,7 @@ const AuthPage = () => {
           <div className="relative z-20 mt-auto">
             <p className="text-lg">Brindando soluciones desde 2021</p>
             <footer className="text-sm">
-              {"&copy; Cosolito-Danelone-Margitic"}
+              {"Cosolito-Danelone-Margitic® "}
             </footer>
           </div>
         </div>
