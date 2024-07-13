@@ -283,7 +283,7 @@ exports.updateOrderProvision = function (productId, cantidad, precio) { return _
                         Authorization: "Bearer " + token
                     }
                 };
-                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/orden-provision", { cantidad: cantidad, precio: precio }, config)];
+                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/update-stock-and-price", { cantidad: cantidad, precio: precio }, config)];
             case 1:
                 response = _a.sent();
                 updatedProduct = response.data;
@@ -308,7 +308,7 @@ exports.updatePromotionalDiscount = function (productId, descuento) { return __a
                         Authorization: "Bearer " + token
                     }
                 };
-                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/descuento-promocional", { descuento: descuento }, config)];
+                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/update-descuento", { descuento: descuento }, config)];
             case 1:
                 response = _a.sent();
                 updatedProduct = response.data;

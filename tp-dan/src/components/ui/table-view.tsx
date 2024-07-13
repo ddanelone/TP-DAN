@@ -10,11 +10,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Product } from "@/interfaces/product-interface";
-import { LayoutList, ShoppingCart, SquarePen, Trash2 } from "lucide-react";
+import {
+  LayoutList,
+  RotateCw,
+  ShoppingCart,
+  SquarePen,
+  Trash2,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreateUpdateItem } from "@/app/(vendedor)/abm/components/create-update-item-form";
 import { ConfirmDeletion } from "@/app/(vendedor)/abm/components/confirm-deletion";
 import AddItemToCart from "@/app/(cliente)/components/add-item-to-cart";
+import { UpdateStockPriceDiscount } from "@/app/(vendedor)/abm/components/update-stock-price-discount";
 
 interface TableViewProps {
   items: Product[];
@@ -63,10 +70,22 @@ export function TableView({
                 <TableCell>{formatPrice(item.precio)}</TableCell>
                 <TableCell>{formatPrice(item.descuento)}</TableCell>
                 <TableCell className="text-center">
+                  {/* ========== Actualizar stock, precio y/o descuento ========== */}
+                  {getItems && (
+                    <UpdateStockPriceDiscount
+                      itemToUpdate={item}
+                      getItems={getItems}
+                    >
+                      <Button className="mr-4">
+                        <RotateCw />
+                      </Button>
+                    </UpdateStockPriceDiscount>
+                  )}
+
                   {/* ========== Actualizar producto ========== */}
                   {getItems && (
                     <CreateUpdateItem itemToUpdate={item} getItems={getItems}>
-                      <Button>
+                      <Button className="mr-4 mt-2">
                         <SquarePen />
                       </Button>
                     </CreateUpdateItem>
@@ -74,7 +93,7 @@ export function TableView({
                   {/* ========== Eliminar producto  ========== */}
                   {deleteItem && (
                     <ConfirmDeletion deleteItem={deleteItem} item={item}>
-                      <Button className="ml-4" variant={"destructive"}>
+                      <Button className="mr-4 mt-2" variant={"destructive"}>
                         <Trash2 />
                       </Button>
                     </ConfirmDeletion>

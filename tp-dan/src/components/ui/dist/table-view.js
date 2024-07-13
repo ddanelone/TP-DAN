@@ -10,6 +10,7 @@ var skeleton_1 = require("@/components/ui/skeleton");
 var create_update_item_form_1 = require("@/app/(vendedor)/abm/components/create-update-item-form");
 var confirm_deletion_1 = require("@/app/(vendedor)/abm/components/confirm-deletion");
 var add_item_to_cart_1 = require("@/app/(cliente)/components/add-item-to-cart");
+var update_stock_price_discount_1 = require("@/app/(vendedor)/abm/components/update-stock-price-discount");
 function TableView(_a) {
     var items = _a.items, getItems = _a.getItems, deleteItem = _a.deleteItem, isLoading = _a.isLoading, addItem = _a.addItem;
     return (react_1["default"].createElement("div", { className: "hidden md:block" },
@@ -36,11 +37,14 @@ function TableView(_a) {
                         react_1["default"].createElement(table_1.TableCell, null, format_price_1.formatPrice(item.precio)),
                         react_1["default"].createElement(table_1.TableCell, null, format_price_1.formatPrice(item.descuento)),
                         react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
+                            getItems && (react_1["default"].createElement(update_stock_price_discount_1.UpdateStockPriceDiscount, { itemToUpdate: item, getItems: getItems },
+                                react_1["default"].createElement(button_1.Button, { className: "mr-4" },
+                                    react_1["default"].createElement(lucide_react_1.RotateCw, null)))),
                             getItems && (react_1["default"].createElement(create_update_item_form_1.CreateUpdateItem, { itemToUpdate: item, getItems: getItems },
-                                react_1["default"].createElement(button_1.Button, null,
+                                react_1["default"].createElement(button_1.Button, { className: "mr-4 mt-2" },
                                     react_1["default"].createElement(lucide_react_1.SquarePen, null)))),
                             deleteItem && (react_1["default"].createElement(confirm_deletion_1.ConfirmDeletion, { deleteItem: deleteItem, item: item },
-                                react_1["default"].createElement(button_1.Button, { className: "ml-4", variant: "destructive" },
+                                react_1["default"].createElement(button_1.Button, { className: "mr-4 mt-2", variant: "destructive" },
                                     react_1["default"].createElement(lucide_react_1.Trash2, null)))),
                             addItem && (react_1["default"].createElement(add_item_to_cart_1["default"], { item: item, addItem: addItem },
                                 react_1["default"].createElement(button_1.Button, null,
