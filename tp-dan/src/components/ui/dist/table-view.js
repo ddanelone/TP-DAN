@@ -22,6 +22,7 @@ function TableView(_a) {
                     react_1["default"].createElement(table_1.TableHead, null, "Stock Actual"),
                     getItems && react_1["default"].createElement(table_1.TableHead, null, "Stock M\u00EDnimo"),
                     react_1["default"].createElement(table_1.TableHead, null, "Precio"),
+                    react_1["default"].createElement(table_1.TableHead, null, "Descuento"),
                     react_1["default"].createElement(table_1.TableHead, { className: "text-center w-[250px]" }, "Acciones"))),
             react_1["default"].createElement(table_1.TableBody, null,
                 !isLoading &&
@@ -33,6 +34,7 @@ function TableView(_a) {
                         react_1["default"].createElement(table_1.TableCell, null, item.stockActual),
                         getItems && react_1["default"].createElement(table_1.TableCell, null, item.stockMinimo),
                         react_1["default"].createElement(table_1.TableCell, null, format_price_1.formatPrice(item.precio)),
+                        react_1["default"].createElement(table_1.TableCell, null, format_price_1.formatPrice(item.descuento)),
                         react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
                             getItems && (react_1["default"].createElement(create_update_item_form_1.CreateUpdateItem, { itemToUpdate: item, getItems: getItems },
                                 react_1["default"].createElement(button_1.Button, null,

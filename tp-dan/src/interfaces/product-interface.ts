@@ -8,6 +8,7 @@ export interface Product {
   stockMinimo: number;
   precio: number;
   categoria: Category;
+  descuento: number;
   //cantidad sólo es relevante para el carrito
   cantidad?: number;
 }

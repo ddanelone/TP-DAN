@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import isi.dan.ms_productos.modelo.Producto;
 import isi.dan.ms_productos.servicio.ProductoService;
+import jakarta.annotation.PostConstruct;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +29,19 @@ public class ProductoController {
    @Autowired
    private ProductoService productoService;
 
+   @Autowired
+   private MeterRegistry meterRegistry;
+
    private static final Logger log = LoggerFactory.getLogger(ProductoController.class);
 
    private Counter createProductoCounter;
    private Counter deleteProductoCounter;
+
+   @PostConstruct
+   public void init() {
+      createProductoCounter = meterRegistry.counter("productos.controller.create");
+      deleteProductoCounter = meterRegistry.counter("productos.controller.delete");
+   }
 
    @Counted(value = "productos.controller.create", description = "Number of times createProducto endpoint is called")
    @PostMapping
@@ -74,7 +85,6 @@ public class ProductoController {
       return ResponseEntity.noContent().build();
    }
 
-   // Verificar si hay stock suficiente de un producto dado
    @Timed(value = "productos.controller.verificarStock.timer", description = "Time taken to verify stock")
    @PostMapping("/{id}/verificar-stock")
    public ResponseEntity<?> verificarStock(@PathVariable Long id, @RequestBody Map<String, Integer> requestBody) {
@@ -94,7 +104,6 @@ public class ProductoController {
       }
    }
 
-   // Endpoint para actualizar stock y precio de un producto
    @Timed(value = "productos.controller.updateStockAndPrice.timer", description = "Time taken to update stock and price")
    @PutMapping("/{id}/update-stock-and-price")
    public ResponseEntity<Producto> updateStockAndPrice(@PathVariable Long id,
@@ -105,7 +114,6 @@ public class ProductoController {
       return ResponseEntity.ok(updatedProducto);
    }
 
-   // Endpoint para actualizar descuento promocional de un producto
    @Timed(value = "productos.controller.updateDescuento.timer", description = "Time taken to update discount")
    @PutMapping("/{id}/update-descuento")
    public ResponseEntity<Producto> updateDescuento(@PathVariable Long id,
@@ -115,5 +123,4 @@ public class ProductoController {
       Producto updatedProducto = productoService.updateDescuento(id, descuento);
       return ResponseEntity.ok(updatedProducto);
    }
-
 }

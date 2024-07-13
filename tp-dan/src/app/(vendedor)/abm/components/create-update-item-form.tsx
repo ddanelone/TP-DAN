@@ -56,6 +56,7 @@ export function CreateUpdateItem({
     stockMinimo: z.coerce
       .number()
       .gte(0, "El stock mínimo debe ser mayor o igual a 0"),
+    descuento: z.coerce.number().gte(0, "El precio debe ser mayor a 0"),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,6 +70,7 @@ export function CreateUpdateItem({
           precio: undefined,
           stockActual: undefined,
           stockMinimo: undefined,
+          descuento: undefined,
         },
   });
 
@@ -192,6 +194,19 @@ export function CreateUpdateItem({
                 type="number"
               />
               <p className="form-error">{errors.precio?.message}</p>
+            </div>
+
+            {/* ========== Descuento ========== */}
+            <div className="mb-3">
+              <Label htmlFor="Descuento">Descuento</Label>
+              <Input
+                {...register("descuento")}
+                id="descuento"
+                placeholder="0.00"
+                step="0.01"
+                type="number"
+              />
+              <p className="form-error">{errors.descuento?.message}</p>
             </div>
             {/* ========== Stock ACtual ========== */}
             <div className="mb-3">

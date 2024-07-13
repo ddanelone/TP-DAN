@@ -42,6 +42,7 @@ export function TableView({
             <TableHead>Stock Actual</TableHead>
             {getItems && <TableHead>Stock Mínimo</TableHead>}
             <TableHead>Precio</TableHead>
+            <TableHead>Descuento</TableHead>
             <TableHead className="text-center w-[250px]">Acciones</TableHead>
           </TableRow>
         </TableHeader>
@@ -60,6 +61,7 @@ export function TableView({
                 <TableCell>{item.stockActual}</TableCell>
                 {getItems && <TableCell>{item.stockMinimo}</TableCell>}
                 <TableCell>{formatPrice(item.precio)}</TableCell>
+                <TableCell>{formatPrice(item.descuento)}</TableCell>
                 <TableCell className="text-center">
                   {/* ========== Actualizar producto ========== */}
                   {getItems && (
