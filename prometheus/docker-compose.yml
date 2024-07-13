@@ -1,3 +1,5 @@
+version: "3"
+
 volumes:
   grafana-data:
   prometheus-data:
@@ -28,7 +30,7 @@ services:
     container_name: prometheus
     restart: unless-stopped
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - /home/diegofro/public_html/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
     ports:
       - 9090:9090

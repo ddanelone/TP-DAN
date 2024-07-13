@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  haproxy:
+    image: haproxy:2.9
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - "80:80"
+      - "70:70"
+    networks:
+      - backend-net
+      - frontend-net
+
+  dan-ui:
+    image: dan-ui:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - frontend-net
+
+networks:
+  backend-net:
+    external: true
+  frontend-net:
+    driver: bridge

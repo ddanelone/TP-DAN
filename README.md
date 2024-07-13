@@ -81,3 +81,13 @@ password: nuestroTPesLaMeraVerga
 
 En System/Overview --> input --> GELF UDP --Launch new input --> poner nombre. Darle play para que actualice automaticamente.
 Voilà!
+
+# HAPROXY
+
+http://localhost:70
+user: user
+pass: pass
+
+# Para ejecutar el Frontend:
+
+http://localhost/

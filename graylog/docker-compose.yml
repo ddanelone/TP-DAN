@@ -1,3 +1,5 @@
+version: "3"
+
 services:
   graylog-mongo:
     image: mongo
