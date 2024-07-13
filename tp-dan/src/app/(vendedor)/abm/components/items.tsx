@@ -2,7 +2,7 @@
 
 import { useUser } from "@/hooks/use-user";
 import { CreateUpdateItem } from "./create-update-item-form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Product } from "@/interfaces/product-interface";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
@@ -12,40 +12,32 @@ import { Badge } from "@/components/ui/badge";
 import { deleteProductById, getProducts } from "@/lib/auth";
 import { TableView } from "@/components/ui/table-view";
 import ListView from "@/components/ui/list-view";
+import SheetSearchProducts from "./sheet-search-productos";
 
 function Items() {
   const user = useUser();
   const [items, setItems] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasFetched, setHasFetched] = useState<boolean>(false);
 
-  const getItems = async () => {
+  const getItems = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await getProducts();
-
-      console.log(res);
-
       setItems(res);
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  /* ========== Borrar un item en la base de datos ========== */
+  }, []);
 
   const deleteItem = async (item: Product) => {
     setIsLoading(true);
-
     try {
-      const res = await deleteProductById(item.id);
-
+      await deleteProductById(item.id);
       toast.success("Item eliminado correctamente");
-
-      const newItems = items.filter((i) => i.id !== item.id);
-
-      setItems(newItems);
+      setItems((prevItems) => prevItems.filter((i) => i.id !== item.id));
     } catch (error: any) {
       toast.error(error.message, { duration: 4000 });
     } finally {
@@ -54,8 +46,10 @@ function Items() {
   };
 
   useEffect(() => {
-    if (user) getItems();
-  }, [user]);
+    if (user && !hasFetched) {
+      getItems().then(() => setHasFetched(true));
+    }
+  }, [user, getItems, hasFetched]);
 
   return (
     <>
@@ -68,12 +62,23 @@ function Items() {
             </Badge>
           )}
         </div>
-        <CreateUpdateItem getItems={getItems}>
-          <Button className="px-6">
-            Crear
-            <CirclePlus className="ml-2 w-[20px]" />
-          </Button>
-        </CreateUpdateItem>
+        <div>
+          {/* ========== Opción de filtras productos ========== */}
+          <SheetSearchProducts
+            isLoading={isLoading}
+            items={items}
+            setItems={setItems}
+            getItems={getItems}
+          ></SheetSearchProducts>
+
+          {/* ========== Opción de crear producto ========== */}
+          <CreateUpdateItem getItems={getItems}>
+            <Button className="px-6 ml-4">
+              Crear
+              <CirclePlus className="ml-2 w-[20px]" />
+            </Button>
+          </CreateUpdateItem>
+        </div>
       </div>
       <TableView
         deleteItem={deleteItem}
