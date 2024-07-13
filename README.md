@@ -1,6 +1,6 @@
 # tp-dan-2024# TP-DAN
 
-# RAMA A CLONAR: ZIPKIN
+# RAMA A CLONAR: HAPROXY
 
 1. Levantar el microservicio de RabittQM
 2. Levantar el config-service (tiene las configuraciones remotas de los demás MS)

@@ -207,6 +207,68 @@ export const checkStockProducto = async (id?: number, cantidad?: number) => {
     }
   }
 };
+
+// Función para actualizar la orden de provisión de un producto
+export const updateOrderProvision = async (
+  productId: number,
+  cantidad: number,
+  precio: number
+): Promise<Product> => {
+  try {
+    // Obtén el token del local storage
+    const token = getFromLocalstorage("jwt");
+
+    // Configura la cabecera de autorización
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Realiza la solicitud para actualizar la orden de provisión del producto
+    const response = await api.put(
+      `/productos/${productId}/orden-provision`,
+      { cantidad, precio },
+      config
+    );
+    const updatedProduct = response.data;
+
+    return updatedProduct;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+// Función para actualizar el descuento promocional de un producto
+export const updatePromotionalDiscount = async (
+  productId: number,
+  descuento: number
+): Promise<Product> => {
+  try {
+    // Obtén el token del local storage
+    const token = getFromLocalstorage("jwt");
+
+    // Configura la cabecera de autorización
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Realiza la solicitud para actualizar el descuento promocional del producto
+    const response = await api.put(
+      `/productos/${productId}/descuento-promocional`,
+      { descuento },
+      config
+    );
+    const updatedProduct = response.data;
+
+    return updatedProduct;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
 /* ==========  CLIENTES ========== */
 
 // Función para obtener la lista de clientes

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import isi.dan.ms_productos.modelo.Producto;
 import isi.dan.ms_productos.servicio.ProductoService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +92,28 @@ public class ProductoController {
          String mensaje = "No hay suficiente stock del producto " + id + ", nombre " + producto.getNombre();
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensaje);
       }
+   }
+
+   // Endpoint para actualizar stock y precio de un producto
+   @Timed(value = "productos.controller.updateStockAndPrice.timer", description = "Time taken to update stock and price")
+   @PutMapping("/{id}/update-stock-and-price")
+   public ResponseEntity<Producto> updateStockAndPrice(@PathVariable Long id,
+         @RequestBody Map<String, Object> requestBody) {
+      log.info("Updating stock and price for producto with id: {}", id);
+      Producto updatedProducto = productoService.updateStockAndPrice(id, (Integer) requestBody.get("cantidad"),
+            new BigDecimal(requestBody.get("precio").toString()));
+      return ResponseEntity.ok(updatedProducto);
+   }
+
+   // Endpoint para actualizar descuento promocional de un producto
+   @Timed(value = "productos.controller.updateDescuento.timer", description = "Time taken to update discount")
+   @PutMapping("/{id}/update-descuento")
+   public ResponseEntity<Producto> updateDescuento(@PathVariable Long id,
+         @RequestBody Map<String, BigDecimal> requestBody) {
+      log.info("Updating discount for producto with id: {}", id);
+      BigDecimal descuento = requestBody.get("descuento");
+      Producto updatedProducto = productoService.updateDescuento(id, descuento);
+      return ResponseEntity.ok(updatedProducto);
    }
 
 }

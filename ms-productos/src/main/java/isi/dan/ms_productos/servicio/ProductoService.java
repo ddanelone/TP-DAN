@@ -13,6 +13,7 @@ import isi.dan.ms_productos.dao.ProductoRepository;
 import isi.dan.ms_productos.modelo.Producto;
 import jakarta.annotation.PostConstruct;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -93,4 +94,40 @@ public class ProductoService {
                }
             });
    }
+
+   public Producto updateStockAndPrice(Long id, int cantidad, BigDecimal precio) {
+      return Observation.createNotStarted("producto.updateStockAndPrice", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  Producto producto = productoRepository.findById(id).orElse(null);
+                  if (producto != null) {
+                     producto.setStockActual(producto.getStockActual() + cantidad);
+                     producto.setPrecio(precio);
+                     return productoRepository.save(producto);
+                  }
+                  return null;
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.updateStockAndPrice"));
+               }
+            });
+   }
+
+   public Producto updateDescuento(Long id, BigDecimal descuento) {
+      return Observation.createNotStarted("producto.updateDescuento", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  Producto producto = productoRepository.findById(id).orElse(null);
+                  if (producto != null) {
+                     producto.setDescuento(descuento);
+                     return productoRepository.save(producto);
+                  }
+                  return null;
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.updateDescuento"));
+               }
+            });
+   }
+
 }
