@@ -37,7 +37,7 @@ function TableAuthorizateUser(_a) {
                 isLoading &&
                     [1, 1, 1, 1, 1].map(function (e, i) { return (react_1["default"].createElement(table_1.TableRow, { key: i },
                         react_1["default"].createElement(table_1.TableCell, null,
-                            react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-16 h-16 rounded-xl" })),
+                            react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
                         react_1["default"].createElement(table_1.TableCell, null,
                             react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
                         react_1["default"].createElement(table_1.TableCell, null,

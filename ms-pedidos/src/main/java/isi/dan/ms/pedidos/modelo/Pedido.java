@@ -26,6 +26,8 @@ public class Pedido {
    private Cliente cliente;
    private BigDecimal total;
 
+   private Obra obra;
+
    private Estado estado;
    private List<EstadoCambio> historialEstado = new ArrayList<>();
 

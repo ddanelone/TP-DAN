@@ -10,7 +10,7 @@ export function ListHistoryOrders({ order }: ListHistoryOrderProps) {
   console.log("Order to view:", order);
 
   if (!order.historialEstado || order.historialEstado.length === 0) {
-    console.log("No historialEstado to display");
+    console.log("Ningún historial de Estado para mostrar");
     return (
       <div className="w-full block">
         <p>No hay historial de estados disponible.</p>

@@ -23,6 +23,7 @@ import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/updat
 import { formatDate } from "@/action/format-date";
 import StatusHistoryView from "./status-history-view";
 import DialogOrderDetail from "./dialog-order-detail";
+import { Status } from "@/interfaces/order-state-interface";
 
 interface TableOrderProps {
   orders: Order[];
@@ -74,16 +75,18 @@ export function TableOrders({
                     </Button>
                   </StatusHistoryView>
                   {/* ========== Actualizar Estado de Orden ========== */}
-                  {getOrders && (
-                    <UpdateStatusOrder
-                      orderToUpdate={order}
-                      getOrders={getOrders}
-                    >
-                      <Button className="ml-4 mt-4">
-                        <SquarePen />
-                      </Button>
-                    </UpdateStatusOrder>
-                  )}
+                  {getOrders &&
+                    order.estado !== Status.ENTREGADO &&
+                    order.estado !== Status.CANCELADO && (
+                      <UpdateStatusOrder
+                        orderToUpdate={order}
+                        getOrders={getOrders}
+                      >
+                        <Button className="ml-4 mt-4">
+                          <SquarePen />
+                        </Button>
+                      </UpdateStatusOrder>
+                    )}
                   {/* ========== Ver Detalle de Orden ========== */}
                   <DialogOrderDetail
                     orderToView={order}
@@ -115,7 +118,13 @@ export function TableOrders({
             [1, 1, 1, 1, 1].map((e, i) => (
               <TableRow key={i}>
                 <TableCell>
-                  <Skeleton className="w-16 h-16 rounded-xl" />
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="w-full h-4" />

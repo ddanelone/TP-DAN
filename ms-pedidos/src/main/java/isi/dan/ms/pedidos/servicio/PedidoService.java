@@ -15,12 +15,14 @@ import isi.dan.ms.pedidos.feignClients.ProductoFeignClient;
 import isi.dan.ms.pedidos.modelo.Cliente;
 import isi.dan.ms.pedidos.modelo.DetallePedido;
 import isi.dan.ms.pedidos.modelo.Estado;
+import isi.dan.ms.pedidos.modelo.EstadoCambio;
 import isi.dan.ms.pedidos.modelo.Pedido;
 import isi.dan.ms.pedidos.modelo.Producto;
 import jakarta.annotation.PostConstruct;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +95,11 @@ public class PedidoService {
                log.info("El cliente tiene saldo. El pedido puede ser aceptado");
                pedido.setEstado(Estado.ACEPTADO);
 
+               // Primero hay que agregar el estado actual al historial de estados
+               List<EstadoCambio> historial = new ArrayList<>();
+               EstadoCambio estadoCambio = new EstadoCambio(Estado.ACEPTADO, Instant.now(), pedido.getUsuario());
+               historial.add(estadoCambio);
+
                boolean stockSuficienteParaTodosLosProductos = true;
 
                // Verificar y actualizar stock para todos los productos del pedido
@@ -108,6 +115,7 @@ public class PedidoService {
                         log.info("No hay suficiente stock para el producto {}", dp.getProducto().getId());
                         stockSuficienteParaTodosLosProductos = false;
                         pedido.setEstado(Estado.EN_PREPARACION);
+                        estadoCambio.setEstado(Estado.EN_PREPARACION);
                      } else {
                         // Actualizar el stock solo si hay suficiente
                         try {
@@ -122,6 +130,7 @@ public class PedidoService {
                            dp.getProducto().getId(), e.getMessage()));
                      stockSuficienteParaTodosLosProductos = false;
                      pedido.setEstado(Estado.EN_PREPARACION);
+                     estadoCambio.setEstado(Estado.EN_PREPARACION);
                   }
                }
 
@@ -129,7 +138,16 @@ public class PedidoService {
                   pedido.setNumeroPedido((int) sequenceGeneratorService.generateSequence(Pedido.SEQUENCE_NAME));
                }
                pedido.setFecha(Instant.now());
+               pedido.setHistorialEstado(historial);
 
+               return pedidoRepository.save(pedido);
+            });
+   }
+
+   // Método agregado para la actualización del ESTADO del pedido
+   public Pedido updatePedido(Pedido pedido) {
+      return Observation.createNotStarted("pedido.update", observationRegistry)
+            .observe(() -> {
                return pedidoRepository.save(pedido);
             });
    }

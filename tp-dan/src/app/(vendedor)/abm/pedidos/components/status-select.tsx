@@ -19,6 +19,8 @@ export function SelectStatus({
   selectedStatus,
   onStatusChange,
 }: SelectStatusProps) {
+  const allowedStatuses = [Status.ENTREGADO, Status.CANCELADO];
+
   return (
     <Select
       value={selectedStatus || ""}
@@ -34,7 +36,7 @@ export function SelectStatus({
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Estados</SelectLabel>
-          {Object.values(Status).map((status) => (
+          {allowedStatuses.map((status) => (
             <SelectItem key={status} value={status}>
               {status}
             </SelectItem>

@@ -11,6 +11,9 @@ import isi.dan.ms_productos.dto.StockUpdateDTO;
 import isi.dan.ms_productos.modelo.Producto;
 import isi.dan.ms_productos.servicio.ProductoService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class MessageReceiveService {
 
@@ -19,6 +22,8 @@ public class MessageReceiveService {
 
    private final ObjectMapper objectMapper = new ObjectMapper();
 
+   private static final Logger log = LoggerFactory.getLogger(MessageReceiveService.class);
+
    @RabbitListener(queues = RabbitMQConfig.STOCK_UPDATE_QUEUE)
    public void receiveMessage(String message) {
       try {
@@ -26,27 +31,26 @@ public class MessageReceiveService {
          StockUpdateDTO stockUpdateDTO = objectMapper.readValue(message, StockUpdateDTO.class);
          Long idProducto = stockUpdateDTO.getIdProducto();
          Integer cantidad = stockUpdateDTO.getCantidad();
+         log.info("Cantidad recibida para agregar: {}", cantidad);
 
          Producto producto = productoService.getProductoById(idProducto);
          if (producto != null) {
             int stockActual = producto.getStockActual();
+            log.info("Stock actual del producto: {}", stockActual);
             int nuevoStock = stockActual + cantidad;
             producto.setStockActual(nuevoStock);
 
             // Guardar el producto actualizado en la base de datos
             productoService.saveProducto(producto);
+            log.info("Producto actualizado en la base de datos: {}", producto);
 
-            System.out.println("Producto actualizado en la base de datos: " + producto);
          } else {
-            System.out.println("No se encontró producto con ID " + idProducto);
-            // Manejar esta situación según los requerimientos de tu aplicación
+            log.info("No se encontró producto con ID : {}", idProducto);
          }
       } catch (JsonProcessingException e) {
-         System.out.println("Error deserializando el mensaje: " + e.getMessage());
-         // Loggear el mensaje malformado para revisar más tarde
-         System.out.println("Mensaje malformado: " + message);
+         log.error("Error deserializando el mensaje: {}", e.getMessage());
       } catch (Exception e) {
-         System.out.println("Error procesando el mensaje: " + e.getMessage());
+         log.error("Error procesando el mensaje: {}", e.getMessage());
          e.printStackTrace();
       }
    }

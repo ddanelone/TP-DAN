@@ -103,7 +103,6 @@ function BuyCart(_a) {
                         return [2 /*return*/];
                     }
                     else {
-                        /* ==========  ACA HAY QUE CAMBIAR LA LOGICA ========== */
                         if ((client === null || client === void 0 ? void 0 : client.maximoDescubierto) !== undefined &&
                             client.maximoDescubierto <
                                 cartItems.reduce(function (acc, item) { return acc + item.precio * item.cantidad; }, 0)) {

@@ -101,7 +101,19 @@ export function TableBuilding({
             [1, 1, 1, 1, 1].map((e, i) => (
               <TableRow key={i}>
                 <TableCell>
-                  <Skeleton className="w-16 h-16 rounded-xl" />
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="w-full h-4" />

@@ -73,8 +73,6 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
       );
       return;
     } else {
-      /* ==========  ACA HAY QUE CAMBIAR LA LOGICA ========== */
-
       if (
         client?.maximoDescubierto !== undefined &&
         client.maximoDescubierto <

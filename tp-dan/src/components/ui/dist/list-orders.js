@@ -10,6 +10,7 @@ var confirm_deletion_order_1 = require("@/app/(vendedor)/abm/pedidos/components/
 var update_status_order_1 = require("@/app/(vendedor)/abm/pedidos/components/update-status-order");
 var format_date_1 = require("@/action/format-date");
 var status_history_view_1 = require("./status-history-view");
+var order_state_interface_1 = require("@/interfaces/order-state-interface");
 function ListOrders(_a) {
     var orders = _a.orders, getOrders = _a.getOrders, deleteOrder = _a.deleteOrder, isLoading = _a.isLoading;
     return (React.createElement("div", { className: "block md:hidden" },
@@ -44,9 +45,11 @@ function ListOrders(_a) {
                     getOrders && (React.createElement(status_history_view_1["default"], { order: order },
                         React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
                             React.createElement(lucide_react_1.Calendar, { className: "w-5 h-5" })))),
-                    getOrders && (React.createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
-                        React.createElement(button_1.Button, { className: "w-8 h-8 p-0 mt-4 ml-4" },
-                            React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" })))),
+                    getOrders &&
+                        order.estado !== order_state_interface_1.Status.ENTREGADO &&
+                        order.estado !== order_state_interface_1.Status.CANCELADO && (React.createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
+                        React.createElement(button_1.Button, { className: "ml-4 mt-4" },
+                            React.createElement(lucide_react_1.SquarePen, null)))),
                     deleteOrder && (React.createElement(confirm_deletion_order_1.ConfirmDeletionOrder, { deleteOrder: deleteOrder, order: order },
                         React.createElement(button_1.Button, { className: "w-8 h-8 p-0 mt-4", variant: "destructive" },
                             React.createElement(lucide_react_1.Trash2, { className: "w-5 h-5" }))))))); }),

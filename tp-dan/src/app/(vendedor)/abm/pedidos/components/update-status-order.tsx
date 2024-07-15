@@ -14,7 +14,6 @@ import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { useUser } from "@/hooks/use-user";
 import { Button } from "@/components/ui/button";
-import { Order } from "@/interfaces/order.interface";
 import { Status } from "@/interfaces/order-state-interface";
 import { SelectStatus } from "./status-select";
 import { newStatusOrder } from "@/lib/auth";
@@ -22,8 +21,8 @@ import { useForm } from "react-hook-form";
 
 interface UpdateStatusOrderProps {
   children: React.ReactNode;
-  orderToUpdate: Order;
-  getOrders: () => Promise<void>;
+  orderToUpdate: any;
+  getOrders: () => void;
 }
 
 export function UpdateStatusOrder({
@@ -139,7 +138,7 @@ export function UpdateStatusOrder({
             </div>
             {/* ========== Estado ========== */}
             <div className="mb-3">
-              <Label htmlFor="estado">Estado</Label>
+              <Label htmlFor="estado">Nuevo Estado</Label>
               <SelectStatus
                 selectedStatus={watch("estado") || null}
                 onStatusChange={handleStatusChange}

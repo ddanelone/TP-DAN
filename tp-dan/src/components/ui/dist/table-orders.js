@@ -12,6 +12,7 @@ var update_status_order_1 = require("@/app/(vendedor)/abm/pedidos/components/upd
 var format_date_1 = require("@/action/format-date");
 var status_history_view_1 = require("./status-history-view");
 var dialog_order_detail_1 = require("./dialog-order-detail");
+var order_state_interface_1 = require("@/interfaces/order-state-interface");
 function TableOrders(_a) {
     var orders = _a.orders, getOrders = _a.getOrders, deleteOrder = _a.deleteOrder, isLoading = _a.isLoading;
     return (react_1["default"].createElement("div", { className: "hidden md:block" },
@@ -42,7 +43,9 @@ function TableOrders(_a) {
                             react_1["default"].createElement(status_history_view_1["default"], { order: order },
                                 react_1["default"].createElement(button_1.Button, { className: "ml-4 mt-4" },
                                     react_1["default"].createElement(lucide_react_1.Calendar, null))),
-                            getOrders && (react_1["default"].createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
+                            getOrders &&
+                                order.estado !== order_state_interface_1.Status.ENTREGADO &&
+                                order.estado !== order_state_interface_1.Status.CANCELADO && (react_1["default"].createElement(update_status_order_1.UpdateStatusOrder, { orderToUpdate: order, getOrders: getOrders },
                                 react_1["default"].createElement(button_1.Button, { className: "ml-4 mt-4" },
                                     react_1["default"].createElement(lucide_react_1.SquarePen, null)))),
                             react_1["default"].createElement(dialog_order_detail_1["default"], { orderToView: order, orderDetail: order.detalle, isLoading: isLoading },
@@ -54,7 +57,11 @@ function TableOrders(_a) {
                 isLoading &&
                     [1, 1, 1, 1, 1].map(function (e, i) { return (react_1["default"].createElement(table_1.TableRow, { key: i },
                         react_1["default"].createElement(table_1.TableCell, null,
-                            react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-16 h-16 rounded-xl" })),
+                            react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
+                        react_1["default"].createElement(table_1.TableCell, null,
+                            react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
+                        react_1["default"].createElement(table_1.TableCell, null,
+                            react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
                         react_1["default"].createElement(table_1.TableCell, null,
                             react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
                         react_1["default"].createElement(table_1.TableCell, null,

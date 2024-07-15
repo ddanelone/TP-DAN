@@ -8,6 +8,7 @@ import { ConfirmDeletionOrder } from "@/app/(vendedor)/abm/pedidos/components/co
 import { UpdateStatusOrder } from "@/app/(vendedor)/abm/pedidos/components/update-status-order";
 import { formatDate } from "@/action/format-date";
 import StatusHistoryView from "./status-history-view";
+import { Status } from "@/interfaces/order-state-interface";
 
 interface ListOrderProps {
   orders: Order[];
@@ -57,14 +58,19 @@ export function ListOrders({
                 </StatusHistoryView>
               )}
 
-              {/* ========== Actualizar orden ========== */}
-              {getOrders && (
-                <UpdateStatusOrder orderToUpdate={order} getOrders={getOrders}>
-                  <Button className="w-8 h-8 p-0 mt-4 ml-4">
-                    <SquarePen className="w-5 h-5" />
-                  </Button>
-                </UpdateStatusOrder>
-              )}
+              {/* ========== Actualizar Estado de Orden ========== */}
+              {getOrders &&
+                order.estado !== Status.ENTREGADO &&
+                order.estado !== Status.CANCELADO && (
+                  <UpdateStatusOrder
+                    orderToUpdate={order}
+                    getOrders={getOrders}
+                  >
+                    <Button className="ml-4 mt-4">
+                      <SquarePen />
+                    </Button>
+                  </UpdateStatusOrder>
+                )}
 
               {/* ========== Eliminar una orden ========== */}
               {deleteOrder && (

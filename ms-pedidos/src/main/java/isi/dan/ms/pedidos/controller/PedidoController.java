@@ -173,7 +173,7 @@ public class PedidoController {
             }
          }
 
-         Pedido updatedPedido = pedidoService.savePedido(pedido);
+         Pedido updatedPedido = pedidoService.updatePedido(pedido);
          return ResponseEntity.ok(updatedPedido);
       } else {
          return ResponseEntity.notFound().build();
