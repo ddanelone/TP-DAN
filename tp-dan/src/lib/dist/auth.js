@@ -252,7 +252,7 @@ exports.checkStockProducto = function (id, cantidad) { return __awaiter(void 0, 
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, axios_1["default"].post("/productos/" + id + "/verificar-stock", {
-                        cantidadDeseada: cantidad
+                        cantidad: cantidad
                     })];
             case 1:
                 response = _a.sent();
@@ -772,7 +772,13 @@ exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, 
                 return [2 /*return*/, response.data];
             case 2:
                 error_33 = _a.sent();
-                throw new Error(error_33.response.data.message);
+                if (error_33.response && error_33.response.status === 400) {
+                    throw new Error(error_33.response.data);
+                }
+                else {
+                    throw new Error("Error al procesar el pedido: " + error_33.message);
+                }
+                return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });

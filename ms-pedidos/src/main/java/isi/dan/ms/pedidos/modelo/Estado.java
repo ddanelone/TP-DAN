@@ -1,11 +1,10 @@
 package isi.dan.ms.pedidos.modelo;
 
 public enum Estado {
-   PENDIENTE,
-   APROBADO,
-   EN_PROCESO,
-   ENVIADO,
+   ACEPTADO,
+   EN_PREPARACION,
    ENTREGADO,
+   RECHAZADO,
    CANCELADO
 
 }

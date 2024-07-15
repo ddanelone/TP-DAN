@@ -60,7 +60,7 @@ function ListOrders(_a) {
         !isLoading && orders.length === 0 && (React.createElement("div", { className: "text-gray-200 my-20" },
             React.createElement("div", { className: "flex justify-center" },
                 React.createElement(lucide_react_1.LayoutList, { className: "w-[120px] h-[120px]" })),
-            React.createElement("h2", { className: "text-center" }, "No hay productos disponibles")))));
+            React.createElement("h2", { className: "text-center" }, "No hay pedidos disponibles")))));
 }
 exports.ListOrders = ListOrders;
 exports["default"] = ListOrders;

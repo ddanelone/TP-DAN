@@ -12,7 +12,7 @@ export interface Order {
   observaciones: string;
   cliente: Costumer;
   total: number;
-  estado: Status;
+  estado?: Status;
 
   detalle: OrderDetails[];
 

@@ -196,7 +196,7 @@ export const deleteProductById = async (productId?: number): Promise<void> => {
 export const checkStockProducto = async (id?: number, cantidad?: number) => {
   try {
     const response = await api.post(`/productos/${id}/verificar-stock`, {
-      cantidadDeseada: cantidad,
+      cantidad: cantidad,
     });
     return response.data;
   } catch (error: any) {
@@ -556,13 +556,16 @@ export const getPedidoById = async (id: string) => {
     throw new Error(error.response.data.message);
   }
 };
-
 export const createPedido = async (pedidoData: any) => {
   try {
     const response = await api.post("/pedidos", pedidoData);
     return response.data;
   } catch (error: any) {
-    throw new Error(error.response.data.message);
+    if (error.response && error.response.status === 400) {
+      throw new Error(error.response.data);
+    } else {
+      throw new Error("Error al procesar el pedido: " + error.message);
+    }
   }
 };
 

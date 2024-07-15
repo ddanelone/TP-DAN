@@ -8,11 +8,11 @@
 4. gateway-service, es el proxy
 5. Levantar también: graylog y prometheus
 6. resto de los microservicios
-7. para ejecutar el frontend, instalar previamente node.js
+7. para ejecutar el frontend, instalar previamente node.js;
 
 8) instalado node, en la carpeta del frontend, ejecutar npm i
 9) si alguna depenencia no se instala, npm i --force
-10) npm run dev para transpilar el código y levantar el servidor en el puerto 3000
+10) crear el contenedor del frontend; acceder: http://localhost (a través de Haproxy)
 11) sufra con gusto.
 
 # EUREKA (MS registrados por el Discovery)
@@ -68,6 +68,8 @@ Desde el explorador de archivos, entrar al index.html
      -- ObraController
      -- UsuarioHabilitadoController
 
+     -- ProductoController
+
    - 3.2 Con RestControllerTest
      -- ClienteController
      -- ObraController
@@ -91,3 +93,7 @@ pass: pass
 # Para ejecutar el Frontend:
 
 http://localhost/
+
+# Short Circuit & Retry
+
+Implementados en MS Pedidos.

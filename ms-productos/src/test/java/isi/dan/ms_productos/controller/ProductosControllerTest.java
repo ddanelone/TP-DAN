@@ -129,8 +129,11 @@ public class ProductosControllerTest {
       Producto producto = new Producto();
       producto.setId(1L);
       producto.setStockActual(100);
+      producto.setNombre("Cemento");
 
       when(productoService.getProductoById(1L)).thenReturn(producto);
+      when(productoService.verificarStock(1L, 50)).thenReturn(true); // Mock del servicio
+      when(productoService.verificarStock(1L, 150)).thenReturn(false); // Mock del servicio
 
       mockMvc.perform(post("/api/productos/1/verificar-stock")
             .contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +144,7 @@ public class ProductosControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content("{ \"cantidadDeseada\": 150 }"))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("No hay suficiente stock del producto 1, nombre null"));
+            .andExpect(content().string("No hay suficiente stock del producto 1"));
    }
 
    @Test
@@ -175,6 +178,25 @@ public class ProductosControllerTest {
             .content("{ \"descuento\": 15.00 }"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.descuento").value(10.00));
+   }
+
+   @Test
+   void testUpdateStock() throws Exception {
+      Producto producto = new Producto();
+      producto.setId(1L);
+      producto.setStockActual(100);
+
+      when(productoService.updateStock(eq(1L), anyInt())).thenAnswer(invocation -> {
+         int cantidad = invocation.getArgument(1);
+         producto.setStockActual(producto.getStockActual() - cantidad);
+         return producto;
+      });
+
+      mockMvc.perform(post("/api/productos/1/update-stock")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{ \"cantidad\": 20 }"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.stockActual").value(80));
    }
 
 }

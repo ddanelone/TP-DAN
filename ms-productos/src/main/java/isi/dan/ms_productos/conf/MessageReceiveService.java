@@ -26,13 +26,11 @@ public class MessageReceiveService {
          StockUpdateDTO stockUpdateDTO = objectMapper.readValue(message, StockUpdateDTO.class);
          Long idProducto = stockUpdateDTO.getIdProducto();
          Integer cantidad = stockUpdateDTO.getCantidad();
-         System.out
-               .println("Received stock update message for product with ID " + idProducto + ": " + cantidad + " units");
 
          Producto producto = productoService.getProductoById(idProducto);
          if (producto != null) {
             int stockActual = producto.getStockActual();
-            int nuevoStock = stockActual - cantidad;
+            int nuevoStock = stockActual + cantidad;
             producto.setStockActual(nuevoStock);
 
             // Guardar el producto actualizado en la base de datos

@@ -1,5 +1,6 @@
 package isi.dan.msclientes.controller;
 
+import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.servicios.ClienteService;
 
@@ -9,8 +10,10 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
@@ -31,6 +34,9 @@ public class ClienteControllerTestRestTemplateTests {
 
    @Autowired
    private ClienteService clienteService;
+
+   @MockBean
+   private MessageSenderService messageSenderService;
 
    private Cliente cliente;
 

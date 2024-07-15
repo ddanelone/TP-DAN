@@ -66,6 +66,6 @@ function TableOrders(_a) {
         !isLoading && orders.length === 0 && (react_1["default"].createElement("div", { className: "text-gray-200 my-20" },
             react_1["default"].createElement("div", { className: "flex justify-center" },
                 react_1["default"].createElement(lucide_react_1.LayoutList, { className: "w-[120px] h-[120px]" })),
-            react_1["default"].createElement("h2", { className: "text-center" }, "No hay productos disponibles")))));
+            react_1["default"].createElement("h2", { className: "text-center" }, "No hay pedidos disponibles")))));
 }
 exports.TableOrders = TableOrders;

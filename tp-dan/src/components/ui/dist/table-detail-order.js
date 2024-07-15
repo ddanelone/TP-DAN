@@ -39,7 +39,7 @@ function TableOrderDetail(_a) {
                         react_1["default"].createElement("div", { className: "text-gray-200 my-20" },
                             react_1["default"].createElement("div", { className: "flex justify-center" },
                                 react_1["default"].createElement(lucide_react_1.LayoutList, { className: "w-[120px] h-[120px]" })),
-                            react_1["default"].createElement("h2", { className: "text-center" }, "No hay detalle disponible"))))) : null,
+                            react_1["default"].createElement("h2", { className: "text-center" }, "No hay detalle disponible para mostrar"))))) : null,
                 isLoading &&
                     [1, 1, 1, 1, 1].map(function (e, i) { return (react_1["default"].createElement(table_1.TableRow, { key: i },
                         react_1["default"].createElement(table_1.TableCell, { colSpan: 7 },

@@ -94,7 +94,7 @@ export function ListBuilding({
           <div className="flex justify-center">
             <LayoutList className="w-[120px] h-[120px]" />
           </div>
-          <h2 className="text-center">No hay productos disponibles</h2>
+          <h2 className="text-center">No hay obras disponibles</h2>
         </div>
       )}
     </div>

@@ -130,4 +130,25 @@ public class ProductoService {
             });
    }
 
+   public boolean verificarStock(Long id, int cantidadDeseada) {
+      Producto producto = productoRepository.findById(id).orElse(null);
+      return producto != null && producto.getStockActual() >= cantidadDeseada;
+   }
+
+   public Producto updateStock(Long id, int cantidad) {
+      return Observation.createNotStarted("producto.updateStock", observationRegistry)
+            .observe(() -> {
+               Timer.Sample sample = Timer.start(meterRegistry);
+               try {
+                  Producto producto = productoRepository.findById(id).orElse(null);
+                  if (producto != null) {
+                     producto.setStockActual(producto.getStockActual() - cantidad);
+                     return productoRepository.save(producto);
+                  }
+                  return null;
+               } finally {
+                  sample.stop(meterRegistry.timer("producto.updateStock"));
+               }
+            });
+   }
 }

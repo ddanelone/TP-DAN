@@ -1,5 +1,7 @@
 package isi.dan.ms.pedidos.modelo;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
@@ -9,4 +11,5 @@ public class Cliente {
    private String apellido;
    private String correoElectronico;
    private String cuit;
+   private BigDecimal saldo;
 }

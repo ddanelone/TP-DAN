@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
@@ -89,18 +90,32 @@ public class ProductoController {
    @PostMapping("/{id}/verificar-stock")
    public ResponseEntity<?> verificarStock(@PathVariable Long id, @RequestBody Map<String, Integer> requestBody) {
       log.info("Verifying stock for producto with id: {}", id);
-      int cantidadDeseada = requestBody.get("cantidadDeseada");
-      Producto producto = productoService.getProductoById(id);
 
-      if (producto == null) {
-         return ResponseEntity.notFound().build();
+      Integer cantidad = requestBody.get("cantidad");
+
+      if (cantidad == null) {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+               .body("La clave 'cantidad' no está presente en el cuerpo de la solicitud.");
       }
 
-      if (producto.getStockActual() >= cantidadDeseada) {
-         return ResponseEntity.ok().build();
+      boolean stockDisponible = productoService.verificarStock(id, cantidad);
+
+      Map<String, Boolean> response = new HashMap<>();
+      response.put("stockDisponible", stockDisponible);
+
+      return ResponseEntity.ok(response);
+   }
+
+   @PostMapping("/{id}/update-stock")
+   public ResponseEntity<Producto> updateStock(@PathVariable Long id, @RequestBody Map<String, Integer> requestBody) {
+      log.info("Updating stock for producto with id: {}", id);
+      int cantidad = requestBody.get("cantidad");
+      Producto updatedProducto = productoService.updateStock(id, cantidad);
+
+      if (updatedProducto != null) {
+         return ResponseEntity.ok(updatedProducto);
       } else {
-         String mensaje = "No hay suficiente stock del producto " + id + ", nombre " + producto.getNombre();
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensaje);
+         return ResponseEntity.notFound().build();
       }
    }
 

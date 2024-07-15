@@ -20,6 +20,7 @@ import { Status } from "@/interfaces/order-state-interface";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { checkStockProducto, createPedido, getClientByEmail } from "@/lib/auth";
 import { useUser } from "@/hooks/use-user";
+import { comment } from "postcss";
 
 interface BuyCartProps {
   children: React.ReactNode;
@@ -47,7 +48,7 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
       toast.error(
         "No se pudo recuperar los datos de Cliente asociado con este Usuario.",
         {
-          duration: 2000,
+          duration: 2500,
         }
       );
       console.error(error);
@@ -72,6 +73,8 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
       );
       return;
     } else {
+      /* ==========  ACA HAY QUE CAMBIAR LA LOGICA ========== */
+
       if (
         client?.maximoDescubierto !== undefined &&
         client.maximoDescubierto <
@@ -92,7 +95,9 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
         } catch (error: any) {
           toast.error(error.message, { duration: 2500 });
           setIsLoading(false);
-          return;
+
+          /* ========== Le saco el return, para que avise que no hay stock pero que procese igual ========== */
+          //return;
         }
       }
 
@@ -113,12 +118,12 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
           (acc, item) => acc + item.precio * item.cantidad!,
           0
         ),
-        estado: Status.PENDIENTE,
+        //estado: Status.EN_PREPARACION,
         detalle: cartItems.map((item) => ({
           cantidad: item.cantidad!,
-          producto: item as Product, // Aseguramos que item es de tipo Product
+          producto: item as Product,
           precioUnitario: item.precio,
-          descuento: 0, // Hardcodeamos el descuento
+          descuento: item.descuento,
           precioFinal: item.precio * item.cantidad!,
         })),
         historialEstado: [],
@@ -126,15 +131,15 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
 
       console.log("Orden a persistir :", newOrder);
       await createPedido(newOrder);
-      // Mostrar mensaje de éxito
+
       toast.success("Pedido realizado con éxito.");
 
       router.push("/pedidos");
     } catch (error) {
       console.error(error);
-      toast.error(
-        "Hubo un problema al realizar el pedido. Inténtalo nuevamente."
-      );
+      toast.error("No puedes realizar el pedido: " + error, {
+        duration: 2500,
+      });
     } finally {
       setIsLoading(false);
     }

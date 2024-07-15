@@ -12,6 +12,7 @@ import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dto.StockUpdateDTO;
 import isi.dan.ms.pedidos.modelo.Cliente;
 import isi.dan.ms.pedidos.modelo.DetallePedido;
+import isi.dan.ms.pedidos.modelo.Estado;
 import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
 import isi.dan.ms.pedidos.modelo.Pedido;
 import isi.dan.ms.pedidos.modelo.Producto;
@@ -52,21 +53,16 @@ public class PedidoController {
 
    @Timed(value = "pedidos.create.timed", description = "Tiempo de creación de pedidos")
    @PostMapping
-   public ResponseEntity<Pedido> createPedido(@RequestBody Pedido pedido) {
-      // Verificar stock para cada producto en el pedido
-      for (DetallePedido detalle : pedido.getDetalle()) {
-         log.info("Producto {} tiene suficiente stock. Agregando al pedido.", detalle.getProducto().getNombre());
-         // Enviar mensaje a RabbitMQ para actualizar stock
-         StockUpdateDTO stockUpdateDTO = new StockUpdateDTO();
-         stockUpdateDTO.setIdProducto(detalle.getProducto().getId());
-         stockUpdateDTO.setCantidad(detalle.getCantidad());
-         messageSenderService.sendMessage(RabbitMQConfig.STOCK_UPDATE_QUEUE, stockUpdateDTO);
+   public ResponseEntity<?> createPedido(@RequestBody Pedido pedido) {
+      try {
+         // Guardar el pedido con los detalles que tienen suficiente stock
+         Pedido savedPedido = pedidoService.savePedido(pedido);
+         pedidosCount.incrementAndGet();
+         return ResponseEntity.ok(savedPedido);
+      } catch (RuntimeException e) {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+               .body("El cliente no tiene saldo suficiente para aceptar el pedido");
       }
-
-      // Guardar el pedido con los detalles que tienen suficiente stock
-      Pedido savedPedido = pedidoService.savePedido(pedido);
-      pedidosCount.incrementAndGet();
-      return ResponseEntity.ok(savedPedido);
    }
 
    @Timed(value = "pedidos.getAll.timed", description = "Tiempo de obtener todos los pedidos")
@@ -164,6 +160,19 @@ public class PedidoController {
       if (pedido != null) {
          pedido.setEstado(request.getNuevoEstado());
          pedido.addEstadoCambio(request.getNuevoEstado(), request.getUsuarioCambio());
+
+         if (request.getNuevoEstado() == Estado.CANCELADO) {
+            // Construir y enviar el DTO a RabbitMQ
+            for (DetallePedido detalle : pedido.getDetalle()) {
+               StockUpdateDTO stockUpdateDTO = new StockUpdateDTO();
+               stockUpdateDTO.setIdProducto(detalle.getProducto().getId());
+               stockUpdateDTO.setCantidad(detalle.getCantidad());
+
+               // Enviar el mensaje a la cola de RabbitMQ
+               messageSenderService.sendMessage(RabbitMQConfig.STOCK_UPDATE_QUEUE, stockUpdateDTO);
+            }
+         }
+
          Pedido updatedPedido = pedidoService.savePedido(pedido);
          return ResponseEntity.ok(updatedPedido);
       } else {

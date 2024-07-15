@@ -11,6 +11,7 @@ import isi.dan.msclientes.model.UsuarioHabilitado;
 import isi.dan.msclientes.servicios.ClienteService;
 import isi.dan.msclientes.servicios.UsuarioHabilitadoService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -180,5 +181,17 @@ public class ClienteController {
       usuarioHabilitadoService.deleteById(usuarioHabilitadoId);
       log.info("Removed enabled user with id {} from client with id {}", usuarioHabilitadoId, clienteId);
       return ResponseEntity.noContent().build();
+   }
+
+   // Faltar agregarle los test de integración
+   @GetMapping("/{id}/verificar-saldo")
+   public boolean verificarSaldo(@PathVariable Integer id, @RequestParam("montoTotal") double montoTotal) {
+      log.info("Verificando saldo para el cliente con id {}", id);
+      Optional<Cliente> cliente = clienteService.findById(id);
+      if (cliente.isPresent()) {
+         return cliente.get().getMaximoDescubierto().doubleValue() >= BigDecimal.valueOf(montoTotal).doubleValue();
+
+      }
+      return false;
    }
 }

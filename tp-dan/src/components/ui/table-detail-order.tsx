@@ -71,7 +71,9 @@ export function TableOrderDetail({
                   <div className="flex justify-center">
                     <LayoutList className="w-[120px] h-[120px]" />
                   </div>
-                  <h2 className="text-center">No hay detalle disponible</h2>
+                  <h2 className="text-center">
+                    No hay detalle disponible para mostrar
+                  </h2>
                 </div>
               </TableCell>
             </TableRow>
