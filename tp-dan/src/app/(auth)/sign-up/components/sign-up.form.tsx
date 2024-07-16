@@ -55,7 +55,7 @@ function SignUpForm() {
       dni: "",
       email: "",
       password: "",
-      role: 0, // Todo el que se da de alta vía web va a ser sólo un cliente
+      role: 1, // Todo el que se da de alta vía web va a ser Vendedor, así puede crear Clientes
     },
   });
 
@@ -68,7 +68,7 @@ function SignUpForm() {
       await createUser(user);
       toast.success(`Bienvenido ${user.name}!`, { icon: "👋" });
       //Asumo que el usuario que se registra es un cliente, lo hizo via web
-      router.push("/productos");
+      router.push("/abm/productos");
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.errors) {
         const validationErrors = error.response.data.errors;
@@ -148,17 +148,6 @@ function SignUpForm() {
             />
             <p className="form-error">{errors.password?.message}</p>
           </div>
-          {/* <div className="mb-3">
-            <Label htmlFor="role">Rol</Label>
-            <Input
-              {...register("role", { valueAsNumber: true })}
-              id="role"
-              placeholder="1"
-              type="number"
-              autoComplete="role"
-            />
-            <p className="form-error">{errors.role?.message}</p>
-          </div> */}
 
           <Button type="submit" disabled={isLoading}>
             {isLoading && (

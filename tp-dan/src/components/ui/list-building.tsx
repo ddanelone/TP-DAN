@@ -5,12 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Building } from "@/interfaces/building.interface";
 import { CreateUpdateBuilding } from "@/app/(vendedor)/abm/obras/components/create-update-building";
 import { ConfirmDeletionBuilding } from "@/app/(vendedor)/abm/obras/components/confirm-deletion-building";
+import { setInLocalstorage } from "@/action/set-in-localstorage";
+import { useState } from "react";
 
 interface ListBuildingProps {
   isLoading: boolean;
   buildings: Building[];
   getBuildings?: () => Promise<void>;
   deleteBuilding?: (building: Building) => Promise<void>;
+  existingBuilding: () => void;
 }
 
 export function ListBuilding({
@@ -18,7 +21,23 @@ export function ListBuilding({
   buildings,
   getBuildings,
   deleteBuilding,
+  existingBuilding,
 }: ListBuildingProps) {
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
+    null
+  );
+
+  const handleSelectBuilding = (building: Building) => {
+    if (selectedBuilding?.id === building.id) {
+      setSelectedBuilding(null);
+      localStorage.removeItem("selectedBuilding");
+    } else {
+      setSelectedBuilding(building);
+      setInLocalstorage("selectedBuilding", building);
+      existingBuilding();
+    }
+  };
+
   return (
     <div className="block md:hidden">
       {!isLoading &&
@@ -49,6 +68,15 @@ export function ListBuilding({
               </div>
             </div>
             <div className="ml-2">
+              {/* ========== Seleccionar una Obra ========== */}
+              {!getBuildings && (
+                <Button
+                  className="ml-4"
+                  onClick={() => handleSelectBuilding(building)}
+                >
+                  {selectedBuilding?.id === building.id ? "✔️" : "❌"}
+                </Button>
+              )}
               {getBuildings && (
                 <CreateUpdateBuilding
                   isLoading={isLoading}

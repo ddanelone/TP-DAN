@@ -18,9 +18,12 @@ const BuildingManagerClient = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [client, setClient] = useState<Costumer | undefined>();
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
+  const [isBuildingSelected, setIsBuildingSelected] = useState<boolean>(false);
 
   const getMyClientData = async () => {
     const emailUser = user?.email;
+    existingBuilding();
+
     setIsLoading(true);
 
     try {
@@ -39,6 +42,13 @@ const BuildingManagerClient = () => {
       console.error(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const existingBuilding = () => {
+    const selectedBuilding = getFromLocalstorage("selectedBuilding");
+    if (selectedBuilding) {
+      setIsBuildingSelected(true);
     }
   };
 
@@ -89,16 +99,24 @@ const BuildingManagerClient = () => {
             SECCIÓN EXCLUSIVA PARA CLIENTES
           </Badge>
         </div>
+        {!isBuildingSelected && (
+          <Badge className="mt-2 text-[14px]" variant={"destructive"}>
+            SELECCIONE UNA OBRA ANTES DE EFECTUAR UNA COMPRA
+          </Badge>
+        )}
       </div>
-      <div className="m-4">
-        <TableBuilding isLoading={isLoading} buildings={buildings} />
-        <ListBuilding isLoading={isLoading} buildings={buildings} />
-      </div>
+      <TableBuilding
+        isLoading={isLoading}
+        buildings={buildings}
+        existingBuilding={existingBuilding}
+      />
+      <ListBuilding
+        isLoading={isLoading}
+        buildings={buildings}
+        existingBuilding={existingBuilding}
+      />
     </>
   );
 };
 
 export default BuildingManagerClient;
-function setAuthUsers(authorizedUsers: any) {
-  throw new Error("Function not implemented.");
-}

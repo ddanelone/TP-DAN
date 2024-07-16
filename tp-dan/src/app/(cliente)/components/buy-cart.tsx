@@ -16,11 +16,11 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Order } from "@/interfaces/order.interface";
-import { Status } from "@/interfaces/order-state-interface";
 import { Costumer } from "@/interfaces/costumer.interface";
 import { checkStockProducto, createPedido, getClientByEmail } from "@/lib/auth";
 import { useUser } from "@/hooks/use-user";
-import { comment } from "postcss";
+import { Building } from "@/interfaces/building.interface";
+import { getFromLocalstorage } from "@/action/get-from-localstorage";
 
 interface BuyCartProps {
   children: React.ReactNode;
@@ -64,6 +64,16 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
   const handlePurchase = async () => {
     if (cartItems.length === 0) {
       toast.error("El carrito está vacío. No se puede realizar la compra.");
+      return;
+    }
+
+    //Verifciar que exista una obra a la que asignarle el pedido
+    const selectedBuilding = getFromLocalstorage(
+      "selectedBuilding" || "null"
+    ) as Building | null;
+    if (!selectedBuilding) {
+      toast.error("Debe elegir una obra a la cual enviar el pedido.");
+      router.push("/obras");
       return;
     }
 
@@ -112,6 +122,19 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
           dni: client.dni,
           cuit: client.cuit,
         },
+        obra: {
+          id: selectedBuilding.id,
+          calle: selectedBuilding.calle,
+          ciudad: selectedBuilding.ciudad,
+          provincia: selectedBuilding.provincia,
+          pais: selectedBuilding.pais,
+          altura: selectedBuilding.altura,
+          esRemodelacion: selectedBuilding.esRemodelacion,
+          lat: selectedBuilding.lat,
+          lng: selectedBuilding.lng,
+          presupuesto: selectedBuilding.presupuesto,
+          estado: selectedBuilding.estado,
+        },
         total: cartItems.reduce(
           (acc, item) => acc + item.precio * item.cantidad!,
           0
@@ -129,6 +152,8 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
 
       console.log("Orden a persistir :", newOrder);
       await createPedido(newOrder);
+
+      localStorage.removeItem("selectedBuilding");
 
       toast.success("Pedido realizado con éxito.");
 

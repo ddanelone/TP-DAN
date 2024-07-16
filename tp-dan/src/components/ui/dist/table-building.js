@@ -8,8 +8,21 @@ var skeleton_1 = require("@/components/ui/skeleton");
 var button_1 = require("./button");
 var create_update_building_1 = require("@/app/(vendedor)/abm/obras/components/create-update-building");
 var confirm_deletion_building_1 = require("@/app/(vendedor)/abm/obras/components/confirm-deletion-building");
+var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 function TableBuilding(_a) {
-    var isLoading = _a.isLoading, buildings = _a.buildings, getBuildings = _a.getBuildings, deleteBuilding = _a.deleteBuilding;
+    var isLoading = _a.isLoading, buildings = _a.buildings, getBuildings = _a.getBuildings, deleteBuilding = _a.deleteBuilding, existingBuilding = _a.existingBuilding;
+    var _b = react_1.useState(null), selectedBuilding = _b[0], setSelectedBuilding = _b[1];
+    var handleSelectBuilding = function (building) {
+        if ((selectedBuilding === null || selectedBuilding === void 0 ? void 0 : selectedBuilding.id) === building.id) {
+            setSelectedBuilding(null);
+            localStorage.removeItem("selectedBuilding");
+        }
+        else {
+            setSelectedBuilding(building);
+            set_in_localstorage_1.setInLocalstorage("selectedBuilding", building);
+            existingBuilding();
+        }
+    };
     return (react_1["default"].createElement("div", { className: "hidden md:block" },
         react_1["default"].createElement(table_1.Table, null,
             react_1["default"].createElement(table_1.TableHeader, null,
@@ -43,6 +56,7 @@ function TableBuilding(_a) {
                             react_1["default"].createElement(table_1.TableCell, { className: "w-[50px]" }, building.lat),
                             react_1["default"].createElement(table_1.TableCell, { className: "w-[50px]" }, building.lng),
                             react_1["default"].createElement(table_1.TableCell, { className: "text-center" },
+                                !getBuildings && (react_1["default"].createElement(button_1.Button, { className: "ml-4", onClick: function () { return handleSelectBuilding(building); } }, (selectedBuilding === null || selectedBuilding === void 0 ? void 0 : selectedBuilding.id) === building.id ? "✔️" : "❌")),
                                 getBuildings && (react_1["default"].createElement(create_update_building_1.CreateUpdateBuilding, { isLoading: isLoading, buildingToUpdate: building, getBuildings: getBuildings },
                                     react_1["default"].createElement(button_1.Button, { className: "ml-4" },
                                         react_1["default"].createElement(lucide_react_1.SquarePen, null)))),

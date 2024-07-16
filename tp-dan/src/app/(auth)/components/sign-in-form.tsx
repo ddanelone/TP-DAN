@@ -54,7 +54,7 @@ function SignInForm() {
       if (authenticatedUser.role === 1) {
         router.push("/abm/productos");
       } else {
-        router.push("/productos");
+        router.push("/obras");
       }
     } catch (error: any) {
       toast.error(error.message, { duration: 4000 });
@@ -117,12 +117,11 @@ function SignInForm() {
 
       {/* ========== Registrarse ========== */}
       <p className="text-center text-sm text-muted-foreground">
-        ¿Aun no tenés una cuenta? {""}
+        ¿Aun no tenés una cuenta?
         <Link
           href="/sign-up"
           className="underline underline-offset-4 hover:text-primary "
         >
-          {" "}
           Registrate
         </Link>
       </p>

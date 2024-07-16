@@ -2,7 +2,7 @@
 
 # RAMA A CLONAR: HAPROXY
 
-1. Levantar el microservicio de RabittQM
+1. Levantar el microservicio de RabittQM-Zipkin
 2. Levantar el config-service (tiene las configuraciones remotas de los demás MS)
 3. eureka-service porque tiene que registrar a los demás microservicios
 4. gateway-service, es el proxy
@@ -14,6 +14,15 @@
 9. si alguna depenencia no se instala, npm i --force
 10. crear el contenedor del frontend; acceder: http://localhost (a través de Haproxy)
 11. sufra con gusto.
+
+# 4° MICROSERVICIO IMPLEMENTADO
+
+ms-usuarios-svc en Node.js --> desde el "Crear cuenta" se crea un usuario con status de "Vendedor". Quedó así porque es razonable tener la posibilidad de autogestionar algún tipo de usuario que sea capaz de crear Clientes. No tiene demasiado sentido en la vida real, pero es práctico para el TP.
+
+# CREACIÓN DE "CLIENTES"
+
+Al darse de alta un "Cliente", el ms-clientes le envía un mensaje a la cola RabbitMQ que luego consume el ms-Usuarios, creando un nuevo usuario. La clave creada por omisión es: primer letra del nombre, en mayúsculas; primer letra del apellido, en minúsculas, y el número de Documento. Así, el usuario "Juan Pérez, DNI 12345678", tendrá como clave: "Jp12345678"
+Se puede cambiar en el menú correspondiente.
 
 # EUREKA (MS registrados por el Discovery)
 

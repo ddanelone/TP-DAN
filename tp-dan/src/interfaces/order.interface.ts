@@ -1,3 +1,4 @@
+import { Building } from "./building.interface";
 import { Costumer } from "./costumer.interface";
 import { OrderDetails } from "./order-detail.interface";
 import { OrderHistory } from "./order-history.interface";
@@ -13,6 +14,7 @@ export interface Order {
   cliente: Costumer;
   total: number;
   estado?: Status;
+  obra?: Building;
 
   detalle: OrderDetails[];
 

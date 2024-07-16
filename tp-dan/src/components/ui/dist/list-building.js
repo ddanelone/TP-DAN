@@ -7,8 +7,22 @@ var skeleton_1 = require("@/components/ui/skeleton");
 var badge_1 = require("@/components/ui/badge");
 var create_update_building_1 = require("@/app/(vendedor)/abm/obras/components/create-update-building");
 var confirm_deletion_building_1 = require("@/app/(vendedor)/abm/obras/components/confirm-deletion-building");
+var set_in_localstorage_1 = require("@/action/set-in-localstorage");
+var react_1 = require("react");
 function ListBuilding(_a) {
-    var isLoading = _a.isLoading, buildings = _a.buildings, getBuildings = _a.getBuildings, deleteBuilding = _a.deleteBuilding;
+    var isLoading = _a.isLoading, buildings = _a.buildings, getBuildings = _a.getBuildings, deleteBuilding = _a.deleteBuilding, existingBuilding = _a.existingBuilding;
+    var _b = react_1.useState(null), selectedBuilding = _b[0], setSelectedBuilding = _b[1];
+    var handleSelectBuilding = function (building) {
+        if ((selectedBuilding === null || selectedBuilding === void 0 ? void 0 : selectedBuilding.id) === building.id) {
+            setSelectedBuilding(null);
+            localStorage.removeItem("selectedBuilding");
+        }
+        else {
+            setSelectedBuilding(building);
+            set_in_localstorage_1.setInLocalstorage("selectedBuilding", building);
+            existingBuilding();
+        }
+    };
     return (React.createElement("div", { className: "block md:hidden" },
         !isLoading &&
             buildings &&
@@ -49,6 +63,7 @@ function ListBuilding(_a) {
                                     "Estado: ",
                                     building.estado)))),
                     React.createElement("div", { className: "ml-2" },
+                        !getBuildings && (React.createElement(button_1.Button, { className: "ml-4", onClick: function () { return handleSelectBuilding(building); } }, (selectedBuilding === null || selectedBuilding === void 0 ? void 0 : selectedBuilding.id) === building.id ? "✔️" : "❌")),
                         getBuildings && (React.createElement(create_update_building_1.CreateUpdateBuilding, { isLoading: isLoading, buildingToUpdate: building, getBuildings: getBuildings },
                             React.createElement(button_1.Button, { className: "w-8 h-8 p-0" },
                                 React.createElement(lucide_react_1.SquarePen, { className: "w-5 h-5" })))),

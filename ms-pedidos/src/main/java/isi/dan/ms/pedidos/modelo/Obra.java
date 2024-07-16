@@ -26,5 +26,5 @@ public class Obra {
    private float lat;
    private float lng;
    private BigDecimal presupuesto;
-   private Estado estado;
+   private EstadoObra estado;
 }

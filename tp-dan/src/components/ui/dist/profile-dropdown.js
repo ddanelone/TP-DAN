@@ -12,9 +12,14 @@ function ProfileDropdown() {
     var user = use_user_1.useUser();
     var router = navigation_1.useRouter();
     var salir = function () {
+        //Verificar que no hayan quedado trazas de clientes ni obras en el localstorage
         var idClient = get_from_localstorage_1.getFromLocalstorage("idClient");
         if (idClient) {
             localStorage.removeItem("idClient");
+        }
+        var selectedBuilding = get_from_localstorage_1.getFromLocalstorage("selectedBuilding");
+        if (selectedBuilding) {
+            localStorage.removeItem("selectedBuilding");
         }
         auth_1.signOutAccount();
         router.push("/");

@@ -138,6 +138,15 @@ export function TableOrders({
                 <TableCell>
                   <Skeleton className="w-full h-4" />
                 </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-full h-4" />
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>

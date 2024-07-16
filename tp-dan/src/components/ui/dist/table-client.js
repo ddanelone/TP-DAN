@@ -55,6 +55,8 @@ function TableClient(_a) {
                         react_1["default"].createElement(table_1.TableCell, null,
                             react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
                         react_1["default"].createElement(table_1.TableCell, null,
+                            react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })),
+                        react_1["default"].createElement(table_1.TableCell, null,
                             react_1["default"].createElement(skeleton_1.Skeleton, { className: "w-full h-4" })))); }))),
         !isLoading && clients.length === 0 && (react_1["default"].createElement("div", { className: "text-gray-200 my-20" },
             react_1["default"].createElement("div", { className: "flex justify-center" },

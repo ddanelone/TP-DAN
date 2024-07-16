@@ -27,9 +27,14 @@ export function ProfileDropdown() {
   const router = useRouter();
 
   const salir = () => {
+    //Verificar que no hayan quedado trazas de clientes ni obras en el localstorage
     const idClient = getFromLocalstorage("idClient");
     if (idClient) {
       localStorage.removeItem("idClient");
+    }
+    const selectedBuilding = getFromLocalstorage("selectedBuilding");
+    if (selectedBuilding) {
+      localStorage.removeItem("selectedBuilding");
     }
 
     signOutAccount();

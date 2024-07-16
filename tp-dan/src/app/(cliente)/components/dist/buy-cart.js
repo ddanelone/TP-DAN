@@ -47,6 +47,7 @@ var navigation_1 = require("next/navigation");
 var react_hot_toast_1 = require("react-hot-toast");
 var auth_1 = require("@/lib/auth");
 var use_user_1 = require("@/hooks/use-user");
+var get_from_localstorage_1 = require("@/action/get-from-localstorage");
 function BuyCart(_a) {
     var _this = this;
     var children = _a.children, cartItems = _a.cartItems, removeItem = _a.removeItem;
@@ -90,12 +91,18 @@ function BuyCart(_a) {
         removeItem(item);
     };
     var handlePurchase = function () { return __awaiter(_this, void 0, void 0, function () {
-        var _i, cartItems_1, item, error_2, newOrder, error_3;
+        var selectedBuilding, _i, cartItems_1, item, error_2, newOrder, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (cartItems.length === 0) {
                         react_hot_toast_1["default"].error("El carrito está vacío. No se puede realizar la compra.");
+                        return [2 /*return*/];
+                    }
+                    selectedBuilding = get_from_localstorage_1.getFromLocalstorage("selectedBuilding" || "null");
+                    if (!selectedBuilding) {
+                        react_hot_toast_1["default"].error("Debe elegir una obra a la cual enviar el pedido.");
+                        router.push("/obras");
                         return [2 /*return*/];
                     }
                     if (!client) {
@@ -148,6 +155,19 @@ function BuyCart(_a) {
                             dni: client.dni,
                             cuit: client.cuit
                         },
+                        obra: {
+                            id: selectedBuilding.id,
+                            calle: selectedBuilding.calle,
+                            ciudad: selectedBuilding.ciudad,
+                            provincia: selectedBuilding.provincia,
+                            pais: selectedBuilding.pais,
+                            altura: selectedBuilding.altura,
+                            esRemodelacion: selectedBuilding.esRemodelacion,
+                            lat: selectedBuilding.lat,
+                            lng: selectedBuilding.lng,
+                            presupuesto: selectedBuilding.presupuesto,
+                            estado: selectedBuilding.estado
+                        },
                         total: cartItems.reduce(function (acc, item) { return acc + item.precio * item.cantidad; }, 0),
                         //estado: Status.EN_PREPARACION,
                         detalle: cartItems.map(function (item) { return ({
@@ -163,6 +183,7 @@ function BuyCart(_a) {
                     return [4 /*yield*/, auth_1.createPedido(newOrder)];
                 case 8:
                     _a.sent();
+                    localStorage.removeItem("selectedBuilding");
                     react_hot_toast_1["default"].success("Pedido realizado con éxito.");
                     router.push("/pedidos");
                     return [3 /*break*/, 11];

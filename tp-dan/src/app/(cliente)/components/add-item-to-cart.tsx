@@ -14,6 +14,10 @@ import { useState } from "react";
 
 import { Product } from "@/interfaces/product-interface";
 import { Button } from "@/components/ui/button";
+import { getFromLocalstorage } from "@/action/get-from-localstorage";
+import { Building } from "@/interfaces/building.interface";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface AddItemToCartProps {
   children: React.ReactNode;
@@ -32,10 +36,26 @@ export function AddItemToCart({ children, item, addItem }: AddItemToCartProps) {
     },
   });
 
+  const router = useRouter();
+
   const cantidad = watch("cantidad");
   const totalItem = item.precio * cantidad;
 
   const onSubmit = (data: any) => {
+    //Agrego la verificación de obra seleccionada...
+    //Verifciar que exista una obra a la que asignarle el pedido
+    const selectedBuilding = getFromLocalstorage(
+      "selectedBuilding" || "null"
+    ) as Building | null;
+    if (!selectedBuilding) {
+      toast.error("Debe elegir una obra a la cual enviar el pedido.", {
+        duration: 4000,
+      });
+      router.push("/obras");
+      return;
+    }
+    //No es muy elegante, pero...
+
     addItem({ ...item, cantidad: data.cantidad });
     console.log("Item agregado al carrito", {
       ...item,

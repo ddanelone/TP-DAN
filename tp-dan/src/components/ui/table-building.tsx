@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,12 +13,14 @@ import { Button } from "./button";
 import { CreateUpdateBuilding } from "@/app/(vendedor)/abm/obras/components/create-update-building";
 import { ConfirmDeletionBuilding } from "@/app/(vendedor)/abm/obras/components/confirm-deletion-building";
 import { Building } from "@/interfaces/building.interface";
+import { setInLocalstorage } from "@/action/set-in-localstorage";
 
 interface TableBuildingProps {
   isLoading: boolean;
   buildings: Building[];
   getBuildings?: () => Promise<void>;
   deleteBuilding?: (building: Building) => Promise<void>;
+  existingBuilding: () => void;
 }
 
 export function TableBuilding({
@@ -26,7 +28,23 @@ export function TableBuilding({
   buildings,
   getBuildings,
   deleteBuilding,
+  existingBuilding,
 }: TableBuildingProps) {
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
+    null
+  );
+
+  const handleSelectBuilding = (building: Building) => {
+    if (selectedBuilding?.id === building.id) {
+      setSelectedBuilding(null);
+      localStorage.removeItem("selectedBuilding");
+    } else {
+      setSelectedBuilding(building);
+      setInLocalstorage("selectedBuilding", building);
+      existingBuilding();
+    }
+  };
+
   return (
     <div className="hidden md:block">
       <Table>
@@ -69,6 +87,15 @@ export function TableBuilding({
                 <TableCell className="w-[50px]">{building.lat}</TableCell>
                 <TableCell className="w-[50px]">{building.lng}</TableCell>
                 <TableCell className="text-center">
+                  {/* ========== Seleccionar una Obra ========== */}
+                  {!getBuildings && (
+                    <Button
+                      className="ml-4"
+                      onClick={() => handleSelectBuilding(building)}
+                    >
+                      {selectedBuilding?.id === building.id ? "✔️" : "❌"}
+                    </Button>
+                  )}
                   {/* ========== Actualizar Obra ========== */}
                   {getBuildings && (
                     <CreateUpdateBuilding

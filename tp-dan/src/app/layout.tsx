@@ -36,8 +36,8 @@ export default function RootLayout({
       if (authRoutes.includes(pathName)) {
         if (user.role === 1 && pathName !== "/abm/clientes") {
           router.push("/abm/productos");
-        } else if (user.role === 0 && pathName !== "/productos") {
-          router.push("/productos");
+        } else if (user.role === 0 && pathName !== "/obras") {
+          router.push("/obras");
         }
       }
     } else {
