@@ -1,8 +1,6 @@
 package isi.dan.ms.pedidos.controller;
 
 import isi.dan.ms.pedidos.MessageSenderService;
-import isi.dan.ms.pedidos.conf.MongoTestConfiguration;
-import isi.dan.ms.pedidos.dao.PedidoRepository;
 import isi.dan.ms.pedidos.modelo.Estado;
 import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
 import isi.dan.ms.pedidos.modelo.Pedido;
@@ -10,18 +8,14 @@ import isi.dan.ms.pedidos.servicio.PedidoService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -42,10 +36,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SpringBootTest
 @AutoConfigureMockMvc
-@WebMvcTest(controllers = PedidoController.class)
-@Import(MongoTestConfiguration.class)
-@ActiveProfiles("test")
 public class PedidoControllerTest {
 
    @Autowired
@@ -60,10 +52,13 @@ public class PedidoControllerTest {
    @MockBean
    private MeterRegistry meterRegistry;
 
+   @Autowired
+   private PedidoController pedidoController;
+
    @BeforeEach
    public void setUp() {
-      mockMvc = MockMvcBuilders
-            .standaloneSetup(new PedidoController(meterRegistry, pedidoService, messageSenderService)).build();
+      MockitoAnnotations.openMocks(this);
+      mockMvc = MockMvcBuilders.standaloneSetup(pedidoController).build();
    }
 
    @Test

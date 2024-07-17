@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile;
 public class TestConfig {
 
    @Bean
-   MeterRegistry meterRegistry() {
+   public MeterRegistry meterRegistry() {
       return new SimpleMeterRegistry();
    }
 }
