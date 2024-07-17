@@ -20,7 +20,9 @@ function TableBuilding(_a) {
         else {
             setSelectedBuilding(building);
             set_in_localstorage_1.setInLocalstorage("selectedBuilding", building);
-            existingBuilding();
+            if (existingBuilding) {
+                existingBuilding();
+            }
         }
     };
     return (react_1["default"].createElement("div", { className: "hidden md:block" },

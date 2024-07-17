@@ -100,6 +100,11 @@ public class ProductoController {
 
       boolean stockDisponible = productoService.verificarStock(id, cantidad);
 
+      if (!stockDisponible) {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+               .body("No hay suficiente stock del producto " + id);
+      }
+
       Map<String, Boolean> response = new HashMap<>();
       response.put("stockDisponible", stockDisponible);
 

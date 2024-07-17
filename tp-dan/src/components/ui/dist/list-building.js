@@ -20,7 +20,9 @@ function ListBuilding(_a) {
         else {
             setSelectedBuilding(building);
             set_in_localstorage_1.setInLocalstorage("selectedBuilding", building);
-            existingBuilding();
+            if (existingBuilding) {
+                existingBuilding();
+            }
         }
     };
     return (React.createElement("div", { className: "block md:hidden" },

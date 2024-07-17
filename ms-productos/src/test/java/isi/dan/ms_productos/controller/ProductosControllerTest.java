@@ -132,17 +132,17 @@ public class ProductosControllerTest {
       producto.setNombre("Cemento");
 
       when(productoService.getProductoById(1L)).thenReturn(producto);
-      when(productoService.verificarStock(1L, 50)).thenReturn(true); // Mock del servicio
-      when(productoService.verificarStock(1L, 150)).thenReturn(false); // Mock del servicio
+      when(productoService.verificarStock(1L, 50)).thenReturn(true);
+      when(productoService.verificarStock(1L, 150)).thenReturn(false);
 
       mockMvc.perform(post("/api/productos/1/verificar-stock")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{ \"cantidadDeseada\": 50 }"))
+            .content("{ \"cantidad\": 50 }"))
             .andExpect(status().isOk());
 
       mockMvc.perform(post("/api/productos/1/verificar-stock")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{ \"cantidadDeseada\": 150 }"))
+            .content("{ \"cantidad\": 150 }"))
             .andExpect(status().isBadRequest())
             .andExpect(content().string("No hay suficiente stock del producto 1"));
    }

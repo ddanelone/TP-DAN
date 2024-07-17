@@ -20,7 +20,7 @@ interface TableBuildingProps {
   buildings: Building[];
   getBuildings?: () => Promise<void>;
   deleteBuilding?: (building: Building) => Promise<void>;
-  existingBuilding: () => void;
+  existingBuilding?: () => void;
 }
 
 export function TableBuilding({
@@ -41,7 +41,9 @@ export function TableBuilding({
     } else {
       setSelectedBuilding(building);
       setInLocalstorage("selectedBuilding", building);
-      existingBuilding();
+      if (existingBuilding) {
+        existingBuilding();
+      }
     }
   };
 

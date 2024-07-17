@@ -7,13 +7,12 @@ import { CreateUpdateBuilding } from "@/app/(vendedor)/abm/obras/components/crea
 import { ConfirmDeletionBuilding } from "@/app/(vendedor)/abm/obras/components/confirm-deletion-building";
 import { setInLocalstorage } from "@/action/set-in-localstorage";
 import { useState } from "react";
-
 interface ListBuildingProps {
   isLoading: boolean;
   buildings: Building[];
   getBuildings?: () => Promise<void>;
   deleteBuilding?: (building: Building) => Promise<void>;
-  existingBuilding: () => void;
+  existingBuilding?: () => void;
 }
 
 export function ListBuilding({
@@ -34,7 +33,9 @@ export function ListBuilding({
     } else {
       setSelectedBuilding(building);
       setInLocalstorage("selectedBuilding", building);
-      existingBuilding();
+      if (existingBuilding) {
+        existingBuilding();
+      }
     }
   };
 

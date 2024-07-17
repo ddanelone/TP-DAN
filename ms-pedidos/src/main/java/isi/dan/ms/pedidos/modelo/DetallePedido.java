@@ -15,4 +15,9 @@ public class DetallePedido {
    private BigDecimal descuento;
    private BigDecimal precioFinal;
 
+   public DetallePedido(Producto producto, Integer cantidad) {
+      this.producto = producto;
+      this.cantidad = cantidad;
+
+   }
 }

@@ -56,6 +56,10 @@ Contraseña y usuario por default: admin admin
 Ejecutar mvn clean test en el ms-clientes y se crea la carpeta correspondiente /target/site
 Desde el explorador de archivos, entrar al index.html
 
+# SUREFIRE
+
+En los microservicios de Clientes y Productos: /target/surefire-reports
+
 # TEST IMPLEMENTADOS
 
 1. TestContainer mySQL en:
@@ -79,12 +83,14 @@ Desde el explorador de archivos, entrar al index.html
 
      -- ProductoController
 
+     --PedidosController
+
    - 3.2 Con RestControllerTest
      -- ClienteController
      -- ObraController
      -- UsuarioHabilitadoController
 
-# GRAYLOG
+# GRAYLOG EN TODOS LOS MS JAVA
 
 http://localhost:9800/system/overview
 usuario: admin

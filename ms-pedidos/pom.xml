@@ -26,6 +26,8 @@
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-data-mongodb</artifactId>
       </dependency>
+
+
       <!-- {/* ========== Lo modifico para usar graylog ========== */} -->
       <dependency>
          <groupId>org.springframework.boot</groupId>
@@ -55,29 +57,10 @@
          <artifactId>spring-boot-starter-test</artifactId>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-testcontainers</artifactId>
-         <scope>test</scope>
-      </dependency>
+
       <dependency>
          <groupId>org.springframework.amqp</groupId>
          <artifactId>spring-rabbit-test</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.testcontainers</groupId>
-         <artifactId>junit-jupiter</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.testcontainers</groupId>
-         <artifactId>mongodb</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.testcontainers</groupId>
-         <artifactId>rabbitmq</artifactId>
          <scope>test</scope>
       </dependency>
 
@@ -130,10 +113,6 @@
          </exclusions>
       </dependency>
 
-      <dependency>
-         <groupId>com.fasterxml.jackson.datatype</groupId>
-         <artifactId>jackson-datatype-jsr310</artifactId>
-      </dependency>
 
 
       <!-- Spring Cloud LoadBalancer -->
@@ -158,7 +137,6 @@
          <artifactId>zipkin-reporter-brave</artifactId>
       </dependency>
 
-
       <!-- {/* ========== Hay que cambiar también la configuracion de spring boot starter ========== */} -->
       <dependency>
          <groupId>de.siegmar</groupId>
@@ -166,22 +144,28 @@
          <version>6.0.1</version>
       </dependency>
 
-      <!-- {/* ========== Testing ========== */} -->
-      <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
       <dependency>
-         <groupId>org.junit.jupiter</groupId>
-         <artifactId>junit-jupiter-api</artifactId>
-         <version>5.11.0-M2</version>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-testcontainers</artifactId>
          <scope>test</scope>
       </dependency>
 
-      <!-- Dependencia para Spring Test DBUnit -->
       <dependency>
-         <groupId>com.github.springtestdbunit</groupId>
-         <artifactId>spring-test-dbunit</artifactId>
-         <version>1.3.0</version>
+         <groupId>org.testcontainers</groupId>
+         <artifactId>junit-jupiter</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.testcontainers</groupId>
+         <artifactId>mongodb</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.testcontainers</groupId>
+         <artifactId>rabbitmq</artifactId>
+         <scope>test</scope>
+      </dependency>
+
 
    </dependencies>
 

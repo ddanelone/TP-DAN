@@ -45,7 +45,10 @@ public class PedidoController {
    private final AtomicInteger pedidosCount = new AtomicInteger();
 
    @Autowired
-   public PedidoController(MeterRegistry meterRegistry) {
+   public PedidoController(MeterRegistry meterRegistry, PedidoService pedidoService,
+         MessageSenderService messageSenderService) {
+      this.pedidoService = pedidoService;
+      this.messageSenderService = messageSenderService;
       Gauge.builder("pedidos.count", pedidosCount, AtomicInteger::get)
             .description("Número de pedidos en el sistema")
             .register(meterRegistry);
@@ -84,6 +87,34 @@ public class PedidoController {
       pedidoService.deletePedido(id);
       pedidosCount.decrementAndGet();
       return ResponseEntity.noContent().build();
+   }
+
+   // Método para actualizar el ESTADO del pedido
+   @PutMapping("/{id}/estado")
+   public ResponseEntity<Pedido> updatePedidoEstado(@PathVariable String id, @RequestBody EstadoCambioRequest request) {
+      Pedido pedido = pedidoService.getPedidoById(id);
+
+      if (pedido != null) {
+         pedido.setEstado(request.getNuevoEstado());
+         pedido.addEstadoCambio(request.getNuevoEstado(), request.getUsuarioCambio());
+
+         if (request.getNuevoEstado() == Estado.CANCELADO) {
+            // Construir y enviar el DTO a RabbitMQ
+            for (DetallePedido detalle : pedido.getDetalle()) {
+               StockUpdateDTO stockUpdateDTO = new StockUpdateDTO();
+               stockUpdateDTO.setIdProducto(detalle.getProducto().getId());
+               stockUpdateDTO.setCantidad(detalle.getCantidad());
+
+               // Enviar el mensaje a la cola de RabbitMQ
+               messageSenderService.sendMessage(RabbitMQConfig.STOCK_UPDATE_QUEUE, stockUpdateDTO);
+            }
+         }
+
+         Pedido updatedPedido = pedidoService.updatePedido(pedido);
+         return ResponseEntity.ok(updatedPedido);
+      } else {
+         return ResponseEntity.notFound().build();
+      }
    }
 
    @Retry(name = "clientesRetry")
@@ -152,31 +183,4 @@ public class PedidoController {
       return new ResponseEntity("No se pudo guardar el producto para el pedido", HttpStatus.OK);
    }
 
-   // Método para actualizar el ESTADO del pedido
-   @PutMapping("/{id}/estado")
-   public ResponseEntity<Pedido> updatePedidoEstado(@PathVariable String id, @RequestBody EstadoCambioRequest request) {
-      Pedido pedido = pedidoService.getPedidoById(id);
-
-      if (pedido != null) {
-         pedido.setEstado(request.getNuevoEstado());
-         pedido.addEstadoCambio(request.getNuevoEstado(), request.getUsuarioCambio());
-
-         if (request.getNuevoEstado() == Estado.CANCELADO) {
-            // Construir y enviar el DTO a RabbitMQ
-            for (DetallePedido detalle : pedido.getDetalle()) {
-               StockUpdateDTO stockUpdateDTO = new StockUpdateDTO();
-               stockUpdateDTO.setIdProducto(detalle.getProducto().getId());
-               stockUpdateDTO.setCantidad(detalle.getCantidad());
-
-               // Enviar el mensaje a la cola de RabbitMQ
-               messageSenderService.sendMessage(RabbitMQConfig.STOCK_UPDATE_QUEUE, stockUpdateDTO);
-            }
-         }
-
-         Pedido updatedPedido = pedidoService.updatePedido(pedido);
-         return ResponseEntity.ok(updatedPedido);
-      } else {
-         return ResponseEntity.notFound().build();
-      }
-   }
 }
