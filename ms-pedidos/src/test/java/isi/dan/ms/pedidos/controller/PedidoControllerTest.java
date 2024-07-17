@@ -1,6 +1,7 @@
 package isi.dan.ms.pedidos.controller;
 
 import isi.dan.ms.pedidos.MessageSenderService;
+import isi.dan.ms.pedidos.conf.EmbeddedMongoConfig;
 import isi.dan.ms.pedidos.modelo.Estado;
 import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
 import isi.dan.ms.pedidos.modelo.Pedido;
@@ -11,8 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -36,8 +39,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@SpringBootTest
 @AutoConfigureMockMvc
+@WebMvcTest(controllers = PedidoController.class)
+@Import(EmbeddedMongoConfig.class)
+@ActiveProfiles("test")
 public class PedidoControllerTest {
 
    @Autowired
@@ -52,13 +57,10 @@ public class PedidoControllerTest {
    @MockBean
    private MeterRegistry meterRegistry;
 
-   @Autowired
-   private PedidoController pedidoController;
-
    @BeforeEach
    public void setUp() {
-      MockitoAnnotations.openMocks(this);
-      mockMvc = MockMvcBuilders.standaloneSetup(pedidoController).build();
+      mockMvc = MockMvcBuilders
+            .standaloneSetup(new PedidoController(meterRegistry, pedidoService, messageSenderService)).build();
    }
 
    @Test

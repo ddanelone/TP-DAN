@@ -18,8 +18,8 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import java.io.IOException;
 import java.util.Arrays;
 
-//@Configuration
-//@Profile("test")
+@Configuration
+@Profile("test")
 public class EmbeddedMongoConfig extends AbstractMongoClientConfiguration {
 
    private MongodExecutable mongodExecutable;
