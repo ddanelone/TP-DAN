@@ -38,7 +38,7 @@ password: guest
 
 localhost:9411
 
-# PROMETHEUS
+# PROMETHEUS /TELEMETRIA: en todos los MS Java
 
 localhost:9090
 
@@ -53,7 +53,7 @@ Contraseña y usuario por default: admin admin
 
 # JACOCO
 
-Ejecutar mvn clean test en el ms-clientes y se crea la carpeta correspondiente /target/site
+Ejecutar mvn clean test en el ms-clientes y se creará la carpeta correspondiente /target/site
 Desde el explorador de archivos, entrar al index.html
 
 # SUREFIRE

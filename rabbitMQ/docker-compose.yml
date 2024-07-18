@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   rabbitmq:
@@ -7,15 +7,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks:
-      - backend-net
-
-  ### Zipkin
-  zipkin:
-    image: openzipkin/zipkin:2.24.2
-    container_name: zipkin
-    ports:
-      - "9411:9411"
     networks:
       - backend-net
 
