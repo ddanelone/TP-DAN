@@ -10,7 +10,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,6 +19,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -47,6 +48,7 @@ public class ClienteControllerTestRestTemplateTests {
       cliente.setNombre("Test Cliente");
       cliente.setCorreoElectronico("test@cliente.com");
       cliente.setCuit("12998887776");
+      cliente.setMaximoDescubierto(new BigDecimal("110000"));
 
       // Guardar el cliente en la base de datos antes de cada prueba
       cliente = clienteService.save(cliente);
@@ -135,6 +137,38 @@ public class ClienteControllerTestRestTemplateTests {
             Void.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+   }
+
+   @Test
+   @Order(7)
+   void testVerificarSaldo_SaldoSuficiente() {
+      ResponseEntity<Boolean> response = restTemplate.getForEntity(
+            getUrl("/api/clientes/" + cliente.getId() + "/verificar-saldo?montoTotal=500.00"),
+            Boolean.class);
+
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+      assertThat(response.getBody()).isTrue();
+   }
+
+   @Test
+   @Order(8)
+   void testVerificarSaldo_SaldoInsuficiente() {
+      ResponseEntity<Boolean> response = restTemplate.getForEntity(
+            getUrl("/api/clientes/" + cliente.getId() + "/verificar-saldo?montoTotal=1500000.00"),
+            Boolean.class);
+
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+      assertThat(response.getBody()).isFalse();
+   }
+
+   @Test
+   @Order(9)
+   void testVerificarSaldo_ClienteNoEncontrado() {
+      ResponseEntity<Boolean> response = restTemplate.getForEntity(
+            getUrl("/api/clientes/999/verificar-saldo?montoTotal=500.00"),
+            Boolean.class);
+
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
    }
 
    private String getUrl(String path) {

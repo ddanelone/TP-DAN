@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -39,9 +40,6 @@ public class ClienteControllerTest {
    @MockBean
    private MessageSenderService messageSenderService;
 
-   @Autowired
-   private ObjectMapper objectMapper;
-
    private Cliente cliente;
 
    @BeforeEach
@@ -51,6 +49,7 @@ public class ClienteControllerTest {
       cliente.setNombre("Test Cliente");
       cliente.setCorreoElectronico("test@cliente.com");
       cliente.setCuit("12998887776");
+      cliente.setMaximoDescubierto(new BigDecimal("110000"));
    }
 
    @Test
@@ -112,6 +111,37 @@ public class ClienteControllerTest {
 
       mockMvc.perform(delete("/api/clientes/1"))
             .andExpect(status().isNoContent());
+   }
+
+   @Test
+   void testVerificarSaldo_SaldoSuficiente() throws Exception {
+      Mockito.when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
+
+      mockMvc.perform(get("/api/clientes/1/verificar-saldo")
+            .param("montoTotal", "500.00"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().string("true"));
+   }
+
+   @Test
+   void testVerificarSaldo_SaldoInsuficiente() throws Exception {
+      Mockito.when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
+
+      mockMvc.perform(get("/api/clientes/1/verificar-saldo")
+            .param("montoTotal", "1500.00"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().string("false"));
+   }
+
+   @Test
+   void testVerificarSaldo_ClienteNoEncontrado() throws Exception {
+      Mockito.when(clienteService.findById(1)).thenReturn(Optional.empty());
+
+      mockMvc.perform(get("/api/clientes/1/verificar-saldo")
+            .param("montoTotal", "500.00"))
+            .andExpect(status().isNotFound());
    }
 
    private static String asJsonString(final Object obj) {

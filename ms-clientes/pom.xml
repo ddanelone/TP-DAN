@@ -167,6 +167,21 @@
          <scope>test</scope>
       </dependency>
 
+
+      <!-- Dependencia para las anotaciones de Swagger -->
+      <dependency>
+         <groupId>io.swagger.core.v3</groupId>
+         <artifactId>swagger-annotations</artifactId>
+         <version>2.2.22</version>
+      </dependency>
+
+      <!-- Dependencia para Springdoc OpenAPI UI -->
+      <dependency>
+         <groupId>org.springdoc</groupId>
+         <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+         <version>2.2.0</version>
+      </dependency>
+
    </dependencies>
 
    <build>
