@@ -169,10 +169,22 @@
 
 
       <!-- Dependencia para las anotaciones de Swagger -->
-      <dependency>
+      <!-- <dependency>
          <groupId>io.swagger.core.v3</groupId>
          <artifactId>swagger-annotations</artifactId>
          <version>2.2.22</version>
+      </dependency> -->
+
+      <dependency>
+         <groupId>io.springfox</groupId>
+         <artifactId>springfox-swagger2</artifactId>
+         <version>3.0.0</version>
+      </dependency>
+
+      <dependency>
+         <groupId>io.springfox</groupId>
+         <artifactId>springfox-swagger-ui</artifactId>
+         <version>3.0.0</version>
       </dependency>
 
       <!-- Dependencia para Springdoc OpenAPI UI -->
