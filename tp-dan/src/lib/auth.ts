@@ -433,10 +433,12 @@ export const updateAuthorizedUser = async (
       },
     };
     const response = await api.put(
-      `/clientes/usuarios-habilitados/${id}`,
+      `/clientes/usuarios-habilitados/update-usuario-habilitado/${id}`,
       userData,
       config
     );
+    console.log("userData Recibida: ", userData);
+    console.log("RsponseDAta: ", response.data);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.message);

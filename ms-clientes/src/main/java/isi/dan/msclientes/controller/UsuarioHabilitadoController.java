@@ -109,22 +109,25 @@ public class UsuarioHabilitadoController {
       return ResponseEntity.ok(usuarioHabilitadoService.update(usuarioHabilitado));
    }
 
-   @PutMapping("/update-usuarios-habilitados/{clienteId}")
-   @Timed(value = "updateClienteUsuariosHabilitados.time", description = "Time taken to update usuarios habilitados for a cliente")
-   @Counted(value = "updateClienteUsuariosHabilitados.count", description = "Number of times the updateClienteUsuariosHabilitados method is called")
-   @Operation(summary = "Actualizar usuarios habilitados para un cliente", description = "Permite actualizar la lista de usuarios habilitados para un cliente dado")
+   @PutMapping("/update-usuario-habilitado/{clienteId}")
+   @Timed(value = "updateClienteUsuarioHabilitado.time", description = "Time taken to update a usuario habilitado for a cliente")
+   @Counted(value = "updateClienteUsuarioHabilitado.count", description = "Number of times the updateClienteUsuarioHabilitado method is called")
+   @Operation(summary = "Actualizar un usuario habilitado para un cliente", description = "Permite actualizar un usuario habilitado para un cliente dado")
    @ApiResponses(value = {
-         @ApiResponse(responseCode = "200", description = "Usuarios habilitados actualizados correctamente"),
+         @ApiResponse(responseCode = "200", description = "Usuario habilitado actualizado correctamente"),
          @ApiResponse(responseCode = "401", description = "No autorizado"),
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
    })
-   public ResponseEntity<Cliente> updateClienteUsuariosHabilitados(@PathVariable Integer clienteId,
-         @RequestBody List<UsuarioHabilitado> usuariosHabilitados) {
-      log.info("Updating usuarios habilitados for cliente with id: {}", clienteId);
+   public ResponseEntity<Cliente> updateClienteUsuarioHabilitado(
+         @PathVariable Integer clienteId,
+         @RequestBody UsuarioHabilitado usuarioHabilitado) {
+      log.info("Updating usuario habilitado for cliente with id: {}", clienteId);
+      log.info("Received usuarioHabilitado: {}", usuarioHabilitado);
+
       try {
-         Cliente updatedCliente = usuarioHabilitadoService.updateClienteUsuariosHabilitados(clienteId,
-               usuariosHabilitados);
+         Cliente updatedCliente = usuarioHabilitadoService.updateClienteUsuarioHabilitado(clienteId, usuarioHabilitado);
+         log.info("Usuario habilitado updated successfully for cliente with id: {}", clienteId);
          return ResponseEntity.ok(updatedCliente);
       } catch (EntityNotFoundException e) {
          log.warn("Cliente not found with id: {}", clienteId);

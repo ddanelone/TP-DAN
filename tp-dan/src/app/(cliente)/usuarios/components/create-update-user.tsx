@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 import { useUser } from "@/hooks/use-user";
 import { Button } from "@/components/ui/button";
 import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
-import { createAuthorizedUser } from "@/lib/auth";
+import { createAuthorizedUser, updateAuthorizedUser } from "@/lib/auth";
 import { getFromLocalstorage } from "@/action/get-from-localstorage";
 
 interface CreateUpdateUserProps {
@@ -118,9 +118,7 @@ export function CreateUpdateUser({
     setIsLoading(true);
 
     try {
-      //Acá tengo el usuario con un id, por lo que el método POST lo va a actualizar
-
-      await createAuthorizedUser(idClient, authUser);
+      await updateAuthorizedUser(idClient, authUser);
 
       toast.success("Cliente actualizado correctamente");
 
@@ -135,6 +133,7 @@ export function CreateUpdateUser({
       setIsLoading(false);
     }
   };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>

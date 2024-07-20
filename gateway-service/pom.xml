@@ -76,6 +76,14 @@
          <artifactId>zipkin-reporter-brave</artifactId>
       </dependency>
 
+      <!-- Dependencias necesarias para implemntar a validacion de token JWT -->
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-security</artifactId>
+      </dependency>
+
+
+
    </dependencies>
    <dependencyManagement>
       <dependencies>

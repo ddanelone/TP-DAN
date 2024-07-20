@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.hasSize;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,19 +113,30 @@ public class UsuarioHabilitadoControllerIntegrationTest {
 
    @Test
    @Order(6)
-   public void testUpdateClienteUsuariosHabilitados() throws Exception {
-      Cliente cliente = Cliente.builder().id(1).build();
-      UsuarioHabilitado usuario1 = UsuarioHabilitado.builder().id(1).correoElectronico("test1@example.com").build();
-      UsuarioHabilitado usuario2 = UsuarioHabilitado.builder().id(2).correoElectronico("test2@example.com").build();
-      List<UsuarioHabilitado> usuarios = List.of(usuario1, usuario2);
+   public void testUpdateClienteUsuarioHabilitado() throws Exception {
+      Cliente cliente = Cliente.builder()
+            .id(1)
+            .usuariosHabilitados(new HashSet<>()) // Usar HashSet en lugar de Set
+            .build();
 
-      when(usuarioHabilitadoService.updateClienteUsuariosHabilitados(1, usuarios)).thenReturn(cliente);
+      UsuarioHabilitado usuario1 = UsuarioHabilitado.builder()
+            .id(1)
+            .nombre("Juan")
+            .apellido("Pérez")
+            .dni("12345678")
+            .correoElectronico("test1@example.com")
+            .build();
 
-      mockMvc.perform(put("/api/clientes/usuarios-habilitados/update-usuarios-habilitados/1")
+      cliente.addUsuarioHabilitado(usuario1);
+
+      when(usuarioHabilitadoService.updateClienteUsuarioHabilitado(1, usuario1)).thenReturn(cliente);
+
+      mockMvc.perform(put("/api/clientes/usuarios-habilitados/update-usuario-habilitado/1")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("[{\"id\":1,\"correoElectronico\":\"test1@example.com\"}," +
-                  "{\"id\":2,\"correoElectronico\":\"test2@example.com\"}]"))
+            .content(
+                  "{\"id\":1,\"nombre\":\"Juan\",\"apellido\":\"Pérez\",\"dni\":\"12345678\",\"correoElectronico\":\"test1@example.com\"}"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(1));
    }
+
 }

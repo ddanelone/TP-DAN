@@ -61,8 +61,10 @@ public class PedidoController {
          // Guardar el pedido con los detalles que tienen suficiente stock
          Pedido savedPedido = pedidoService.savePedido(pedido);
          pedidosCount.incrementAndGet();
+         log.info("Pedido creado: {} ", savedPedido);
          return ResponseEntity.ok(savedPedido);
       } catch (RuntimeException e) {
+         log.info("Pedido no creado por falta de saldo del cliente: {} ");
          return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                .body("El cliente no tiene saldo suficiente para aceptar el pedido");
       }
@@ -71,6 +73,7 @@ public class PedidoController {
    @Timed(value = "pedidos.getAll.timed", description = "Tiempo de obtener todos los pedidos")
    @GetMapping
    public List<Pedido> getAllPedidos() {
+      log.info("Listando todos los pedidos {}");
       return pedidoService.getAllPedidos();
    }
 
@@ -78,6 +81,7 @@ public class PedidoController {
    @GetMapping("/{id}")
    public ResponseEntity<Pedido> getPedidoById(@PathVariable String id) {
       Pedido pedido = pedidoService.getPedidoById(id);
+      log.info("Pedido a buscar con el id: {} ", id);
       return pedido != null ? ResponseEntity.ok(pedido) : ResponseEntity.notFound().build();
    }
 
@@ -86,6 +90,7 @@ public class PedidoController {
    public ResponseEntity<Void> deletePedido(@PathVariable String id) {
       pedidoService.deletePedido(id);
       pedidosCount.decrementAndGet();
+      log.info("Id del Pedido eliminado: {} ", id);
       return ResponseEntity.noContent().build();
    }
 
@@ -111,6 +116,7 @@ public class PedidoController {
          }
 
          Pedido updatedPedido = pedidoService.updatePedido(pedido);
+         log.info("Pedido después de actualizarse: {} ", updatedPedido);
          return ResponseEntity.ok(updatedPedido);
       } else {
          return ResponseEntity.notFound().build();
@@ -122,6 +128,7 @@ public class PedidoController {
    @CircuitBreaker(name = "clientesCB", fallbackMethod = "fallbackSaveCliente")
    public ResponseEntity<Pedido> addClienteToPedido(@PathVariable String id, @RequestBody Cliente cliente) {
       Pedido updatedPedido = pedidoService.addClienteToPedido(id, cliente);
+      log.info("Cliente agregado al pedido: {} ", cliente);
       return ResponseEntity.ok(updatedPedido);
    }
 
