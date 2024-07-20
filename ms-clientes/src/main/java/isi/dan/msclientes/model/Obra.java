@@ -34,13 +34,11 @@ public class Obra {
    private String provincia;
    private String pais;
    private String altura;
-   // private String direccion;
 
    @Column(name = "ES_REMODELACION")
    private Boolean esRemodelacion;
 
    private float lat;
-
    private float lng;
 
    @ManyToOne

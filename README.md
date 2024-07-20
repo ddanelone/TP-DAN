@@ -95,6 +95,9 @@ http://localhost:8080/swagger-ui/index.html
      -- ObraController
      -- UsuarioHabilitadoController
 
+   - 3.3 Con MockRestServiceServe
+     -- ClienteController
+
 # GRAYLOG EN TODOS LOS MS JAVA
 
 http://localhost:9800/system/overview

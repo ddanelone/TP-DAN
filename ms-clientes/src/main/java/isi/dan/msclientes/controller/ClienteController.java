@@ -215,60 +215,63 @@ public class ClienteController {
    }
 
    @DeleteMapping("/{clienteId}/usuarios-habilitados/{usuarioHabilitadoId}")
-    @Operation(summary = "Eliminar un usuario habilitado de un cliente", description = "Permite eliminar un usuario habilitado asociado a un cliente específico")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Usuario habilitado eliminado correctamente"),
-        @ApiResponse(responseCode = "404", description = "Cliente o usuario habilitado no encontrado"),
-        @ApiResponse(responseCode = "401", description = "No autorizado"),
-        @ApiResponse(responseCode = "403", description = "Prohibido")
-    })
-    @Timed(value = "clientes.eliminarUsuarioHabilitado.time", description = "Time taken to remove an enabled user")
-    @Counted(value = "clientes.eliminarUsuarioHabilitado.count", description = "Times eliminarUsuarioHabilitado() method is called")
-    public ResponseEntity<Void> eliminarUsuarioHabilitado(@PathVariable Integer clienteId, @PathVariable Integer usuarioHabilitadoId) {
-        log.info("Removing enabled user with id {} from client with id {}", usuarioHabilitadoId, clienteId);
-        Optional<Cliente> clienteOpt = clienteService.findById(clienteId);
-        if (!clienteOpt.isPresent()) {
-            log.warn("Client with id {} not found", clienteId);
-            return ResponseEntity.notFound().build();
-        }
+   @Operation(summary = "Eliminar un usuario habilitado de un cliente", description = "Permite eliminar un usuario habilitado asociado a un cliente específico")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "204", description = "Usuario habilitado eliminado correctamente"),
+         @ApiResponse(responseCode = "404", description = "Cliente o usuario habilitado no encontrado"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido")
+   })
+   @Timed(value = "clientes.eliminarUsuarioHabilitado.time", description = "Time taken to remove an enabled user")
+   @Counted(value = "clientes.eliminarUsuarioHabilitado.count", description = "Times eliminarUsuarioHabilitado() method is called")
+   public ResponseEntity<Void> eliminarUsuarioHabilitado(@PathVariable Integer clienteId,
+         @PathVariable Integer usuarioHabilitadoId) {
+      log.info("Removing enabled user with id {} from client with id {}", usuarioHabilitadoId, clienteId);
+      Optional<Cliente> clienteOpt = clienteService.findById(clienteId);
+      if (!clienteOpt.isPresent()) {
+         log.warn("Client with id {} not found", clienteId);
+         return ResponseEntity.notFound().build();
+      }
 
-        Cliente cliente = clienteOpt.get();
-        Set<UsuarioHabilitado> usuariosHabilitados = cliente.getUsuariosHabilitados();
-        UsuarioHabilitado usuarioHabilitado = usuariosHabilitados.stream()
+      Cliente cliente = clienteOpt.get();
+      Set<UsuarioHabilitado> usuariosHabilitados = cliente.getUsuariosHabilitados();
+      UsuarioHabilitado usuarioHabilitado = usuariosHabilitados.stream()
             .filter(uh -> uh.getId().equals(usuarioHabilitadoId))
             .findFirst()
             .orElse(null);
 
-        if (usuarioHabilitado == null) {
-            log.warn("Enabled user with id {} not found for client with id {}", usuarioHabilitadoId, clienteId);
-            return ResponseEntity.notFound().build();
-        }
+      if (usuarioHabilitado == null) {
+         log.warn("Enabled user with id {} not found for client with id {}", usuarioHabilitadoId, clienteId);
+         return ResponseEntity.notFound().build();
+      }
 
-        usuariosHabilitados.remove(usuarioHabilitado);
-        clienteService.update(cliente);
-        usuarioHabilitadoService.deleteById(usuarioHabilitadoId);
-        log.info("Removed enabled user with id {} from client with id {}", usuarioHabilitadoId, clienteId);
-        return ResponseEntity.noContent().build();
-    }
+      usuariosHabilitados.remove(usuarioHabilitado);
+      clienteService.update(cliente);
+      usuarioHabilitadoService.deleteById(usuarioHabilitadoId);
+      log.info("Removed enabled user with id {} from client with id {}", usuarioHabilitadoId, clienteId);
+      return ResponseEntity.noContent().build();
+   }
 
-    @GetMapping("/{id}/verificar-saldo")
-    @Operation(summary = "Verificar saldo del cliente", description = "Permite verificar si el cliente tiene saldo suficiente para un monto especificado")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Saldo verificado correctamente"),
-        @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
-        @ApiResponse(responseCode = "401", description = "No autorizado"),
-        @ApiResponse(responseCode = "403", description = "Prohibido")
-    })
-    public ResponseEntity<Boolean> verificarSaldo(@PathVariable Integer id, @RequestParam("montoTotal") double montoTotal) {
-        log.info("Verificando saldo para el cliente con id {}", id);
-        Optional<Cliente> clienteOpt = clienteService.findById(id);
-        if (clienteOpt.isPresent()) {
-            boolean saldoSuficiente = clienteOpt.get().getMaximoDescubierto().doubleValue() >= BigDecimal.valueOf(montoTotal).doubleValue();
-            log.info("Saldo suficiente: {}", saldoSuficiente);
-            return ResponseEntity.ok(saldoSuficiente);
-        } else {
-            log.warn("Client with id {} not found", id);
-            return ResponseEntity.notFound().build();
-        }
-    }
+   @GetMapping("/{id}/verificar-saldo")
+   @Operation(summary = "Verificar saldo del cliente", description = "Permite verificar si el cliente tiene saldo suficiente para un monto especificado")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "Saldo verificado correctamente"),
+         @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido")
+   })
+   public ResponseEntity<Boolean> verificarSaldo(@PathVariable Integer id,
+         @RequestParam("montoTotal") double montoTotal) {
+      log.info("Verificando saldo para el cliente con id {}", id);
+      Optional<Cliente> clienteOpt = clienteService.findById(id);
+      if (clienteOpt.isPresent()) {
+         boolean saldoSuficiente = clienteOpt.get().getMaximoDescubierto().doubleValue() >= BigDecimal
+               .valueOf(montoTotal).doubleValue();
+         log.info("Saldo suficiente: {}", saldoSuficiente);
+         return ResponseEntity.ok(saldoSuficiente);
+      } else {
+         log.warn("Client with id {} not found", id);
+         return ResponseEntity.notFound().build();
+      }
+   }
 }

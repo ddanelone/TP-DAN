@@ -57,6 +57,15 @@ public class Cliente {
    @JsonManagedReference
    private Set<UsuarioHabilitado> usuariosHabilitados = new HashSet<>();
 
+   // Constructor sin id y sin usuariosHabilitados
+   public Cliente(Integer id, String nombre, String correoElectronico, String dni, BigDecimal maximoDescubierto) {
+      this.id = id;
+      this.nombre = nombre;
+      this.correoElectronico = correoElectronico;
+      this.dni = dni;
+      this.maximoDescubierto = maximoDescubierto;
+   }
+
    public void addUsuarioHabilitado(UsuarioHabilitado usuarioHabilitado) {
       usuarioHabilitado.setCliente(this);
       this.usuariosHabilitados.add(usuarioHabilitado);
