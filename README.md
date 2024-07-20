@@ -60,6 +60,11 @@ Desde el explorador de archivos, entrar al index.html
 
 En los microservicios de Clientes y Productos: /target/surefire-reports
 
+# SWAGGER
+
+En el microservicio de Clientes.
+http://localhost:8080/swagger-ui/index.html
+
 # TEST IMPLEMENTADOS
 
 1. TestContainer mySQL en:
