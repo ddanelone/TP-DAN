@@ -124,7 +124,11 @@ Implementados en MS Pedidos.
 # JWT
 
 Sólo lo implementamos para el ms-usuarios-svc (Node.js): el inicio de sesión (dura una semana el token) se almacena en el localStorage. Si no se encuentra, la protección de rutas solo te permite navegar en el login / register de los usuarios.
-Las peticiones desde el cliente llevan el token en el encabezado, por sí luego lo implementamos en el gateway.
+Las peticiones desde el cliente llevan el token en el encabezado, por sí luego lo extendemos a otros microservicios.
+
+# AOP
+
+Implementamos un aspecto "bobo" en productos: verifica la existencia del token en la solicitud y sólo se accede al endpoint si el token es "válido".
 
 # COORDENADAS DE LAS OBRAS
 

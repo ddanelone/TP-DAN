@@ -134,12 +134,47 @@
       </dependency>
 
       <!-- AOP -->
-      <!-- <dependency>
-         <groupId>org.aspectj</groupId>
-         <artifactId>aspectjweaver</artifactId>
-         <version>1.9.22.1</version>
+      <dependency>
+         <groupId>jakarta.servlet</groupId>
+         <artifactId>jakarta.servlet-api</artifactId>
+         <version>5.0.0</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- JSON Web Token (JWT) library -->
+      <dependency>
+         <groupId>io.jsonwebtoken</groupId>
+         <artifactId>jjwt-api</artifactId>
+         <version>0.11.2</version>
+      </dependency>
+      <dependency>
+         <groupId>io.jsonwebtoken</groupId>
+         <artifactId>jjwt-impl</artifactId>
+         <version>0.11.2</version>
          <scope>runtime</scope>
-      </dependency> -->
+      </dependency>
+      <dependency>
+         <groupId>io.jsonwebtoken</groupId>
+         <artifactId>jjwt-jackson</artifactId>
+         <version>0.11.2</version>
+         <scope>runtime</scope>
+      </dependency>
+
+      <!-- Base64 encoding/decoding (if not using Java 8 or later) -->
+      <dependency>
+         <groupId>commons-codec</groupId>
+         <artifactId>commons-codec</artifactId>
+         <version>1.15</version>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.annotation</groupId>
+         <artifactId>javax.annotation-api</artifactId>
+         <version>1.3.2</version>
+      </dependency>
+
+
+
 
 
 

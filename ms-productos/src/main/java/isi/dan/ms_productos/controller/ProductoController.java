@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import isi.dan.ms_productos.aspect.TokenValidation;
 import isi.dan.ms_productos.modelo.Producto;
 import isi.dan.ms_productos.servicio.ProductoService;
 import jakarta.annotation.PostConstruct;
@@ -44,6 +45,7 @@ public class ProductoController {
       deleteProductoCounter = meterRegistry.counter("productos.controller.delete");
    }
 
+   @TokenValidation
    @Counted(value = "productos.controller.create", description = "Number of times createProducto endpoint is called")
    @PostMapping
    public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
@@ -53,6 +55,7 @@ public class ProductoController {
       return ResponseEntity.ok(savedProducto);
    }
 
+   @TokenValidation
    @Timed(value = "productos.controller.getAll.timer", description = "Time taken to get all products")
    @GetMapping
    public List<Producto> getAllProductos() {
@@ -60,6 +63,7 @@ public class ProductoController {
       return productoService.getAllProductos();
    }
 
+   @TokenValidation
    @Timed(value = "productos.controller.getById.timer", description = "Time taken to get a product by ID")
    @GetMapping("/{id}")
    public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
@@ -68,6 +72,7 @@ public class ProductoController {
       return producto != null ? ResponseEntity.ok(producto) : ResponseEntity.notFound().build();
    }
 
+   @TokenValidation
    @Timed(value = "productos.controller.getByIds.timer", description = "Time taken to get products by IDs")
    @GetMapping("/ids")
    public ResponseEntity<List<Producto>> getProductosByIds(@RequestParam List<Long> ids) {
@@ -76,6 +81,7 @@ public class ProductoController {
       return ResponseEntity.ok(productos);
    }
 
+   @TokenValidation
    @Counted(value = "productos.controller.delete", description = "Number of times deleteProducto endpoint is called")
    @Timed(value = "productos.controller.delete.timer", description = "Time taken to delete a product")
    @DeleteMapping("/{id}")
@@ -86,6 +92,7 @@ public class ProductoController {
       return ResponseEntity.noContent().build();
    }
 
+   @TokenValidation
    @Timed(value = "productos.controller.verificarStock.timer", description = "Time taken to verify stock")
    @PostMapping("/{id}/verificar-stock")
    public ResponseEntity<?> verificarStock(@PathVariable Long id, @RequestBody Map<String, Integer> requestBody) {
@@ -111,6 +118,7 @@ public class ProductoController {
       return ResponseEntity.ok(response);
    }
 
+   @TokenValidation
    @PostMapping("/{id}/update-stock")
    public ResponseEntity<Producto> updateStock(@PathVariable Long id, @RequestBody Map<String, Integer> requestBody) {
       log.info("Updating stock for producto with id: {}", id);
@@ -124,6 +132,7 @@ public class ProductoController {
       }
    }
 
+   @TokenValidation
    @Timed(value = "productos.controller.updateStockAndPrice.timer", description = "Time taken to update stock and price")
    @PutMapping("/{id}/update-stock-and-price")
    public ResponseEntity<Producto> updateStockAndPrice(@PathVariable Long id,
@@ -134,6 +143,7 @@ public class ProductoController {
       return ResponseEntity.ok(updatedProducto);
    }
 
+   @TokenValidation
    @Timed(value = "productos.controller.updateDescuento.timer", description = "Time taken to update discount")
    @PutMapping("/{id}/update-descuento")
    public ResponseEntity<Producto> updateDescuento(@PathVariable Long id,
