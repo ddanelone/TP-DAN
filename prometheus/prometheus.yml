@@ -1,13 +1,13 @@
 global:
-  scrape_interval: 15s
-  scrape_timeout: 15s
-  evaluation_interval: 15s
+  scrape_interval: 60s
+  scrape_timeout: 60s
+  evaluation_interval: 60s
 
 # scrape metrics from the prometheus server itself
 scrape_configs:
   - job_name: prometheus
-    scrape_interval: 15s
-    scrape_timeout: 15s
+    scrape_interval: 60s
+    scrape_timeout: 60s
     metrics_path: /metrics
     static_configs:
       - targets:
@@ -16,6 +16,7 @@ scrape_configs:
   - job_name: "cadvisor"
     static_configs:
       - targets: ["cadvisor:8080"]
+    bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE
 
   # Discover targets from Eureka and scrape metrics from them (Whitebox monitoring)
   - job_name: eureka-service

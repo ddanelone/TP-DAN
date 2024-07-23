@@ -42,6 +42,10 @@ localhost:9411
 
 localhost:9090
 
+# I M P O R T A N T E
+
+Actualizar el token en el prometheus.yml porque tiene vigencia 7 días (hasta el 29/07/2024 inclusive)
+
 # NODE EXPORTER
 
 localhost: 9100
