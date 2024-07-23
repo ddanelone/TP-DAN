@@ -1,6 +1,7 @@
 package isi.dan.ms.pedidos.controller;
 
 import isi.dan.ms.pedidos.MessageSenderService;
+import isi.dan.ms.pedidos.aspect.JwtUtil;
 import isi.dan.ms.pedidos.conf.EmbeddedMongoConfig;
 import isi.dan.ms.pedidos.modelo.Estado;
 import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -57,10 +59,18 @@ public class PedidoControllerTest {
    @MockBean
    private MeterRegistry meterRegistry;
 
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
    @BeforeEach
    public void setUp() {
       mockMvc = MockMvcBuilders
             .standaloneSetup(new PedidoController(meterRegistry, pedidoService, messageSenderService)).build();
+
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
+
    }
 
    @Test
@@ -72,6 +82,8 @@ public class PedidoControllerTest {
       when(pedidoService.savePedido(any(Pedido.class))).thenReturn(savedPedido);
 
       mockMvc.perform(post("/api/pedidos")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(pedido)))
             .andExpect(status().isOk())
@@ -81,11 +93,13 @@ public class PedidoControllerTest {
    @Test
    public void testGetAllPedidos() throws Exception {
       Pedido pedido = new Pedido();
-      pedido.setId("123"); // Asegúrate de que el pedido tenga un ID establecido
+      pedido.setId("123");
       List<Pedido> pedidos = Collections.singletonList(pedido);
       when(pedidoService.getAllPedidos()).thenReturn(pedidos);
 
       mockMvc.perform(get("/api/pedidos")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
@@ -99,6 +113,8 @@ public class PedidoControllerTest {
       when(pedidoService.getPedidoById("123")).thenReturn(pedido);
 
       mockMvc.perform(get("/api/pedidos/123")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value("123"));
@@ -109,6 +125,8 @@ public class PedidoControllerTest {
       doNothing().when(pedidoService).deletePedido("123");
 
       mockMvc.perform(delete("/api/pedidos/123")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
    }
@@ -132,6 +150,8 @@ public class PedidoControllerTest {
       when(pedidoService.updatePedido(any(Pedido.class))).thenReturn(updatedPedido);
 
       mockMvc.perform(put("/api/pedidos/123/estado")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(request)))
             .andExpect(status().isOk())
