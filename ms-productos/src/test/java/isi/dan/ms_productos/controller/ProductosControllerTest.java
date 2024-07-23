@@ -1,5 +1,6 @@
 package isi.dan.ms_productos.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,11 +15,13 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import isi.dan.ms_productos.aspect.JwtUtil;
 import isi.dan.ms_productos.modelo.Categoria;
 import isi.dan.ms_productos.modelo.Producto;
 import isi.dan.ms_productos.servicio.ProductoService;
@@ -32,6 +35,16 @@ public class ProductosControllerTest {
 
    @MockBean
    private ProductoService productoService;
+
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
+   @BeforeEach
+   void setUp() {
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
+   }
 
    @Test
    void testCreateProducto() throws Exception {
@@ -48,6 +61,8 @@ public class ProductosControllerTest {
       when(productoService.saveProducto(any(Producto.class))).thenReturn(producto);
 
       mockMvc.perform(post("/api/productos")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                   "{ \"nombre\": \"Cemento\", \"descripcion\": \"Cemento de alta calidad\", \"stockActual\": 100, \"stockMinimo\": 10, \"precio\": 50.00, \"descuento\": 0.00, \"categoria\": \"CEMENTOS\" }"))
@@ -73,6 +88,8 @@ public class ProductosControllerTest {
       when(productoService.getAllProductos()).thenReturn(productos);
 
       mockMvc.perform(get("/api/productos")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id").value(1L))
@@ -88,6 +105,8 @@ public class ProductosControllerTest {
       when(productoService.getProductoById(1L)).thenReturn(producto);
 
       mockMvc.perform(get("/api/productos/1")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(1L))
@@ -109,6 +128,8 @@ public class ProductosControllerTest {
       when(productoService.getProductosByIds(Arrays.asList(1L, 2L))).thenReturn(productos);
 
       mockMvc.perform(get("/api/productos/ids?ids=1,2")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id").value(1L))
@@ -120,6 +141,8 @@ public class ProductosControllerTest {
    @Test
    void testDeleteProducto() throws Exception {
       mockMvc.perform(delete("/api/productos/1")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
    }
@@ -136,11 +159,15 @@ public class ProductosControllerTest {
       when(productoService.verificarStock(1L, 150)).thenReturn(false);
 
       mockMvc.perform(post("/api/productos/1/verificar-stock")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{ \"cantidad\": 50 }"))
             .andExpect(status().isOk());
 
       mockMvc.perform(post("/api/productos/1/verificar-stock")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{ \"cantidad\": 150 }"))
             .andExpect(status().isBadRequest())
@@ -158,6 +185,8 @@ public class ProductosControllerTest {
             .thenReturn(producto);
 
       mockMvc.perform(put("/api/productos/1/update-stock-and-price")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{ \"cantidad\": 200, \"precio\": 75.00 }"))
             .andExpect(status().isOk())
@@ -174,6 +203,8 @@ public class ProductosControllerTest {
       when(productoService.updateDescuento(eq(1L), any(BigDecimal.class))).thenReturn(producto);
 
       mockMvc.perform(put("/api/productos/1/update-descuento")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{ \"descuento\": 15.00 }"))
             .andExpect(status().isOk())
@@ -193,6 +224,8 @@ public class ProductosControllerTest {
       });
 
       mockMvc.perform(post("/api/productos/1/update-stock")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{ \"cantidad\": 20 }"))
             .andExpect(status().isOk())
