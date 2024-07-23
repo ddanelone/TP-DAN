@@ -1,6 +1,6 @@
 # tp-dan-2024# TP-DAN
 
-# RAMA A CLONAR: HAPROXY
+# RAMA A CLONAR: ASPECT
 
 1. Levantar el microservicio de RabittQM-Zipkin
 2. Levantar el config-service (tiene las configuraciones remotas de los demás MS)
@@ -42,7 +42,7 @@ localhost:9411
 
 localhost:9090
 
-# I M P O R T A N T E
+# I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E
 
 Actualizar el token en el prometheus.yml porque tiene vigencia 7 días (hasta el 29/07/2024 inclusive)
 

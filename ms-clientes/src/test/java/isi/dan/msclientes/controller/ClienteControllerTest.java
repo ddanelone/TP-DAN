@@ -2,6 +2,7 @@ package isi.dan.msclientes.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import isi.dan.msclientes.aspect.JwtUtil;
 import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.servicios.ClienteService;
@@ -21,6 +22,8 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,6 +45,11 @@ public class ClienteControllerTest {
 
    private Cliente cliente;
 
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
    @BeforeEach
    void setUp() {
       cliente = new Cliente();
@@ -50,13 +58,16 @@ public class ClienteControllerTest {
       cliente.setCorreoElectronico("test@cliente.com");
       cliente.setCuit("12998887776");
       cliente.setMaximoDescubierto(new BigDecimal("110000"));
+
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
    }
 
    @Test
    void testGetAll() throws Exception {
       Mockito.when(clienteService.findAll()).thenReturn(Collections.singletonList(cliente));
 
-      mockMvc.perform(get("/api/clientes"))
+      mockMvc.perform(get("/api/clientes").header("Authorization", "Bearer "
+            + validJwtToken))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].nombre").value("Test Cliente"));
@@ -66,7 +77,8 @@ public class ClienteControllerTest {
    void testGetById() throws Exception {
       Mockito.when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
 
-      mockMvc.perform(get("/api/clientes/1"))
+      mockMvc.perform(get("/api/clientes/1").header("Authorization", "Bearer "
+            + validJwtToken))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.nombre").value("Test Cliente"))
@@ -77,7 +89,8 @@ public class ClienteControllerTest {
    void testGetById_NotFound() throws Exception {
       Mockito.when(clienteService.findById(2)).thenReturn(Optional.empty());
 
-      mockMvc.perform(get("/api/clientes/2"))
+      mockMvc.perform(get("/api/clientes/2").header("Authorization", "Bearer "
+            + validJwtToken))
             .andExpect(status().isNotFound());
    }
 
@@ -85,7 +98,7 @@ public class ClienteControllerTest {
    void testCreate() throws Exception {
       Mockito.when(clienteService.save(Mockito.any(Cliente.class))).thenReturn(cliente);
 
-      mockMvc.perform(post("/api/clientes")
+      mockMvc.perform(post("/api/clientes").header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(cliente)))
             .andExpect(status().isOk())
@@ -97,7 +110,7 @@ public class ClienteControllerTest {
       Mockito.when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
       Mockito.when(clienteService.update(Mockito.any(Cliente.class))).thenReturn(cliente);
 
-      mockMvc.perform(put("/api/clientes/1")
+      mockMvc.perform(put("/api/clientes/1").header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(cliente)))
             .andExpect(status().isOk())
@@ -109,7 +122,8 @@ public class ClienteControllerTest {
       Mockito.when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
       Mockito.doNothing().when(clienteService).deleteById(1);
 
-      mockMvc.perform(delete("/api/clientes/1"))
+      mockMvc.perform(delete("/api/clientes/1").header("Authorization", "Bearer "
+            + validJwtToken))
             .andExpect(status().isNoContent());
    }
 
@@ -117,7 +131,7 @@ public class ClienteControllerTest {
    void testVerificarSaldo_SaldoSuficiente() throws Exception {
       Mockito.when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
 
-      mockMvc.perform(get("/api/clientes/1/verificar-saldo")
+      mockMvc.perform(get("/api/clientes/1/verificar-saldo").header("Authorization", "Bearer " + validJwtToken)
             .param("montoTotal", "500.00"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -128,8 +142,8 @@ public class ClienteControllerTest {
    void testVerificarSaldo_SaldoInsuficiente() throws Exception {
       Mockito.when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
 
-      mockMvc.perform(get("/api/clientes/1/verificar-saldo")
-            .param("montoTotal", "1500.00"))
+      mockMvc.perform(get("/api/clientes/1/verificar-saldo").header("Authorization", "Bearer " + validJwtToken)
+            .param("montoTotal", "150000.00"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().string("false"));
@@ -139,7 +153,7 @@ public class ClienteControllerTest {
    void testVerificarSaldo_ClienteNoEncontrado() throws Exception {
       Mockito.when(clienteService.findById(1)).thenReturn(Optional.empty());
 
-      mockMvc.perform(get("/api/clientes/1/verificar-saldo")
+      mockMvc.perform(get("/api/clientes/1/verificar-saldo").header("Authorization", "Bearer " + validJwtToken)
             .param("montoTotal", "500.00"))
             .andExpect(status().isNotFound());
    }

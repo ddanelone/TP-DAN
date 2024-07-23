@@ -1,9 +1,11 @@
 package isi.dan.msclientes.controller;
 
+import isi.dan.msclientes.aspect.JwtUtil;
 import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.servicios.ClienteService;
 
+import org.apache.http.auth.AUTH;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -19,6 +21,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 
@@ -41,6 +45,11 @@ public class ClienteControllerTestRestTemplateTests {
 
    private Cliente cliente;
 
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
    @BeforeEach
    void setUp() {
       // Crear un cliente nuevo para usar en cada prueba
@@ -52,6 +61,8 @@ public class ClienteControllerTestRestTemplateTests {
 
       // Guardar el cliente en la base de datos antes de cada prueba
       cliente = clienteService.save(cliente);
+
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
    }
 
    @AfterEach
@@ -68,6 +79,7 @@ public class ClienteControllerTestRestTemplateTests {
       newCliente.setCorreoElectronico("nuevo@cliente.com");
       newCliente.setCuit("2998887777");
       HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
       headers.setContentType(MediaType.APPLICATION_JSON);
       HttpEntity<Cliente> request = new HttpEntity<>(newCliente, headers);
 
@@ -84,6 +96,7 @@ public class ClienteControllerTestRestTemplateTests {
       cliente.setNombre("Cliente Actualizado");
 
       HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
       headers.setContentType(MediaType.APPLICATION_JSON);
       HttpEntity<Cliente> request = new HttpEntity<>(cliente, headers);
 
@@ -99,7 +112,15 @@ public class ClienteControllerTestRestTemplateTests {
    @Test
    @Order(3)
    void testGetAll() {
-      ResponseEntity<Cliente[]> response = restTemplate.getForEntity(getUrl("/api/clientes"), Cliente[].class);
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Cliente[]> response = restTemplate.exchange(
+            getUrl("/api/clientes"),
+            HttpMethod.GET,
+            request,
+            Cliente[].class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
       assertThat(response.getBody()).isNotEmpty();
@@ -109,7 +130,14 @@ public class ClienteControllerTestRestTemplateTests {
    @Test
    @Order(4)
    void testGetById() {
-      ResponseEntity<Cliente> response = restTemplate.getForEntity(getUrl("/api/clientes/" + cliente.getId()),
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken); // Establecer el token JWT
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Cliente> response = restTemplate.exchange(
+            getUrl("/api/clientes/" + cliente.getId()),
+            HttpMethod.GET,
+            request,
             Cliente.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -121,7 +149,15 @@ public class ClienteControllerTestRestTemplateTests {
    @Test
    @Order(5)
    void testGetById_NotFound() {
-      ResponseEntity<Cliente> response = restTemplate.getForEntity(getUrl("/api/clientes/999"), Cliente.class);
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken); // Establecer el token JWT
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Cliente> response = restTemplate.exchange(
+            getUrl("/api/clientes/999"),
+            HttpMethod.GET,
+            request,
+            Cliente.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
    }
@@ -130,10 +166,13 @@ public class ClienteControllerTestRestTemplateTests {
    @Order(6)
    void testDelete() {
       HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken); // Establecer el token JWT
       HttpEntity<Void> request = new HttpEntity<>(headers);
 
-      ResponseEntity<Void> response = restTemplate.exchange(getUrl("/api/clientes/" + cliente.getId()),
-            HttpMethod.DELETE, request,
+      ResponseEntity<Void> response = restTemplate.exchange(
+            getUrl("/api/clientes/" + cliente.getId()),
+            HttpMethod.DELETE,
+            request,
             Void.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -142,8 +181,14 @@ public class ClienteControllerTestRestTemplateTests {
    @Test
    @Order(7)
    void testVerificarSaldo_SaldoSuficiente() {
-      ResponseEntity<Boolean> response = restTemplate.getForEntity(
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken); // Establecer el token JWT
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Boolean> response = restTemplate.exchange(
             getUrl("/api/clientes/" + cliente.getId() + "/verificar-saldo?montoTotal=500.00"),
+            HttpMethod.GET,
+            request,
             Boolean.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -153,8 +198,14 @@ public class ClienteControllerTestRestTemplateTests {
    @Test
    @Order(8)
    void testVerificarSaldo_SaldoInsuficiente() {
-      ResponseEntity<Boolean> response = restTemplate.getForEntity(
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken); // Establecer el token JWT
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Boolean> response = restTemplate.exchange(
             getUrl("/api/clientes/" + cliente.getId() + "/verificar-saldo?montoTotal=1500000.00"),
+            HttpMethod.GET,
+            request,
             Boolean.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -164,8 +215,14 @@ public class ClienteControllerTestRestTemplateTests {
    @Test
    @Order(9)
    void testVerificarSaldo_ClienteNoEncontrado() {
-      ResponseEntity<Boolean> response = restTemplate.getForEntity(
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken); // Establecer el token JWT
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Boolean> response = restTemplate.exchange(
             getUrl("/api/clientes/999/verificar-saldo?montoTotal=500.00"),
+            HttpMethod.GET,
+            request,
             Boolean.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -174,4 +231,5 @@ public class ClienteControllerTestRestTemplateTests {
    private String getUrl(String path) {
       return "http://localhost:" + port + path;
    }
+
 }

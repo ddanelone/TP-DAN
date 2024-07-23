@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -23,8 +24,10 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.MockRestServiceServer;
 
+import isi.dan.msclientes.aspect.JwtUtil;
 import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
 import isi.dan.msclientes.servicios.GeocodingService;
@@ -63,9 +66,15 @@ public class ObraControllerMockRestServiceServerTests {
 
    private MockRestServiceServer mockRestServiceServer;
 
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
    @BeforeEach
    public void setUp() {
       mockRestServiceServer = MockRestServiceServer.createServer(restTemplate.getRestTemplate());
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
    }
 
    @Test
@@ -79,6 +88,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.findAll()).thenReturn(obras);
 
       mockMvc.perform(get("/api/obras")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
@@ -107,6 +117,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.findStates()).thenReturn(estados);
 
       mockMvc.perform(get("/api/obras/estados")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(3)))
@@ -123,6 +134,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.findById(1)).thenReturn(Optional.of(obra));
 
       mockMvc.perform(get("/api/obras/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(1))
@@ -141,6 +153,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.findById(1)).thenReturn(Optional.empty());
 
       mockMvc.perform(get("/api/obras/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
    }
@@ -156,6 +169,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.save(any(Obra.class))).thenReturn(savedObra);
 
       mockMvc.perform(post("/api/obras")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(obra)))
             .andExpect(status().isOk())
@@ -182,6 +196,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.update(any(Obra.class))).thenReturn(updatedObra);
 
       mockMvc.perform(put("/api/obras/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(updatedObra)))
             .andExpect(status().isOk())
@@ -201,6 +216,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.findById(1)).thenReturn(Optional.empty());
 
       mockMvc.perform(put("/api/obras/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
                   Obra.builder().id(1).calle("Calle1").ciudad("Ciudad1").provincia("Provincia1").pais("Pais1")
@@ -217,6 +233,7 @@ public class ObraControllerMockRestServiceServerTests {
       doNothing().when(obraService).deleteById(1);
 
       mockMvc.perform(delete("/api/obras/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent()); // Cambiar aquí a .isNoContent()
    }
@@ -227,6 +244,7 @@ public class ObraControllerMockRestServiceServerTests {
       when(obraService.findById(1)).thenReturn(Optional.empty());
 
       mockMvc.perform(delete("/api/obras/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
    }

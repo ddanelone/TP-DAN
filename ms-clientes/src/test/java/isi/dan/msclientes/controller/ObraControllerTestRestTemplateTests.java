@@ -8,12 +8,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
+import isi.dan.msclientes.aspect.JwtUtil;
 import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
 import isi.dan.msclientes.servicios.ObraService;
@@ -36,6 +40,11 @@ public class ObraControllerTestRestTemplateTests {
 
    private Obra obra;
 
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
    @BeforeEach
    void setUp() {
       // Crear una obra nueva para usar en cada prueba
@@ -49,10 +58,12 @@ public class ObraControllerTestRestTemplateTests {
       obra.setLat(-34.603722f);
       obra.setLng(-58.381592f);
       obra.setPresupuesto(new BigDecimal("10000.00"));
-      obra.setEstado(Estado.HABILITADA); // Asume que tienes un enum Estado con un valor ACTIVO
+      obra.setEstado(Estado.HABILITADA);
 
       // Guardar la obra en la base de datos antes de cada prueba
       obra = obraService.save(obra);
+
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
    }
 
    @AfterEach
@@ -77,6 +88,7 @@ public class ObraControllerTestRestTemplateTests {
       newObra.setEstado(Estado.PENDIENTE);
 
       HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
       headers.setContentType(MediaType.APPLICATION_JSON);
       HttpEntity<Obra> request = new HttpEntity<>(newObra, headers);
 
@@ -93,6 +105,7 @@ public class ObraControllerTestRestTemplateTests {
       obra.setCalle("Calle Actualizada");
 
       HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
       headers.setContentType(MediaType.APPLICATION_JSON);
       HttpEntity<Obra> request = new HttpEntity<>(obra, headers);
 
@@ -107,7 +120,13 @@ public class ObraControllerTestRestTemplateTests {
    @Test
    @Order(3)
    void testGetAll() {
-      ResponseEntity<Obra[]> response = restTemplate.getForEntity(getUrl("/api/obras"), Obra[].class);
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Obra[]> response = restTemplate.exchange(getUrl("/api/obras"), HttpMethod.GET,
+            request, Obra[].class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
       assertThat(response.getBody()).isNotEmpty();
@@ -117,7 +136,12 @@ public class ObraControllerTestRestTemplateTests {
    @Test
    @Order(4)
    void testGetById() {
-      ResponseEntity<Obra> response = restTemplate.getForEntity(getUrl("/api/obras/" + obra.getId()), Obra.class);
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Obra> response = restTemplate.exchange(getUrl("/api/obras/" + obra.getId()), HttpMethod.GET,
+            request, Obra.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
       assertThat(response.getBody()).isNotNull();
@@ -127,7 +151,12 @@ public class ObraControllerTestRestTemplateTests {
    @Test
    @Order(5)
    void testGetById_NotFound() {
-      ResponseEntity<Obra> response = restTemplate.getForEntity(getUrl("/api/obras/999"), Obra.class);
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Obra> response = restTemplate.exchange(getUrl("/api/obras/999"), HttpMethod.GET, request,
+            Obra.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
    }
@@ -136,6 +165,7 @@ public class ObraControllerTestRestTemplateTests {
    @Order(6)
    void testDelete() {
       HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
       HttpEntity<Void> request = new HttpEntity<>(headers);
 
       ResponseEntity<Void> response = restTemplate.exchange(getUrl("/api/obras/" + obra.getId()), HttpMethod.DELETE,

@@ -1,6 +1,7 @@
 package isi.dan.msclientes.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import isi.dan.msclientes.aspect.JwtUtil;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.UsuarioHabilitado;
 import isi.dan.msclientes.servicios.UsuarioHabilitadoService;
@@ -39,9 +41,15 @@ public class UsuarioHabilitadoControllerIntegrationTest {
    @MockBean
    private UsuarioHabilitadoService usuarioHabilitadoService;
 
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
    @BeforeEach
    void setUp() {
       MockitoAnnotations.openMocks(this);
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
    }
 
    @Test
@@ -52,6 +60,7 @@ public class UsuarioHabilitadoControllerIntegrationTest {
       when(usuarioHabilitadoService.save(any(UsuarioHabilitado.class))).thenReturn(usuario);
 
       mockMvc.perform(post("/api/clientes/usuarios-habilitados")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"id\":1,\"correoElectronico\":\"test@example.com\"}"))
             .andExpect(status().isOk())
@@ -67,6 +76,7 @@ public class UsuarioHabilitadoControllerIntegrationTest {
       when(usuarioHabilitadoService.findAll()).thenReturn(usuarios);
 
       mockMvc.perform(get("/api/clientes/usuarios-habilitados")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
@@ -81,6 +91,7 @@ public class UsuarioHabilitadoControllerIntegrationTest {
       when(usuarioHabilitadoService.findById(1)).thenReturn(Optional.of(usuario));
 
       mockMvc.perform(get("/api/clientes/usuarios-habilitados/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.correoElectronico").value("test@example.com"));
@@ -93,6 +104,7 @@ public class UsuarioHabilitadoControllerIntegrationTest {
       doNothing().when(usuarioHabilitadoService).deleteById(1);
 
       mockMvc.perform(delete("/api/clientes/usuarios-habilitados/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
    }
@@ -105,6 +117,7 @@ public class UsuarioHabilitadoControllerIntegrationTest {
       when(usuarioHabilitadoService.update(any(UsuarioHabilitado.class))).thenReturn(usuario);
 
       mockMvc.perform(put("/api/clientes/usuarios-habilitados/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"id\":1,\"correoElectronico\":\"test@example.com\"}"))
             .andExpect(status().isOk())
@@ -132,6 +145,7 @@ public class UsuarioHabilitadoControllerIntegrationTest {
       when(usuarioHabilitadoService.updateClienteUsuarioHabilitado(1, usuario1)).thenReturn(cliente);
 
       mockMvc.perform(put("/api/clientes/usuarios-habilitados/update-usuario-habilitado/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                   "{\"id\":1,\"nombre\":\"Juan\",\"apellido\":\"Pérez\",\"dni\":\"12345678\",\"correoElectronico\":\"test1@example.com\"}"))

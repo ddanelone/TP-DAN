@@ -1,5 +1,6 @@
 package isi.dan.msclientes.controller;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +31,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import isi.dan.msclientes.aspect.JwtUtil;
 import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.UsuarioHabilitado;
@@ -61,9 +63,15 @@ public class ClienteControllerMockRestServiceServerTests {
 
    private MockRestServiceServer mockRestServiceServer;
 
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
+
    @BeforeEach
    public void setUp() {
       mockRestServiceServer = MockRestServiceServer.createServer(restTemplate.getRestTemplate());
+      when(jwtUtil.validateToken(anyString())).thenReturn(true);
    }
 
    @Test
@@ -76,6 +84,7 @@ public class ClienteControllerMockRestServiceServerTests {
       when(clienteService.findAll()).thenReturn(clientes);
 
       mockMvc.perform(get("/api/clientes")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].nombre").value("Cliente1"))
@@ -90,6 +99,7 @@ public class ClienteControllerMockRestServiceServerTests {
       when(clienteService.findById(1)).thenReturn(Optional.of(cliente));
 
       mockMvc.perform(get("/api/clientes/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.nombre").value("Cliente"));
@@ -105,6 +115,7 @@ public class ClienteControllerMockRestServiceServerTests {
       when(clienteService.save(cliente)).thenReturn(createdCliente);
 
       mockMvc.perform(post("/api/clientes")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(cliente)))
             .andExpect(status().isOk())
@@ -121,6 +132,7 @@ public class ClienteControllerMockRestServiceServerTests {
       when(clienteService.update(cliente)).thenReturn(cliente);
 
       mockMvc.perform(put("/api/clientes/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(cliente)))
             .andExpect(status().isOk())
@@ -134,6 +146,7 @@ public class ClienteControllerMockRestServiceServerTests {
             Optional.of(new Cliente(1, "Cliente", "cliente@domain.com", "12345678901", new BigDecimal("100000"))));
 
       mockMvc.perform(delete("/api/clientes/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
    }
@@ -146,6 +159,7 @@ public class ClienteControllerMockRestServiceServerTests {
       when(clienteService.findByCorreoElectronico("cliente@domain.com")).thenReturn(Optional.of(cliente));
 
       mockMvc.perform(get("/api/clientes/email/{email}", "cliente@domain.com")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.nombre").value("Cliente"));
@@ -164,6 +178,7 @@ public class ClienteControllerMockRestServiceServerTests {
       when(usuarioHabilitadoService.save(usuarioHabilitado)).thenReturn(savedUser);
 
       mockMvc.perform(post("/api/clientes/1/usuarios-habilitados")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(usuarioHabilitado)))
             .andExpect(status().isOk())
@@ -184,6 +199,7 @@ public class ClienteControllerMockRestServiceServerTests {
       doNothing().when(usuarioHabilitadoService).deleteById(1);
 
       mockMvc.perform(delete("/api/clientes/1/usuarios-habilitados/1")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
    }
@@ -197,6 +213,7 @@ public class ClienteControllerMockRestServiceServerTests {
 
       mockMvc.perform(get("/api/clientes/1/verificar-saldo")
             .param("montoTotal", "400000")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().string("true"));

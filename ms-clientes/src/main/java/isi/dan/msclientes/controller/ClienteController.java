@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import isi.dan.msclientes.aspect.TokenValidation;
 import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.conf.RabbitMQConfig;
 import isi.dan.msclientes.model.Cliente;
@@ -53,6 +54,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.getAll.time", description = "Time taken to get all clients")
    @Counted(value = "clientes.getAll.count", description = "Times getAll() method is called")
+   @TokenValidation
    public List<Cliente> getAll() {
       log.info("Fetching all clients");
       List<Cliente> clientes = clienteService.findAll();
@@ -70,6 +72,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.getById.time", description = "Time taken to get a client by ID")
    @Counted(value = "clientes.getById.count", description = "Times getById() method is called")
+   @TokenValidation
    public ResponseEntity<Cliente> getById(@PathVariable Integer id) {
       log.info("Fetching client with id {}", id);
       Optional<Cliente> cliente = clienteService.findById(id);
@@ -92,6 +95,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.create.time", description = "Time taken to create a client")
    @Counted(value = "clientes.create.count", description = "Times create() method is called")
+   @TokenValidation
    public Cliente create(@RequestBody Cliente cliente) {
       log.info("Creating client: {}", cliente);
       messageSenderService.sendMessage(RabbitMQConfig.CREAR_USUARIO_QUEUE, cliente);
@@ -110,6 +114,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.update.time", description = "Time taken to update a client")
    @Counted(value = "clientes.update.count", description = "Times update() method is called")
+   @TokenValidation
    public ResponseEntity<Cliente> update(@PathVariable final Integer id, @RequestBody Cliente cliente) {
       log.info("Updating client with id {}", id);
       if (!clienteService.findById(id).isPresent()) {
@@ -132,6 +137,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.delete.time", description = "Time taken to delete a client")
    @Counted(value = "clientes.delete.count", description = "Times delete() method is called")
+   @TokenValidation
    public ResponseEntity<Void> delete(@PathVariable Integer id) {
       log.info("Deleting client with id {}", id);
       if (!clienteService.findById(id).isPresent()) {
@@ -153,6 +159,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.getByEmail.time", description = "Time taken to get a client by email")
    @Counted(value = "clientes.getByEmail.count", description = "Times getByEmail() method is called")
+   @TokenValidation
    public ResponseEntity<Cliente> getByEmail(@PathVariable String email) {
       log.info("Fetching client with email {}", email);
       Optional<Cliente> cliente = clienteService.findByCorreoElectronico(email);
@@ -175,6 +182,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.agregarUsuarioHabilitado.time", description = "Time taken to add an enabled user")
    @Counted(value = "clientes.agregarUsuarioHabilitado.count", description = "Times agregarUsuarioHabilitado() method is called")
+   @TokenValidation
    public ResponseEntity<UsuarioHabilitado> agregarUsuarioHabilitado(
          @PathVariable Integer clienteId, @RequestBody UsuarioHabilitado usuarioHabilitado) {
       log.info("Adding enabled user to client with id {}", clienteId);
@@ -202,6 +210,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.getUsuariosHabilitados.time", description = "Time taken to get enabled users")
    @Counted(value = "clientes.getUsuariosHabilitados.count", description = "Times getUsuariosHabilitados() method is called")
+   @TokenValidation
    public ResponseEntity<Set<UsuarioHabilitado>> getUsuariosHabilitados(@PathVariable Integer clienteId) {
       log.info("Fetching enabled users for client with id {}", clienteId);
       Optional<Cliente> clienteOpt = clienteService.findById(clienteId);
@@ -224,6 +233,7 @@ public class ClienteController {
    })
    @Timed(value = "clientes.eliminarUsuarioHabilitado.time", description = "Time taken to remove an enabled user")
    @Counted(value = "clientes.eliminarUsuarioHabilitado.count", description = "Times eliminarUsuarioHabilitado() method is called")
+   @TokenValidation
    public ResponseEntity<Void> eliminarUsuarioHabilitado(@PathVariable Integer clienteId,
          @PathVariable Integer usuarioHabilitadoId) {
       log.info("Removing enabled user with id {} from client with id {}", usuarioHabilitadoId, clienteId);
@@ -260,6 +270,7 @@ public class ClienteController {
          @ApiResponse(responseCode = "401", description = "No autorizado"),
          @ApiResponse(responseCode = "403", description = "Prohibido")
    })
+   @TokenValidation
    public ResponseEntity<Boolean> verificarSaldo(@PathVariable Integer id,
          @RequestParam("montoTotal") double montoTotal) {
       log.info("Verificando saldo para el cliente con id {}", id);
