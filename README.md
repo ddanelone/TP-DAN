@@ -107,6 +107,29 @@ password: nuestroTPesLaMeraVerga
 En System/Overview --> input --> GELF UDP --Launch new input --> poner nombre. Darle play para que actualice automaticamente.
 Voilà!
 
+# Patrones: Short Circuit & Retry
+
+Implementados en MS Pedidos.
+
+# JWT PARA LA CREACIÓN DE SESION
+
+Sólo lo implementamos para el ms-usuarios-svc (Node.js): el inicio de sesión (dura una semana el token) se almacena en el localStorage. Si no se encuentra, la protección de rutas solo te permite navegar en el login / register de los usuarios.
+Las peticiones desde el cliente llevan el token en el encabezado, por sí luego lo extendemos a otros microservicios.
+
+# COORDENADAS DE LAS OBRAS
+
+Agregamos más campos para poder organizar adecuadamente la dirección de una obra. La consulta se hace armando una petición GET al sitio:
+
+"https://nominatim.openstreetmap.org/search" que devuelve un objeto con información, entre ellas, las coordenadas. Así, cuando se da de alta una obra, sólo se ingresa el domicilio (calle, altura, ciudad, provincia, pais -se carga por omisión Argentina) y la petición busca las coordenadas automáticamente.
+
+# JWT PARA LA PROTECCIÓN DE RUTAS
+
+Se utilizó Aspect para ello. Sin embargo, no hemos logrado validar el jwt generado en Node.js con las bibliotecas de java (no coincide la signature del jwt) por lo que, de manera arbitraria, decidimos exponer un /validate en ms-usuarios (que genera el jwt de inicio de sesión) para que reciba un token y devuelve #TRUE o #FALSE. Es decir, privilegiamos la seguridad, sabiendo que no es lo óptimo la forma (demasiado acople de todos los microservicios java con el de usuarios en node.js).
+
+# AOP
+
+Implementado en los ms-pedidos, ms-productos y ms-clientes, para la protección de rutas. Lamentablemente, la formad de validar en token no es la apropiada...
+
 # HAPROXY
 
 http://localhost:70
@@ -116,22 +139,3 @@ pass: pass
 # Para ejecutar el Frontend:
 
 http://localhost/
-
-# Patrones: Short Circuit & Retry
-
-Implementados en MS Pedidos.
-
-# JWT
-
-Sólo lo implementamos para el ms-usuarios-svc (Node.js): el inicio de sesión (dura una semana el token) se almacena en el localStorage. Si no se encuentra, la protección de rutas solo te permite navegar en el login / register de los usuarios.
-Las peticiones desde el cliente llevan el token en el encabezado, por sí luego lo extendemos a otros microservicios.
-
-# AOP
-
-Implementamos un aspecto "bobo" en productos: verifica la existencia del token en la solicitud y sólo se accede al endpoint si el token es "válido".
-
-# COORDENADAS DE LAS OBRAS
-
-Agregamos más campos para poder organizar adecuadamente la dirección de una obra. La consulta se hace armando una petición GET al sitio:
-
-"https://nominatim.openstreetmap.org/search" que devuelve un objeto con información, entre ellas, las coordenadas. Así, cuando se da de alta una obra, sólo se ingresa el domicilio (calle, altura, ciudad, provincia, pais -se carga por omisión Argentina) y la petición busca las coordenadas automáticamente.

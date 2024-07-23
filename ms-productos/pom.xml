@@ -151,21 +151,13 @@
          <groupId>io.jsonwebtoken</groupId>
          <artifactId>jjwt-impl</artifactId>
          <version>0.11.2</version>
-         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>io.jsonwebtoken</groupId>
          <artifactId>jjwt-jackson</artifactId>
          <version>0.11.2</version>
-         <scope>runtime</scope>
       </dependency>
 
-      <!-- Base64 encoding/decoding (if not using Java 8 or later) -->
-      <dependency>
-         <groupId>commons-codec</groupId>
-         <artifactId>commons-codec</artifactId>
-         <version>1.15</version>
-      </dependency>
 
       <dependency>
          <groupId>javax.annotation</groupId>

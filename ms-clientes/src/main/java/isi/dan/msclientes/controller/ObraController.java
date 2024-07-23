@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import isi.dan.msclientes.aspect.TokenValidation;
 import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
 import isi.dan.msclientes.servicios.GeocodingService;
@@ -50,6 +51,7 @@ public class ObraController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "No se encontraron obras")
    })
+   @TokenValidation
    public List<Obra> getAll() {
       log.info("Fetching all obras");
       return obraService.findAll();
@@ -65,6 +67,7 @@ public class ObraController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "No se encontraron estados")
    })
+   @TokenValidation
    public List<Estado> getEstado() {
       log.info("Fetching all estados");
       return obraService.findStates();
@@ -80,6 +83,7 @@ public class ObraController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "El ID no existe")
    })
+   @TokenValidation
    public ResponseEntity<Obra> getById(@PathVariable Integer id) {
       log.info("Fetching obra with id: {}", id);
       Optional<Obra> obra = obraService.findById(id);
@@ -99,6 +103,7 @@ public class ObraController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "Error en los datos proporcionados")
    })
+   @TokenValidation
    public Obra create(@RequestBody Obra obra) {
       log.info("Creating new obra: {}", obra);
       return obraService.save(obra);
@@ -114,6 +119,7 @@ public class ObraController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "El ID no existe")
    })
+   @TokenValidation
    public ResponseEntity<Obra> update(@PathVariable Integer id, @RequestBody Obra obra) {
       log.info("Updating obra with id: {}", id);
       if (!obraService.findById(id).isPresent()) {
@@ -134,6 +140,7 @@ public class ObraController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "El ID no existe")
    })
+   @TokenValidation
    public ResponseEntity<Void> delete(@PathVariable Integer id) {
       log.info("Deleting obra with id: {}", id);
       if (!obraService.findById(id).isPresent()) {
@@ -152,6 +159,7 @@ public class ObraController {
          @ApiResponse(responseCode = "200", description = "Coordenadas retornadas correctamente"),
          @ApiResponse(responseCode = "500", description = "No se encontraron coordenadas para devolver"),
    })
+   @TokenValidation
    public ResponseEntity<Map<String, Double>> getCoordinates(@RequestBody Map<String, String> address) {
       String calle = address.get("calle");
       String altura = address.get("altura");
@@ -182,6 +190,7 @@ public class ObraController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
    })
+   @TokenValidation
    public ResponseEntity<Map<String, Object>> validarObra(@PathVariable Integer idCliente, @RequestBody Obra obra) {
       log.info("Validating obra for cliente with id: {}", idCliente);
       return obraService.validarObra(idCliente, obra, cantidadMaximaObrasHabilitadas);

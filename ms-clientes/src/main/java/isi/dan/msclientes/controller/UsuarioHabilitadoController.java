@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isi.dan.msclientes.aspect.TokenValidation;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.UsuarioHabilitado;
 import isi.dan.msclientes.servicios.UsuarioHabilitadoService;
@@ -49,6 +50,7 @@ public class UsuarioHabilitadoController {
    })
    @Timed(value = "getAllUsuariosHabilitados.time", description = "Time taken to return all usuarios habilitados")
    @Counted(value = "getAllUsuariosHabilitados.count", description = "Number of times the getAll method is called")
+   @TokenValidation
    public List<UsuarioHabilitado> getAll() {
       log.info("Fetching all usuarios habilitados");
       return usuarioHabilitadoService.findAll();
@@ -64,6 +66,7 @@ public class UsuarioHabilitadoController {
    })
    @Timed(value = "getUsuarioHabilitadoById.time", description = "Time taken to return a usuario habilitado by id")
    @Counted(value = "getUsuarioHabilitadoById.count", description = "Number of times the getById method is called")
+   @TokenValidation
    public ResponseEntity<UsuarioHabilitado> getById(@PathVariable Integer id) {
       log.info("Fetching usuario habilitado with id: {}", id);
       Optional<UsuarioHabilitado> usuarioHabilitado = usuarioHabilitadoService.findById(id);
@@ -83,6 +86,7 @@ public class UsuarioHabilitadoController {
    })
    @Timed(value = "createUsuarioHabilitado.time", description = "Time taken to create a new usuario habilitado")
    @Counted(value = "createUsuarioHabilitado.count", description = "Number of times the create method is called")
+   @TokenValidation
    public UsuarioHabilitado create(@RequestBody UsuarioHabilitado usuarioHabilitado) {
       log.info("Creating new usuario habilitado: {}", usuarioHabilitado);
       return usuarioHabilitadoService.save(usuarioHabilitado);
@@ -98,6 +102,7 @@ public class UsuarioHabilitadoController {
    })
    @Timed(value = "updateUsuarioHabilitado.time", description = "Time taken to update a usuario habilitado")
    @Counted(value = "updateUsuarioHabilitado.count", description = "Number of times the update method is called")
+   @TokenValidation
    public ResponseEntity<UsuarioHabilitado> update(@PathVariable final Integer id,
          @RequestBody UsuarioHabilitado usuarioHabilitado) {
       log.info("Updating usuario habilitado with id: {}", id);
@@ -119,6 +124,7 @@ public class UsuarioHabilitadoController {
          @ApiResponse(responseCode = "403", description = "Prohibido"),
          @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
    })
+   @TokenValidation
    public ResponseEntity<Cliente> updateClienteUsuarioHabilitado(
          @PathVariable Integer clienteId,
          @RequestBody UsuarioHabilitado usuarioHabilitado) {
@@ -145,6 +151,7 @@ public class UsuarioHabilitadoController {
    })
    @Timed(value = "deleteUsuarioHabilitado.time", description = "Time taken to delete a usuario habilitado")
    @Counted(value = "deleteUsuarioHabilitado.count", description = "Number of times the delete method is called")
+   @TokenValidation
    public ResponseEntity<Void> delete(@PathVariable Integer id) {
       log.info("Deleting usuario habilitado with id: {}", id);
       if (!usuarioHabilitadoService.findById(id).isPresent()) {

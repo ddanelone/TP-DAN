@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import isi.dan.ms.pedidos.MessageSenderService;
+import isi.dan.ms.pedidos.aspect.TokenValidation;
 import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dto.StockUpdateDTO;
 import isi.dan.ms.pedidos.modelo.Cliente;
@@ -56,6 +57,7 @@ public class PedidoController {
 
    @Timed(value = "pedidos.create.timed", description = "Tiempo de creación de pedidos")
    @PostMapping
+   @TokenValidation
    public ResponseEntity<?> createPedido(@RequestBody Pedido pedido) {
       try {
          // Guardar el pedido con los detalles que tienen suficiente stock
@@ -72,6 +74,7 @@ public class PedidoController {
 
    @Timed(value = "pedidos.getAll.timed", description = "Tiempo de obtener todos los pedidos")
    @GetMapping
+   @TokenValidation
    public List<Pedido> getAllPedidos() {
       log.info("Listando todos los pedidos {}");
       return pedidoService.getAllPedidos();
@@ -79,6 +82,7 @@ public class PedidoController {
 
    @Timed(value = "pedidos.getById.timed", description = "Tiempo de obtener pedido por ID")
    @GetMapping("/{id}")
+   @TokenValidation
    public ResponseEntity<Pedido> getPedidoById(@PathVariable String id) {
       Pedido pedido = pedidoService.getPedidoById(id);
       log.info("Pedido a buscar con el id: {} ", id);
@@ -87,6 +91,7 @@ public class PedidoController {
 
    @Timed(value = "pedidos.delete.timed", description = "Tiempo de eliminar pedido")
    @DeleteMapping("/{id}")
+   @TokenValidation
    public ResponseEntity<Void> deletePedido(@PathVariable String id) {
       pedidoService.deletePedido(id);
       pedidosCount.decrementAndGet();
@@ -96,6 +101,7 @@ public class PedidoController {
 
    // Método para actualizar el ESTADO del pedido
    @PutMapping("/{id}/estado")
+   @TokenValidation
    public ResponseEntity<Pedido> updatePedidoEstado(@PathVariable String id, @RequestBody EstadoCambioRequest request) {
       Pedido pedido = pedidoService.getPedidoById(id);
 
@@ -125,6 +131,7 @@ public class PedidoController {
 
    @Retry(name = "clientesRetry")
    @PostMapping("/{id}/cliente")
+   @TokenValidation
    @CircuitBreaker(name = "clientesCB", fallbackMethod = "fallbackSaveCliente")
    public ResponseEntity<Pedido> addClienteToPedido(@PathVariable String id, @RequestBody Cliente cliente) {
       Pedido updatedPedido = pedidoService.addClienteToPedido(id, cliente);
@@ -134,6 +141,7 @@ public class PedidoController {
 
    @Retry(name = "productosRetry")
    @PostMapping("/{id}/detalle")
+   @TokenValidation
    @CircuitBreaker(name = "productosCB", fallbackMethod = "fallbackSaveProducto")
    public ResponseEntity<Pedido> addProductoToDetalle(@PathVariable String id, @RequestBody DetallePedido detalle) {
       Pedido updatedPedido = pedidoService.addProductoToDetalle(id, detalle);
@@ -143,6 +151,7 @@ public class PedidoController {
 
    @Retry(name = "productosRetry")
    @GetMapping("/productos/{pedidoId}")
+   @TokenValidation
    @CircuitBreaker(name = "productosCB", fallbackMethod = "fallbackGetProductos")
    public ResponseEntity<List<Producto>> getProductos(@PathVariable("pedidoId") String pedidoId) {
       Pedido pedido = pedidoService.getPedidoById(pedidoId);
@@ -159,6 +168,7 @@ public class PedidoController {
    @Retry(name = "clientesRetry")
    @GetMapping("/clientes/{pedidoId}")
    @CircuitBreaker(name = "clientesCB", fallbackMethod = "fallbackGetClientes")
+   @TokenValidation
    public ResponseEntity<Cliente> getCliente(@PathVariable("pedidoId") String pedidoId) {
       Pedido pedido = pedidoService.getPedidoById(pedidoId);
       if (pedido == null) {

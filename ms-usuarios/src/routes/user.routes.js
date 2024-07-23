@@ -8,6 +8,7 @@ import userUpdatePasswordController from '#Controllers/user-update-password.cont
 import getAllUsersController from '#Controllers/user-getAll.controller.js';
 import getUserByIdController from '#Controllers/user-getById.controller.js';
 import userDeleteController from '#Controllers/user-delete.controller.js';
+import validateTokenController from '#Controllers/user-validate-token.controller.js'; // Agrega esta línea
 
 import userJWTDTO from '#Dto/user-jwt.dto.js';
 import userLoginDTO from '#Dto/user-login.dto.js';
@@ -57,5 +58,8 @@ userRouter.delete(
 );
 
 userRouter.delete('/:id', userJWTDTO, userDeleteController);
+
+// Nuevo endpoint para validar el token
+userRouter.get('/validate', validateTokenController);
 
 export default userRouter;
