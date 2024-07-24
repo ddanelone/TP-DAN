@@ -219,4 +219,32 @@ public class ClienteControllerMockRestServiceServerTests {
             .andExpect(content().string("true"));
    }
 
+   @Test
+   @Order(10)
+   public void testValidarCorreo_CorreoValido() throws Exception {
+      String correoValido = "test@example.com";
+
+      when(clienteService.validarCorreo(correoValido)).thenReturn(true);
+
+      mockMvc.perform(get("/api/clientes/validar-correo")
+            .param("correo", correoValido)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string("true"));
+   }
+
+   @Test
+   @Order(11)
+   public void testValidarCorreo_CorreoInvalido() throws Exception {
+      String correoInvalido = "test@invalid";
+
+      when(clienteService.validarCorreo(correoInvalido)).thenReturn(false);
+
+      mockMvc.perform(get("/api/clientes/validar-correo")
+            .param("correo", correoInvalido)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("false"));
+   }
+
 }

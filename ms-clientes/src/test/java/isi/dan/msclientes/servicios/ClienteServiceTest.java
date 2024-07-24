@@ -84,6 +84,48 @@ public class ClienteServiceTest {
       verify(clienteRepository, never()).save(any(Cliente.class));
    }
 
+   @DisplayName("Test para actualizar un Cliente")
+   @Test
+   void testActualizarCliente() {
+      // given
+      given(clienteRepository.save(cliente)).willReturn(cliente);
+      cliente.setCorreoElectronico("correoNuevo@gmail.com");
+      cliente.setNombre("NombreNuevo");
+
+      // when
+      Cliente clienteActualizado = clienteService.update(cliente);
+
+      // then
+      assertThat(clienteActualizado.getCorreoElectronico()).isEqualTo("correoNuevo@gmail.com");
+      assertThat(clienteActualizado.getNombre()).isEqualTo("NombreNuevo");
+   }
+
+   @DisplayName("Test para validar correo electrónico con formato válido")
+   @Test
+   void testValidarCorreo_Valido() {
+      // given
+      String correoValido = "test@example.com";
+
+      // when
+      Boolean resultado = clienteService.validarCorreo(correoValido);
+
+      // then
+      assertThat(resultado).isTrue();
+   }
+
+   @DisplayName("Test para validar correo electrónico con formato inválido")
+   @Test
+   void testValidarCorreo_Invalido() {
+      // given
+      String correoInvalido = "test@invalid";
+
+      // when
+      Boolean resultado = clienteService.validarCorreo(correoInvalido);
+
+      // then
+      assertThat(resultado).isFalse();
+   }
+
    @DisplayName("Test para listar a los clientes")
    @Test
    void testListarClientes() {
@@ -143,22 +185,6 @@ public class ClienteServiceTest {
 
       // then
       assertThat(clienteGuardado).isNotNull();
-   }
-
-   @DisplayName("Test para actualizar un Cliente")
-   @Test
-   void testActualizarCliente() {
-      // given
-      given(clienteRepository.save(cliente)).willReturn(cliente);
-      cliente.setCorreoElectronico("correoNuevo@gmail.com");
-      cliente.setNombre("NombreNuevo");
-
-      // when
-      Cliente clienteActualizado = clienteService.update(cliente);
-
-      // then
-      assertThat(clienteActualizado.getCorreoElectronico()).isEqualTo("correoNuevo@gmail.com");
-      assertThat(clienteActualizado.getNombre()).isEqualTo("NombreNuevo");
    }
 
    @DisplayName("Test para eliminar un cliente")

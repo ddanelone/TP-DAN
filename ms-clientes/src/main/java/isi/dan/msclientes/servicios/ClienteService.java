@@ -43,6 +43,10 @@ public class ClienteService {
    public Cliente save(Cliente cliente) {
       return Observation.createNotStarted("cliente.save", observationRegistry)
             .observe(() -> {
+               if (!validarCorreo(cliente.getCorreoElectronico())) {
+                  throw new IllegalArgumentException("Correo electrónico inválido");
+               }
+
                Optional<Cliente> clienteGuardado = clienteRepository
                      .findByCorreoElectronico(cliente.getCorreoElectronico());
                if (clienteGuardado.isPresent()) {
@@ -60,7 +64,12 @@ public class ClienteService {
 
    public Cliente update(Cliente cliente) {
       return Observation.createNotStarted("cliente.update", observationRegistry)
-            .observe(() -> clienteRepository.save(cliente));
+            .observe(() -> {
+               if (!validarCorreo(cliente.getCorreoElectronico())) {
+                  throw new IllegalArgumentException("Correo electrónico inválido");
+               }
+               return clienteRepository.save(cliente);
+            });
    }
 
    public void deleteById(Integer id) {
@@ -74,5 +83,9 @@ public class ClienteService {
    public Optional<Cliente> findByCorreoElectronico(String correoElectronico) {
       return Observation.createNotStarted("cliente.findByCorreoElectronico", observationRegistry)
             .observe(() -> clienteRepository.findByCorreoElectronico(correoElectronico));
+   }
+
+   public Boolean validarCorreo(String correo) {
+      return correo.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
    }
 }

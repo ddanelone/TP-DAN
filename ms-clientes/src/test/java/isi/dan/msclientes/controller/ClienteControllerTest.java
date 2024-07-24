@@ -158,6 +158,28 @@ public class ClienteControllerTest {
             .andExpect(status().isNotFound());
    }
 
+   @Test
+   void testValidarCorreo_CorreoValido() throws Exception {
+      String correoValido = "test@example.com";
+      Mockito.when(clienteService.validarCorreo(correoValido)).thenReturn(true);
+
+      mockMvc.perform(get("/api/clientes/validar-correo")
+            .param("correo", correoValido))
+            .andExpect(status().isOk())
+            .andExpect(content().string("true"));
+   }
+
+   @Test
+   void testValidarCorreo_CorreoInvalido() throws Exception {
+      String correoInvalido = "test@invalid";
+      Mockito.when(clienteService.validarCorreo(correoInvalido)).thenReturn(false);
+
+      mockMvc.perform(get("/api/clientes/validar-correo")
+            .param("correo", correoInvalido))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("false"));
+   }
+
    private static String asJsonString(final Object obj) {
       try {
          ObjectMapper mapper = new ObjectMapper();

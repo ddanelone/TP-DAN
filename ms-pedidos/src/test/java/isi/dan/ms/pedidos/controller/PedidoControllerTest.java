@@ -91,6 +91,22 @@ public class PedidoControllerTest {
    }
 
    @Test
+   public void testUpdatePedido() throws Exception {
+      Pedido pedido = new Pedido();
+      pedido.setId("123");
+      Pedido updatedPedido = new Pedido();
+      updatedPedido.setId("123");
+      when(pedidoService.updatePedido(anyString(), any(Pedido.class))).thenReturn(updatedPedido);
+
+      mockMvc.perform(put("/api/pedidos/{id}", "123")
+            .header("Authorization", "Bearer " + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(pedido)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("123"));
+   }
+
+   @Test
    public void testGetAllPedidos() throws Exception {
       Pedido pedido = new Pedido();
       pedido.setId("123");

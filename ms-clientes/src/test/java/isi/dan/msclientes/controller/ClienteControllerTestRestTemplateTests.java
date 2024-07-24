@@ -5,7 +5,6 @@ import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.servicios.ClienteService;
 
-import org.apache.http.auth.AUTH;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -226,6 +225,44 @@ public class ClienteControllerTestRestTemplateTests {
             Boolean.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+   }
+
+   @Test
+   @Order(10)
+   void testValidarCorreo_CorreoValido() {
+      String correoValido = "test@example.com";
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Boolean> response = restTemplate.exchange(
+            getUrl("/api/clientes/validar-correo?correo=" + correoValido),
+            HttpMethod.GET,
+            request,
+            Boolean.class);
+
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+      assertThat(response.getBody()).isTrue();
+   }
+
+   @Test
+   @Order(11)
+   void testValidarCorreo_CorreoInvalido() {
+      String correoInvalido = "test@invalid";
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(validJwtToken);
+      HttpEntity<Void> request = new HttpEntity<>(headers);
+
+      ResponseEntity<Boolean> response = restTemplate.exchange(
+            getUrl("/api/clientes/validar-correo?correo=" + correoInvalido),
+            HttpMethod.GET,
+            request,
+            Boolean.class);
+
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+      assertThat(response.getBody()).isFalse();
    }
 
    private String getUrl(String path) {

@@ -55,16 +55,16 @@ localhost: 9100
 localhost:3030
 Contraseña y usuario por default: admin admin
 
-# JACOCO
+# JACOCO  (en los 3 microservicios Java)
 
 Ejecutar mvn clean test en el ms-clientes y se creará la carpeta correspondiente /target/site
 Desde el explorador de archivos, entrar al index.html
 
-# SUREFIRE
+# SUREFIRE (en los 3 microservicios Java)
 
 En los microservicios de Clientes y Productos: /target/surefire-reports
 
-# SWAGGER
+# SWAGGER (en los 3 microservicios Java)
 
 En el microservicio de Clientes.
 http://localhost:8080/swagger-ui/index.html
@@ -102,7 +102,7 @@ http://localhost:8080/swagger-ui/index.html
    - 3.3 Con MockRestServiceServe
      -- ClienteController
 
-# GRAYLOG EN TODOS LOS MS JAVA
+# GRAYLOG (en los 3 microservicios Java)
 
 http://localhost:9800/system/overview
 usuario: admin

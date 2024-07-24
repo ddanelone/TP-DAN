@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,83 +65,30 @@ public class PedidoService {
    public Pedido savePedido(Pedido pedido) {
       return Observation.createNotStarted("pedido.save", observationRegistry)
             .observe(() -> {
-               // Calcular el monto total del pedido actual
-               double montoTotalPedidoActual = pedido.getDetalle().stream()
-                     .mapToDouble(dp -> dp.getProducto().getPrecio().doubleValue() * dp.getCantidad())
-                     .sum();
-               BigDecimal totalBigDecimal = BigDecimal.valueOf(montoTotalPedidoActual);
-               pedido.setTotal(totalBigDecimal);
-
-               // Obtener todos los pedidos del cliente
-               List<Pedido> pedidosCliente = this.getAllPedidosCliente(pedido.getCliente().getId());
-
-               // Calcular el monto total de los pedidos existentes del cliente
-               double montoTotalPedidosExistentes = pedidosCliente.stream()
-                     .filter(p -> p.getEstado() == Estado.ACEPTADO || p.getEstado() == Estado.EN_PREPARACION)
-                     .mapToDouble(p -> p.getTotal().doubleValue())
-                     .sum();
-
-               // Sumar el monto total del pedido actual al monto total de pedidos existentes
-               double montoTotal = montoTotalPedidoActual + montoTotalPedidosExistentes;
-               totalBigDecimal = BigDecimal.valueOf(montoTotal);
-               pedido.setTotal(totalBigDecimal);
-
-               // Verificar si el cliente tiene saldo suficiente
-               if (!clienteFeignClient.verificarSaldo(pedido.getCliente().getId(), montoTotal)) {
-                  log.info("El cliente no tiene saldo suficiente para aceptar el pedido");
-                  pedido.setEstado(Estado.RECHAZADO);
-                  throw new RuntimeException("El cliente no tiene saldo suficiente para aceptar el pedido");
-               }
-
-               log.info("El cliente tiene saldo. El pedido puede ser aceptado");
-               pedido.setEstado(Estado.ACEPTADO);
-
-               // Primero hay que agregar el estado actual al historial de estados
-               List<EstadoCambio> historial = new ArrayList<>();
-               EstadoCambio estadoCambio = new EstadoCambio(Estado.ACEPTADO, Instant.now(), pedido.getUsuario());
-               historial.add(estadoCambio);
-
-               boolean stockSuficienteParaTodosLosProductos = true;
-
-               // Verificar y actualizar stock para todos los productos del pedido
-               for (DetallePedido dp : pedido.getDetalle()) {
-                  Map<String, Integer> requestBody = new HashMap<>();
-                  requestBody.put("cantidad", dp.getCantidad());
-
-                  try {
-                     Map<String, Boolean> stockResponse = productoFeignClient.verificarStock(dp.getProducto().getId(),
-                           requestBody);
-                     Boolean stockSuficiente = stockResponse.get("stockDisponible");
-                     if (!stockSuficiente) {
-                        log.info("No hay suficiente stock para el producto {}", dp.getProducto().getId());
-                        stockSuficienteParaTodosLosProductos = false;
-                        pedido.setEstado(Estado.EN_PREPARACION);
-                        estadoCambio.setEstado(Estado.EN_PREPARACION);
-                     } else {
-                        // Actualizar el stock solo si hay suficiente
-                        try {
-                           productoFeignClient.actualizarStock(dp.getProducto().getId(), requestBody);
-                        } catch (FeignException e) {
-                           log.error(String.format("Error actualizando stock para el producto %d: %s",
-                                 dp.getProducto().getId(), e.getMessage()));
-                        }
-                     }
-                  } catch (FeignException e) {
-                     log.error(String.format("Error verificando stock para el producto %d: %s",
-                           dp.getProducto().getId(), e.getMessage()));
-                     stockSuficienteParaTodosLosProductos = false;
-                     pedido.setEstado(Estado.EN_PREPARACION);
-                     estadoCambio.setEstado(Estado.EN_PREPARACION);
-                  }
-               }
-
-               if (pedido.getNumeroPedido() == null) {
-                  pedido.setNumeroPedido((int) sequenceGeneratorService.generateSequence(Pedido.SEQUENCE_NAME));
-               }
+               validarYCalcularTotales(pedido);
+               verificarStockProductos(pedido);
+               pedido.setNumeroPedido((int) sequenceGeneratorService.generateSequence(Pedido.SEQUENCE_NAME));
                pedido.setFecha(Instant.now());
-               pedido.setHistorialEstado(historial);
-
+               agregarEstadoInicial(pedido, Estado.ACEPTADO);
                return pedidoRepository.save(pedido);
+            });
+   }
+
+   public Pedido updatePedido(String id, Pedido pedido) {
+      return Observation.createNotStarted("pedido.update", observationRegistry)
+            .observe(() -> {
+               Optional<Pedido> optionalPedidoExistente = pedidoRepository.findById(id);
+
+               if (!optionalPedidoExistente.isPresent()) {
+                  throw new RuntimeException("Pedido no encontrado");
+               }
+
+               Pedido pedidoExistente = optionalPedidoExistente.get();
+               actualizarCamposPermitidos(pedidoExistente, pedido);
+               validarYCalcularTotales(pedidoExistente);
+               verificarStockProductos(pedidoExistente);
+               agregarEstadoCambio(pedidoExistente, pedido.getEstado(), pedido.getUsuario());
+               return pedidoRepository.save(pedidoExistente);
             });
    }
 
@@ -240,5 +188,78 @@ public class PedidoService {
                   return null;
                }
             });
+   }
+
+   // Refactorizando el código común de update y save
+   private void validarYCalcularTotales(Pedido pedido) {
+      double montoTotalPedidoActual = pedido.getDetalle().stream()
+            .mapToDouble(dp -> dp.getProducto().getPrecio().doubleValue() * dp.getCantidad())
+            .sum();
+      BigDecimal totalBigDecimal = BigDecimal.valueOf(montoTotalPedidoActual);
+      pedido.setTotal(totalBigDecimal);
+
+      List<Pedido> pedidosCliente = this.getAllPedidosCliente(pedido.getCliente().getId());
+      double montoTotalPedidosExistentes = pedidosCliente.stream()
+            .filter(p -> p.getEstado() == Estado.ACEPTADO || p.getEstado() == Estado.EN_PREPARACION)
+            .mapToDouble(p -> p.getTotal().doubleValue())
+            .sum();
+
+      double montoTotal = montoTotalPedidoActual + montoTotalPedidosExistentes;
+      totalBigDecimal = BigDecimal.valueOf(montoTotal);
+      pedido.setTotal(totalBigDecimal);
+
+      if (!clienteFeignClient.verificarSaldo(pedido.getCliente().getId(), montoTotal)) {
+         log.info("El cliente no tiene saldo suficiente para aceptar el pedido");
+         pedido.setEstado(Estado.RECHAZADO);
+         throw new RuntimeException("El cliente no tiene saldo suficiente para aceptar el pedido");
+      }
+   }
+
+   private void verificarStockProductos(Pedido pedido) {
+      boolean stockSuficienteParaTodosLosProductos = true;
+
+      for (DetallePedido dp : pedido.getDetalle()) {
+         Map<String, Integer> requestBody = new HashMap<>();
+         requestBody.put("cantidad", dp.getCantidad());
+
+         try {
+            Map<String, Boolean> stockResponse = productoFeignClient.verificarStock(dp.getProducto().getId(),
+                  requestBody);
+            Boolean stockSuficiente = stockResponse.get("stockDisponible");
+            if (!stockSuficiente) {
+               log.info("No hay suficiente stock para el producto {}", dp.getProducto().getId());
+               stockSuficienteParaTodosLosProductos = false;
+               pedido.setEstado(Estado.EN_PREPARACION);
+            } else {
+               productoFeignClient.actualizarStock(dp.getProducto().getId(), requestBody);
+            }
+         } catch (FeignException e) {
+            log.error(String.format("Error verificando stock para el producto %d: %s", dp.getProducto().getId(),
+                  e.getMessage()));
+            stockSuficienteParaTodosLosProductos = false;
+            pedido.setEstado(Estado.EN_PREPARACION);
+         }
+      }
+
+      if (!stockSuficienteParaTodosLosProductos) {
+         throw new RuntimeException("No hay suficiente stock para uno o más productos del pedido");
+      }
+   }
+
+   private void agregarEstadoInicial(Pedido pedido, Estado estado) {
+      List<EstadoCambio> historial = new ArrayList<>();
+      EstadoCambio estadoCambio = new EstadoCambio(estado, Instant.now(), pedido.getUsuario());
+      historial.add(estadoCambio);
+      pedido.setHistorialEstado(historial);
+   }
+
+   private void agregarEstadoCambio(Pedido pedido, Estado nuevoEstado, String usuario) {
+      pedido.addEstadoCambio(nuevoEstado, usuario);
+   }
+
+   private void actualizarCamposPermitidos(Pedido pedidoExistente, Pedido pedido) {
+      pedidoExistente.setObservaciones(pedido.getObservaciones());
+      pedidoExistente.setDetalle(pedido.getDetalle());
+      pedidoExistente.setObra(pedido.getObra());
    }
 }

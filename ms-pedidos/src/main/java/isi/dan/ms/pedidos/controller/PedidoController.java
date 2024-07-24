@@ -72,6 +72,19 @@ public class PedidoController {
       }
    }
 
+   @PutMapping("/{id}")
+   @TokenValidation
+   public ResponseEntity<?> updatePedido(@PathVariable String id, @RequestBody Pedido pedido) {
+      try {
+         Pedido updatedPedido = pedidoService.updatePedido(id, pedido);
+         log.info("Pedido actualizado: {} ", updatedPedido);
+         return ResponseEntity.ok(updatedPedido);
+      } catch (RuntimeException e) {
+         log.error("Error al actualizar el pedido: {}", e.getMessage());
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar el pedido: " + e.getMessage());
+      }
+   }
+
    @Timed(value = "pedidos.getAll.timed", description = "Tiempo de obtener todos los pedidos")
    @GetMapping
    @TokenValidation

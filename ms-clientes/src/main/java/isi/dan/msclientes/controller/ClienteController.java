@@ -285,4 +285,24 @@ public class ClienteController {
          return ResponseEntity.notFound().build();
       }
    }
+
+   @GetMapping("/validar-correo")
+   @Operation(summary = "Verificar el formato del correo", description = "Permite verificar si el formato del correo es válido")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "Correo verificado correctamente"),
+         @ApiResponse(responseCode = "400", description = "Correo inválido"),
+         @ApiResponse(responseCode = "500", description = "Error en la validación del correo")
+   })
+   public ResponseEntity<Boolean> validarCorreo(@RequestParam("correo") String correo) {
+      log.info("Validando el formato del eMail {}", correo);
+
+      if (clienteService.validarCorreo(correo)) {
+         log.info("Correo válido");
+         return ResponseEntity.ok(true);
+      } else {
+         log.warn("Correo inválido");
+         return ResponseEntity.badRequest().body(false);
+      }
+   }
+
 }
