@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -15,6 +17,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -25,6 +28,9 @@ import isi.dan.ms_productos.aspect.JwtUtil;
 import isi.dan.ms_productos.modelo.Categoria;
 import isi.dan.ms_productos.modelo.Producto;
 import isi.dan.ms_productos.servicio.ProductoService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -84,16 +90,22 @@ public class ProductosControllerTest {
       producto.setNombre("Cemento");
 
       List<Producto> productos = Arrays.asList(producto);
+      Pageable pageable = PageRequest.of(0, 10);
+      Page<Producto> productosPage = new PageImpl<>(productos, pageable, productos.size());
 
-      when(productoService.getAllProductos()).thenReturn(productos);
+      when(productoService.getAllProductos(pageable)).thenReturn(productosPage);
 
       mockMvc.perform(get("/api/productos")
-            .header("Authorization", "Bearer "
-                  + validJwtToken)
+            .param("page", "0")
+            .param("size", "10")
+            .header("Authorization", "Bearer " + validJwtToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id").value(1L))
-            .andExpect(jsonPath("$[0].nombre").value("Cemento"));
+            .andExpect(jsonPath("$.content[0].id").value(1L))
+            .andExpect(jsonPath("$.content[0].nombre").value("Cemento"))
+            .andExpect(jsonPath("$.numberOfElements").value(1))
+            .andExpect(jsonPath("$.totalElements").value(1))
+            .andExpect(jsonPath("$.totalPages").value(1));
    }
 
    @Test
@@ -230,6 +242,39 @@ public class ProductosControllerTest {
             .content("{ \"cantidad\": 20 }"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.stockActual").value(80));
+   }
+
+   @Test
+   void testSearchProductos() throws Exception {
+      Producto producto1 = new Producto();
+      producto1.setId(1L);
+      producto1.setNombre("Producto 1");
+
+      Producto producto2 = new Producto();
+      producto2.setId(2L);
+      producto2.setNombre("Producto 2");
+
+      List<Producto> productos = Arrays.asList(producto1, producto2);
+      Page<Producto> productosPage = new PageImpl<>(productos);
+
+      when(productoService.searchProductos(
+            anyLong(), anyString(), any(BigDecimal.class), any(BigDecimal.class), any(Pageable.class)))
+            .thenReturn(productosPage);
+
+      mockMvc.perform(get("/api/productos/search")
+            .param("id", "1")
+            .param("nombre", "Producto")
+            .param("precioMin", "10.00")
+            .param("precioMax", "100.00")
+            .param("page", "0")
+            .param("size", "10")
+            .header("Authorization", "Bearer " + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content[0].id").value(1L))
+            .andExpect(jsonPath("$.content[0].nombre").value("Producto 1"))
+            .andExpect(jsonPath("$.content[1].id").value(2L))
+            .andExpect(jsonPath("$.content[1].nombre").value("Producto 2"));
    }
 
 }

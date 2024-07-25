@@ -14,6 +14,7 @@ interface ListViewProps {
   deleteItem?: (item: Product) => Promise<void>;
   isLoading: boolean;
   addItem?: (item: Product) => void;
+  handleScroll?: (e: React.UIEvent<HTMLElement>) => void;
 }
 
 export function ListView({
@@ -22,9 +23,13 @@ export function ListView({
   deleteItem,
   isLoading,
   addItem,
+  handleScroll,
 }: ListViewProps) {
   return (
-    <div className="block md:hidden">
+    <div
+      className="block md:hidden overflow-y-auto h-screen"
+      onScroll={handleScroll}
+    >
       {/* Utiliza w-full para ocupar todo el ancho disponible */}
       {!isLoading &&
         items &&

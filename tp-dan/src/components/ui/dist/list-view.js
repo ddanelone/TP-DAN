@@ -10,8 +10,8 @@ var create_update_item_form_1 = require("@/app/(vendedor)/abm/components/create-
 var confirm_deletion_1 = require("@/app/(vendedor)/abm/components/confirm-deletion");
 var add_item_to_cart_1 = require("@/app/(cliente)/components/add-item-to-cart");
 function ListView(_a) {
-    var items = _a.items, getItems = _a.getItems, deleteItem = _a.deleteItem, isLoading = _a.isLoading, addItem = _a.addItem;
-    return (React.createElement("div", { className: "block md:hidden" },
+    var items = _a.items, getItems = _a.getItems, deleteItem = _a.deleteItem, isLoading = _a.isLoading, addItem = _a.addItem, handleScroll = _a.handleScroll;
+    return (React.createElement("div", { className: "block md:hidden overflow-y-auto h-screen", onScroll: handleScroll },
         !isLoading &&
             items &&
             items.map(function (item) { return (React.createElement("div", { key: item.id, className: "flex items-center mb-6 justify-between border border-solid border-gray-300 rounded-xl p-6" },

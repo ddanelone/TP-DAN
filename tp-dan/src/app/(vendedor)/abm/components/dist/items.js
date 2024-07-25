@@ -36,6 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 var use_user_1 = require("@/hooks/use-user");
 var create_update_item_form_1 = require("./create-update-item-form");
@@ -54,8 +61,10 @@ function Items() {
     var _a = react_1.useState([]), items = _a[0], setItems = _a[1];
     var _b = react_1.useState(true), isLoading = _b[0], setIsLoading = _b[1];
     var _c = react_1.useState(false), hasFetched = _c[0], setHasFetched = _c[1];
+    var _d = react_1.useState(0), page = _d[0], setPage = _d[1];
+    var _e = react_1.useState(0), totalPages = _e[0], setTotalPages = _e[1];
     var getItems = react_1.useCallback(function () { return __awaiter(_this, void 0, void 0, function () {
-        var res, error_1;
+        var res_1, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -63,10 +72,15 @@ function Items() {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, auth_1.getProducts()];
+                    return [4 /*yield*/, auth_1.getProducts(page, 12)];
                 case 2:
-                    res = _a.sent();
-                    setItems(res);
+                    res_1 = _a.sent();
+                    setItems(function (prevItems) {
+                        var newItems = __spreadArrays(prevItems, res_1.data);
+                        var uniqueItems = Array.from(new Set(newItems.map(function (item) { return item.id; }))).map(function (id) { return newItems.find(function (item) { return item.id === id; }); });
+                        return uniqueItems;
+                    });
+                    setTotalPages(res_1.totalPages);
                     return [3 /*break*/, 5];
                 case 3:
                     error_1 = _a.sent();
@@ -78,7 +92,7 @@ function Items() {
                 case 5: return [2 /*return*/];
             }
         });
-    }); }, []);
+    }); }, [page]);
     var deleteItem = function (item) { return __awaiter(_this, void 0, void 0, function () {
         var error_2;
         return __generator(this, function (_a) {
@@ -110,18 +124,33 @@ function Items() {
             getItems().then(function () { return setHasFetched(true); });
         }
     }, [user, getItems, hasFetched]);
+    react_1.useEffect(function () {
+        if (page > 0) {
+            getItems();
+        }
+    }, [page, getItems]);
+    var handleScroll = function (e) {
+        var bottom = e.currentTarget.scrollHeight ===
+            e.currentTarget.scrollTop + e.currentTarget.clientHeight;
+        if (bottom && !isLoading && page < totalPages - 1) {
+            setPage(function (prevPage) {
+                console.log("Setting page to:", prevPage + 1);
+                return prevPage + 1;
+            });
+        }
+    };
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: "flex justify-between items-center m-4 mb-8" },
+        React.createElement("div", { className: "flex justify-between items-center m-4 mb-8 " },
             React.createElement("div", null,
                 React.createElement("h1", { className: "text-2xl ml-1" }, "Mis Productos"),
                 items.length > 0 && (React.createElement(badge_1.Badge, { className: "mt-2 text-[14px]", variant: "outline" }, "SECCI\u00D3N EXCLUSIVA PARA VENDEDORES"))),
             React.createElement("div", null,
-                React.createElement(sheet_search_productos_1["default"], { isLoading: isLoading, items: items, setItems: setItems, getItems: getItems }),
+                React.createElement(sheet_search_productos_1["default"], { items: items, setItems: setItems, getItems: getItems }),
                 React.createElement(create_update_item_form_1.CreateUpdateItem, { getItems: getItems },
                     React.createElement(button_1.Button, { className: "px-6 ml-4" },
                         "Crear",
                         React.createElement(lucide_react_1.CirclePlus, { className: "ml-2 w-[20px]" }))))),
-        React.createElement(table_view_1.TableView, { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading }),
-        React.createElement(list_view_1["default"], { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading })));
+        React.createElement(table_view_1.TableView, { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading, handleScroll: handleScroll }),
+        React.createElement(list_view_1["default"], { deleteItem: deleteItem, getItems: getItems, items: items, isLoading: isLoading, handleScroll: handleScroll })));
 }
 exports["default"] = Items;

@@ -20,6 +20,9 @@ import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +61,12 @@ public class ProductoController {
    @TokenValidation
    @Timed(value = "productos.controller.getAll.timer", description = "Time taken to get all products")
    @GetMapping
-   public List<Producto> getAllProductos() {
-      log.info("Fetching all productos");
-      return productoService.getAllProductos();
+   public ResponseEntity<Page<Producto>> getAllProductos(
+         @RequestParam(defaultValue = "0") int page,
+         @RequestParam(defaultValue = "10") int size) {
+      log.info("Fetching all productos - page: {}, size: {}", page, size);
+      Page<Producto> productosPage = productoService.getAllProductos(PageRequest.of(page, size));
+      return ResponseEntity.ok(productosPage);
    }
 
    @TokenValidation
@@ -152,5 +158,22 @@ public class ProductoController {
       BigDecimal descuento = requestBody.get("descuento");
       Producto updatedProducto = productoService.updateDescuento(id, descuento);
       return ResponseEntity.ok(updatedProducto);
+   }
+
+   @TokenValidation
+   @Timed(value = "productos.controller.search.timer", description = "Time taken to search products")
+   @GetMapping("/search")
+   public ResponseEntity<Page<Producto>> searchProductos(
+         @RequestParam(required = false) Long id,
+         @RequestParam(required = false) String nombre,
+         @RequestParam(required = false) BigDecimal precioMin,
+         @RequestParam(required = false) BigDecimal precioMax,
+         @RequestParam(defaultValue = "0") int page,
+         @RequestParam(defaultValue = "10") int size) {
+      log.info("Searching productos - id: {}, nombre: {}, precioMin: {}, precioMax: {}, page: {}, size: {}",
+            id, nombre, precioMin, precioMax, page, size);
+      Page<Producto> productosPage = productoService.searchProductos(id, nombre, precioMin, precioMax,
+            PageRequest.of(page, size));
+      return ResponseEntity.ok(productosPage);
    }
 }

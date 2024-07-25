@@ -12,8 +12,8 @@ var confirm_deletion_1 = require("@/app/(vendedor)/abm/components/confirm-deleti
 var add_item_to_cart_1 = require("@/app/(cliente)/components/add-item-to-cart");
 var update_stock_price_discount_1 = require("@/app/(vendedor)/abm/components/update-stock-price-discount");
 function TableView(_a) {
-    var items = _a.items, getItems = _a.getItems, deleteItem = _a.deleteItem, isLoading = _a.isLoading, addItem = _a.addItem;
-    return (react_1["default"].createElement("div", { className: "hidden md:block" },
+    var items = _a.items, getItems = _a.getItems, deleteItem = _a.deleteItem, isLoading = _a.isLoading, addItem = _a.addItem, handleScroll = _a.handleScroll;
+    return (react_1["default"].createElement("div", { className: "hidden md:block overflow-y-auto h-screen", onScroll: handleScroll },
         react_1["default"].createElement(table_1.Table, null,
             react_1["default"].createElement(table_1.TableHeader, null,
                 react_1["default"].createElement(table_1.TableRow, null,

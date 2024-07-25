@@ -6,4 +6,3 @@ import isi.dan.ms_productos.modelo.Producto;
 
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
 }
-

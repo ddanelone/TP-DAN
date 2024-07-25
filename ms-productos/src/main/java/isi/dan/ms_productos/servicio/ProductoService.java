@@ -13,8 +13,14 @@ import isi.dan.ms_productos.dao.ProductoRepository;
 import isi.dan.ms_productos.modelo.Producto;
 import jakarta.annotation.PostConstruct;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProductoService {
@@ -47,12 +53,12 @@ public class ProductoService {
             });
    }
 
-   public List<Producto> getAllProductos() {
+   public Page<Producto> getAllProductos(Pageable pageable) {
       return Observation.createNotStarted("producto.getAll", observationRegistry)
             .observe(() -> {
                Timer.Sample sample = Timer.start(meterRegistry);
                try {
-                  return productoRepository.findAll();
+                  return productoRepository.findAll(pageable);
                } finally {
                   sample.stop(meterRegistry.timer("producto.getAll"));
                }
@@ -151,4 +157,39 @@ public class ProductoService {
                }
             });
    }
+
+   public Page<Producto> searchProductos(Long id, String nombre, BigDecimal precioMin, BigDecimal precioMax,
+         Pageable pageable) {
+      Timer.Sample sample = Timer.start(meterRegistry);
+      try {
+         List<Producto> productos = productoRepository.findAll();
+
+         Stream<Producto> stream = productos.stream();
+
+         if (id != null) {
+            stream = stream.filter(producto -> producto.getId().equals(id));
+         }
+         if (nombre != null && !nombre.isEmpty()) {
+            stream = stream.filter(producto -> producto.getNombre().toLowerCase().contains(nombre.toLowerCase()));
+         }
+         if (precioMin != null) {
+            stream = stream.filter(producto -> producto.getPrecio().compareTo(precioMin) >= 0);
+         }
+         if (precioMax != null) {
+            stream = stream.filter(producto -> producto.getPrecio().compareTo(precioMax) <= 0);
+         }
+
+         List<Producto> filteredProducts = stream.collect(Collectors.toList());
+
+         // Paginar los resultados filtrados
+         int start = (int) pageable.getOffset();
+         int end = Math.min((start + pageable.getPageSize()), filteredProducts.size());
+         List<Producto> pagedProducts = filteredProducts.subList(start, end);
+
+         return new PageImpl<>(pagedProducts, pageable, filteredProducts.size());
+      } finally {
+         sample.stop(meterRegistry.timer("producto.search"));
+      }
+   }
+
 }

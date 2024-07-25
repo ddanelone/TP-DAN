@@ -29,6 +29,7 @@ interface TableViewProps {
   deleteItem?: (item: Product) => Promise<void>;
   isLoading: boolean;
   addItem?: (item: Product) => void;
+  handleScroll?: (e: React.UIEvent<HTMLElement>) => void;
 }
 
 export function TableView({
@@ -37,9 +38,13 @@ export function TableView({
   deleteItem,
   isLoading,
   addItem,
+  handleScroll,
 }: TableViewProps) {
   return (
-    <div className="hidden md:block">
+    <div
+      className="hidden md:block overflow-y-auto h-screen"
+      onScroll={handleScroll}
+    >
       <Table>
         <TableHeader>
           <TableRow>
@@ -81,7 +86,6 @@ export function TableView({
                       </Button>
                     </UpdateStockPriceDiscount>
                   )}
-
                   {/* ========== Actualizar producto ========== */}
                   {getItems && (
                     <CreateUpdateItem itemToUpdate={item} getItems={getItems}>

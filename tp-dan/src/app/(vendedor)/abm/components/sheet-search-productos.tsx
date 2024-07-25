@@ -18,18 +18,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Product } from "@/interfaces/product-interface";
-import { CirclePlus, LoaderCircle } from "lucide-react";
-import { get } from "http";
+import { LoaderCircle } from "lucide-react";
+import { searchProducts } from "@/lib/auth";
 
 interface SheetSearchProductsProps {
-  isLoading: boolean;
   items: Product[];
   setItems: Dispatch<SetStateAction<Product[]>>;
   getItems: () => Promise<void>;
 }
 
 export function SheetSearchProducts({
-  isLoading,
   items,
   setItems,
   getItems,
@@ -41,34 +39,41 @@ export function SheetSearchProducts({
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [filteredItems, setFilteredItems] = useState<Product[]>(items);
   const [hasFetched, setHasFetched] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const filterItems = useCallback(() => {
-    getItems();
-    const filtered = items.filter((item) => {
-      return (
-        (id === undefined || item.id === id) &&
-        (!nombre || item.nombre.toLowerCase().includes(nombre.toLowerCase())) &&
-        (precioMin === undefined || item.precio >= precioMin) &&
-        (precioMax === undefined || item.precio <= precioMax)
+  const filterItems = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await searchProducts(
+        0,
+        10,
+        id,
+        nombre,
+        precioMin,
+        precioMax
       );
-    });
-    setFilteredItems(filtered);
-  }, [id, nombre, precioMin, precioMax]);
+      setFilteredItems(data);
+      setItems(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id, nombre, precioMin, precioMax, setItems]);
 
   useEffect(() => {
     if (!hasFetched) {
       getItems().then(() => setHasFetched(true));
     }
-    filterItems();
-  }, [getItems, hasFetched, filterItems]);
+  }, [getItems, hasFetched]);
 
-  const searchGo = () => {
-    setItems(filteredItems);
+  const searchGo = async () => {
+    await filterItems();
     setIsSheetOpen(false);
   };
 
-  const closeWindows = () => {
-    getItems();
+  const closeWindows = async () => {
+    await getItems();
     resetFilters();
     setIsSheetOpen(false);
   };
@@ -78,7 +83,7 @@ export function SheetSearchProducts({
     setNombre("");
     setPrecioMin(undefined);
     setPrecioMax(undefined);
-    filterItems();
+    setFilteredItems(items); // Reset filtered items to the original items
   };
 
   return (
@@ -161,6 +166,9 @@ export function SheetSearchProducts({
             Cancelar
           </Button>
           <Button type="button" onClick={searchGo}>
+            {isLoading && (
+              <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+            )}
             Aplicar Filtro
           </Button>
         </SheetFooter>

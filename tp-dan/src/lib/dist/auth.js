@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.newStatusOrder = exports.getProductosByPedidoId = exports.getClienteByPedidoId = exports.addProductoToDetalle = exports.addClienteToPedido = exports.deletePedido = exports.createPedido = exports.getPedidoById = exports.getAllPedidos = exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.updatePromotionalDiscount = exports.updateOrderProvision = exports.checkStockProducto = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
+exports.newStatusOrder = exports.getProductosByPedidoId = exports.getClienteByPedidoId = exports.addProductoToDetalle = exports.addClienteToPedido = exports.deletePedido = exports.createPedido = exports.getPedidoById = exports.getAllPedidos = exports.validarObra = exports.getCoordinates = exports.deleteObra = exports.updateObra = exports.createObra = exports.getObraById = exports.getEstadosObras = exports.getAllObras = exports.deleteAuthorizedUser = exports.updateAuthorizedUser = exports.createAuthorizedUser = exports.getAuthorizedUserById = exports.getAllAuthorizedUsers = exports.deleteClient = exports.updateClient = exports.createClient = exports.getClientByEmail = exports.getClientById = exports.getAllClients = exports.updatePromotionalDiscount = exports.updateOrderProvision = exports.checkStockProducto = exports.deleteProductById = exports.saveProduct = exports.getProductById = exports.searchProducts = exports.getProducts = exports.sendResetEmail = exports.signOutAccount = exports.updateUser = exports.createUser = exports.signIn = void 0;
 var axios_1 = require("./axios");
 var set_in_localstorage_1 = require("@/action/set-in-localstorage");
 var get_from_localstorage_1 = require("@/action/get-from-localstorage");
@@ -136,24 +147,20 @@ exports.sendResetEmail = function (email) { return __awaiter(void 0, void 0, Pro
     });
 }); };
 /* ========== Productos  ========== */
-// Función para obtener la lista de productos
-exports.getProducts = function () { return __awaiter(void 0, void 0, Promise, function () {
-    var token, config, response, products, error_5;
+exports.getProducts = function (page, size) { return __awaiter(void 0, void 0, void 0, function () {
+    var config, response, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
+                config = __assign(__assign({}, getAuthHeaders()), { params: { page: page, size: size } });
                 return [4 /*yield*/, axios_1["default"].get("/productos", config)];
             case 1:
                 response = _a.sent();
-                products = response.data;
-                return [2 /*return*/, products];
+                return [2 /*return*/, {
+                        data: response.data.content,
+                        totalPages: response.data.totalPages
+                    }];
             case 2:
                 error_5 = _a.sent();
                 throw new Error(error_5.response.data.message);
@@ -161,32 +168,46 @@ exports.getProducts = function () { return __awaiter(void 0, void 0, Promise, fu
         }
     });
 }); };
-// Función para obtener un producto específico por su ID
-exports.getProductById = function (productId) { return __awaiter(void 0, void 0, Promise, function () {
-    var token, config, response, product, error_6;
+exports.searchProducts = function (page, size, id, nombre, precioMin, precioMax) { return __awaiter(void 0, void 0, void 0, function () {
+    var config, response, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].get("/productos/" + productId, config)];
+                config = __assign(__assign({}, getAuthHeaders()), { params: { page: page, size: size, id: id, nombre: nombre, precioMin: precioMin, precioMax: precioMax } });
+                return [4 /*yield*/, axios_1["default"].get("/productos/search", config)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, {
+                        data: response.data.content,
+                        totalPages: response.data.totalPages
+                    }];
+            case 2:
+                error_6 = _a.sent();
+                throw new Error(error_6.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para obtener un producto específico por su ID
+exports.getProductById = function (productId) { return __awaiter(void 0, void 0, Promise, function () {
+    var response, product, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].get("/productos/" + productId, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 product = response.data;
                 return [2 /*return*/, product];
             case 2:
-                error_6 = _a.sent();
-                if (error_6.response && error_6.response.status === 404) {
-                    // Si el producto no se encuentra, retorna null
+                error_7 = _a.sent();
+                if (error_7.response && error_7.response.status === 404) {
                     return [2 /*return*/, null];
                 }
                 else {
-                    throw new Error(error_6.response.data.message);
+                    throw new Error(error_7.response.data.message);
                 }
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
@@ -195,48 +216,16 @@ exports.getProductById = function (productId) { return __awaiter(void 0, void 0,
 }); };
 // Función para crear o actualizar un producto
 exports.saveProduct = function (product) { return __awaiter(void 0, void 0, Promise, function () {
-    var token, config, response, savedProduct, error_7;
+    var response, savedProduct, error_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].post("/productos", product, config)];
+                return [4 /*yield*/, axios_1["default"].post("/productos", product, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 savedProduct = response.data;
                 return [2 /*return*/, savedProduct];
-            case 2:
-                error_7 = _a.sent();
-                throw new Error(error_7.response.data.message);
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-// Función para eliminar un producto por ID
-exports.deleteProductById = function (productId) { return __awaiter(void 0, void 0, Promise, function () {
-    var token, config, error_8;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                // Realiza la solicitud para eliminar el producto por ID
-                return [4 /*yield*/, axios_1["default"]["delete"]("/productos/" + productId, config)];
-            case 1:
-                // Realiza la solicitud para eliminar el producto por ID
-                _a.sent();
-                return [3 /*break*/, 3];
             case 2:
                 error_8 = _a.sent();
                 throw new Error(error_8.response.data.message);
@@ -244,23 +233,41 @@ exports.deleteProductById = function (productId) { return __awaiter(void 0, void
         }
     });
 }); };
+// Función para eliminar un producto por ID
+exports.deleteProductById = function (productId) { return __awaiter(void 0, void 0, Promise, function () {
+    var error_9;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"]["delete"]("/productos/" + productId, getAuthHeaders())];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_9 = _a.sent();
+                throw new Error(error_9.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 /* ========== Validar Stock de Producto ========== */
 exports.checkStockProducto = function (id, cantidad) { return __awaiter(void 0, void 0, void 0, function () {
-    var response, error_9;
+    var response, error_10;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, axios_1["default"].post("/productos/" + id + "/verificar-stock", {
                         cantidad: cantidad
-                    })];
+                    }, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
-                error_9 = _a.sent();
-                if (error_9.response && error_9.response.status === 400) {
-                    throw new Error(error_9.response.data);
+                error_10 = _a.sent();
+                if (error_10.response && error_10.response.status === 400) {
+                    throw new Error(error_10.response.data);
                 }
                 else {
                     throw new Error("Error al verificar el stock del producto");
@@ -272,43 +279,12 @@ exports.checkStockProducto = function (id, cantidad) { return __awaiter(void 0, 
 }); };
 // Función para actualizar la orden de provisión de un producto
 exports.updateOrderProvision = function (productId, cantidad, precio) { return __awaiter(void 0, void 0, Promise, function () {
-    var token, config, response, updatedProduct, error_10;
+    var response, updatedProduct, error_11;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/update-stock-and-price", { cantidad: cantidad, precio: precio }, config)];
-            case 1:
-                response = _a.sent();
-                updatedProduct = response.data;
-                return [2 /*return*/, updatedProduct];
-            case 2:
-                error_10 = _a.sent();
-                throw new Error(error_10.response.data.message);
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-// Función para actualizar el descuento promocional de un producto
-exports.updatePromotionalDiscount = function (productId, descuento) { return __awaiter(void 0, void 0, Promise, function () {
-    var token, config, response, updatedProduct, error_11;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/update-descuento", { descuento: descuento }, config)];
+                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/update-stock-and-price", { cantidad: cantidad, precio: precio }, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 updatedProduct = response.data;
@@ -320,24 +296,18 @@ exports.updatePromotionalDiscount = function (productId, descuento) { return __a
         }
     });
 }); };
-/* ==========  CLIENTES ========== */
-// Función para obtener la lista de clientes
-exports.getAllClients = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_12;
+// Función para actualizar el descuento promocional de un producto
+exports.updatePromotionalDiscount = function (productId, descuento) { return __awaiter(void 0, void 0, Promise, function () {
+    var response, updatedProduct, error_12;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].get("/clientes", config)];
+                return [4 /*yield*/, axios_1["default"].put("/productos/" + productId + "/update-descuento", { descuento: descuento }, getAuthHeaders())];
             case 1:
                 response = _a.sent();
-                return [2 /*return*/, response.data];
+                updatedProduct = response.data;
+                return [2 /*return*/, updatedProduct];
             case 2:
                 error_12 = _a.sent();
                 throw new Error(error_12.response.data.message);
@@ -345,20 +315,14 @@ exports.getAllClients = function () { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); };
-// Función para obtener un cliente por ID
-exports.getClientById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_13;
+/* ========== CLIENTES ========== */
+exports.getAllClients = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_13;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].get("/clientes/" + id, config)];
+                return [4 /*yield*/, axios_1["default"].get("/clientes", getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -369,20 +333,13 @@ exports.getClientById = function (id) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-// Función para obtener un cliente por ID
-exports.getClientByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_14;
+exports.getClientById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_14;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].get("/clientes/email/" + email, config)];
+                return [4 /*yield*/, axios_1["default"].get("/clientes/" + id, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -393,20 +350,13 @@ exports.getClientByEmail = function (email) { return __awaiter(void 0, void 0, v
         }
     });
 }); };
-// Función para crear un nuevo cliente
-exports.createClient = function (clientData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_15;
+exports.getClientByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_15;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].post("/clientes", clientData, config)];
+                return [4 /*yield*/, axios_1["default"].get("/clientes/email/" + email, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -417,20 +367,14 @@ exports.createClient = function (clientData) { return __awaiter(void 0, void 0, 
         }
     });
 }); };
-// Función para actualizar un cliente existente
-exports.updateClient = function (id, clientData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_16;
+// Función para crear un nuevo cliente
+exports.createClient = function (clientData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_16;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].put("/clientes/" + id, clientData, config)];
+                return [4 /*yield*/, axios_1["default"].post("/clientes", clientData, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -441,23 +385,16 @@ exports.updateClient = function (id, clientData) { return __awaiter(void 0, void
         }
     });
 }); };
-// Función para eliminar un cliente
-exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, error_17;
+exports.updateClient = function (id, clientData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_17;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"]["delete"]("/clientes/" + id, config)];
+                return [4 /*yield*/, axios_1["default"].put("/clientes/" + id, clientData, getAuthHeaders())];
             case 1:
-                _a.sent();
-                return [3 /*break*/, 3];
+                response = _a.sent();
+                return [2 /*return*/, response.data];
             case 2:
                 error_17 = _a.sent();
                 throw new Error(error_17.response.data.message);
@@ -465,24 +402,16 @@ exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); };
-/* ========== USUARIOS HABILITADOS PARA OPERAR POR UN CLIENTE ========== */
-// Función para obtener la lista de usuarios habilitados
-exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_18;
+exports.deleteClient = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_18;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].get("/clientes/usuarios-habilitados", config)];
+                return [4 /*yield*/, axios_1["default"]["delete"]("/clientes/" + id, getAuthHeaders())];
             case 1:
-                response = _a.sent();
-                return [2 /*return*/, response.data];
+                _a.sent();
+                return [3 /*break*/, 3];
             case 2:
                 error_18 = _a.sent();
                 throw new Error(error_18.response.data.message);
@@ -490,20 +419,14 @@ exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, v
         }
     });
 }); };
-// Función para obtener un usuario habilitado por ID
-exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_19;
+/* ========== USUARIOS HABILITADOS PARA OPERAR POR UN CLIENTE ========== */
+exports.getAllAuthorizedUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_19;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].get("/clientes/usuarios-habilitados/" + id, config)];
+                return [4 /*yield*/, axios_1["default"].get("/clientes/usuarios-habilitados", getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -514,20 +437,13 @@ exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0,
         }
     });
 }); };
-// Función para crear un nuevo usuario habilitado
-exports.createAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_20;
+exports.getAuthorizedUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_20;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].post("/clientes/" + id + "/usuarios-habilitados", userData, config)];
+                return [4 /*yield*/, axios_1["default"].get("/clientes/usuarios-habilitados/" + id, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -538,20 +454,13 @@ exports.createAuthorizedUser = function (id, userData) { return __awaiter(void 0
         }
     });
 }); };
-// Función para actualizar un usuario habilitado existente
-exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, response, error_21;
+exports.createAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_21;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"].put("/clientes/usuarios-habilitados/" + id, userData, config)];
+                return [4 /*yield*/, axios_1["default"].post("/clientes/" + id + "/usuarios-habilitados", userData, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -562,23 +471,18 @@ exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0
         }
     });
 }); };
-// Función para eliminar un usuario habilitado
-exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, config, error_22;
+exports.updateAuthorizedUser = function (id, userData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_22;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                token = get_from_localstorage_1.getFromLocalstorage("jwt");
-                config = {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                };
-                return [4 /*yield*/, axios_1["default"]["delete"]("/clientes/usuarios-habilitados/" + id, config)];
+                return [4 /*yield*/, axios_1["default"].put("/clientes/usuarios-habilitados/update-usuario-habilitado/" + id, userData, getAuthHeaders())];
             case 1:
-                _a.sent();
-                return [3 /*break*/, 3];
+                response = _a.sent();
+                console.log("userData Recibida: ", userData);
+                console.log("RsponseDAta: ", response.data);
+                return [2 /*return*/, response.data];
             case 2:
                 error_22 = _a.sent();
                 throw new Error(error_22.response.data.message);
@@ -586,17 +490,16 @@ exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, 
         }
     });
 }); };
-/* ==========  OBRAS ========== */
-exports.getAllObras = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var response, error_23;
+exports.deleteAuthorizedUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_23;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/obras")];
+                return [4 /*yield*/, axios_1["default"]["delete"]("/clientes/usuarios-habilitados/" + id, getAuthHeaders())];
             case 1:
-                response = _a.sent();
-                return [2 /*return*/, response.data];
+                _a.sent();
+                return [3 /*break*/, 3];
             case 2:
                 error_23 = _a.sent();
                 throw new Error(error_23.response.data.message);
@@ -604,13 +507,14 @@ exports.getAllObras = function () { return __awaiter(void 0, void 0, void 0, fun
         }
     });
 }); };
-exports.getEstadosObras = function () { return __awaiter(void 0, void 0, void 0, function () {
+/* ========== OBRAS ========== */
+exports.getAllObras = function () { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_24;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/obras/estados")];
+                return [4 /*yield*/, axios_1["default"].get("/obras", getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -621,13 +525,13 @@ exports.getEstadosObras = function () { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-exports.getObraById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getEstadosObras = function () { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_25;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/obras/" + id)];
+                return [4 /*yield*/, axios_1["default"].get("/obras/estados", getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -638,13 +542,13 @@ exports.getObraById = function (id) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); };
-exports.createObra = function (obraData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getObraById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_26;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/obras", obraData)];
+                return [4 /*yield*/, axios_1["default"].get("/obras/" + id, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -655,13 +559,13 @@ exports.createObra = function (obraData) { return __awaiter(void 0, void 0, void
         }
     });
 }); };
-exports.updateObra = function (id, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.createObra = function (obraData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_27;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].put("/obras/" + id, obraData)];
+                return [4 /*yield*/, axios_1["default"].post("/obras", obraData, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -672,16 +576,16 @@ exports.updateObra = function (id, obraData) { return __awaiter(void 0, void 0, 
         }
     });
 }); };
-exports.deleteObra = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_28;
+exports.updateObra = function (id, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_28;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"]["delete"]("/obras/" + id)];
+                return [4 /*yield*/, axios_1["default"].put("/obras/" + id, obraData, getAuthHeaders())];
             case 1:
-                _a.sent();
-                return [3 /*break*/, 3];
+                response = _a.sent();
+                return [2 /*return*/, response.data];
             case 2:
                 error_28 = _a.sent();
                 throw new Error(error_28.response.data.message);
@@ -689,17 +593,16 @@ exports.deleteObra = function (id) { return __awaiter(void 0, void 0, void 0, fu
         }
     });
 }); };
-/* ========== Obtener latitud y longitud pasando la dirección como body ========== */
-exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, Promise, function () {
-    var response, error_29;
+exports.deleteObra = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_29;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/obras/coordenadas", address)];
+                return [4 /*yield*/, axios_1["default"]["delete"]("/obras/" + id, getAuthHeaders())];
             case 1:
-                response = _a.sent();
-                return [2 /*return*/, response.data];
+                _a.sent();
+                return [3 /*break*/, 3];
             case 2:
                 error_29 = _a.sent();
                 throw new Error(error_29.response.data.message);
@@ -707,14 +610,14 @@ exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, P
         }
     });
 }); };
-/* ========== Aplicar reglas de negocio previo a asignar una obra ========== */
-exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, void 0, void 0, function () {
+/* ========== Obtener latitud y longitud pasando la dirección como body ========== */
+exports.getCoordinates = function (address) { return __awaiter(void 0, void 0, Promise, function () {
     var response, error_30;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/obras/cliente/validar-obra/" + idCliente, obraData)];
+                return [4 /*yield*/, axios_1["default"].post("/obras/coordenadas", address, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -725,14 +628,14 @@ exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, 
         }
     });
 }); };
-/* ========== GESTION DE PEDIDOS ========== */
-exports.getAllPedidos = function () { return __awaiter(void 0, void 0, void 0, function () {
+/* ========== Aplicar reglas de negocio previo a asignar una obra ========== */
+exports.validarObra = function (idCliente, obraData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_31;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/pedidos")];
+                return [4 /*yield*/, axios_1["default"].post("/obras/cliente/validar-obra/" + idCliente, obraData, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -743,13 +646,14 @@ exports.getAllPedidos = function () { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); };
-exports.getPedidoById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+/* ========== GESTION DE PEDIDOS ========== */
+exports.getAllPedidos = function () { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_32;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/pedidos/" + id)];
+                return [4 /*yield*/, axios_1["default"].get("/pedidos", getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -760,23 +664,40 @@ exports.getPedidoById = function (id) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getPedidoById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_33;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/pedidos", pedidoData)];
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/" + id, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
             case 2:
                 error_33 = _a.sent();
-                if (error_33.response && error_33.response.status === 400) {
-                    throw new Error(error_33.response.data);
+                throw new Error(error_33.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_34;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].post("/pedidos", pedidoData, getAuthHeaders())];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_34 = _a.sent();
+                if (error_34.response && error_34.response.status === 400) {
+                    throw new Error(error_34.response.data);
                 }
                 else {
-                    throw new Error("Error al procesar el pedido: " + error_33.message);
+                    throw new Error("Error al procesar el pedido: " + error_34.message);
                 }
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
@@ -784,32 +705,15 @@ exports.createPedido = function (pedidoData) { return __awaiter(void 0, void 0, 
     });
 }); };
 exports.deletePedido = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_34;
+    var error_35;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"]["delete"]("/pedidos/" + id)];
+                return [4 /*yield*/, axios_1["default"]["delete"]("/pedidos/" + id, getAuthHeaders())];
             case 1:
                 _a.sent();
                 return [3 /*break*/, 3];
-            case 2:
-                error_34 = _a.sent();
-                throw new Error(error_34.response.data.message);
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.addClienteToPedido = function (id, clienteData) { return __awaiter(void 0, void 0, void 0, function () {
-    var response, error_35;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/cliente", clienteData)];
-            case 1:
-                response = _a.sent();
-                return [2 /*return*/, response.data];
             case 2:
                 error_35 = _a.sent();
                 throw new Error(error_35.response.data.message);
@@ -817,13 +721,13 @@ exports.addClienteToPedido = function (id, clienteData) { return __awaiter(void 
         }
     });
 }); };
-exports.addProductoToDetalle = function (id, detalleData) { return __awaiter(void 0, void 0, void 0, function () {
+exports.addClienteToPedido = function (id, clienteData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_36;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/detalle", detalleData)];
+                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/cliente", clienteData, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -834,13 +738,13 @@ exports.addProductoToDetalle = function (id, detalleData) { return __awaiter(voi
         }
     });
 }); };
-exports.getClienteByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+exports.addProductoToDetalle = function (id, detalleData) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_37;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/pedidos/clientes/" + pedidoId)];
+                return [4 /*yield*/, axios_1["default"].post("/pedidos/" + id + "/detalle", detalleData, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -851,13 +755,13 @@ exports.getClienteByPedidoId = function (pedidoId) { return __awaiter(void 0, vo
         }
     });
 }); };
-exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getClienteByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_38;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].get("/pedidos/productos/" + pedidoId)];
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/clientes/" + pedidoId, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -868,13 +772,13 @@ exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, 
         }
     });
 }); };
-exports.newStatusOrder = function (pedidoId, orderHistory) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getProductosByPedidoId = function (pedidoId) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_39;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1["default"].put("/pedidos/" + pedidoId + "/estado", orderHistory)];
+                return [4 /*yield*/, axios_1["default"].get("/pedidos/productos/" + pedidoId, getAuthHeaders())];
             case 1:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
@@ -885,3 +789,29 @@ exports.newStatusOrder = function (pedidoId, orderHistory) { return __awaiter(vo
         }
     });
 }); };
+exports.newStatusOrder = function (pedidoId, orderHistory) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_40;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1["default"].put("/pedidos/" + pedidoId + "/estado", orderHistory, getAuthHeaders())];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_40 = _a.sent();
+                throw new Error(error_40.response.data.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+// Función para obtener el token
+var getAuthHeaders = function () {
+    var token = get_from_localstorage_1.getFromLocalstorage("jwt");
+    return {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    };
+};
