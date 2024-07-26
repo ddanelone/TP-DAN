@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@/hooks/use-user";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Product } from "@/interfaces/product-interface";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
@@ -12,30 +12,56 @@ import { ShoppingCart } from "lucide-react";
 import { BuyCart } from "./buy-cart";
 import { TableView } from "@/components/ui/table-view";
 import { ListView } from "@/components/ui/list-view";
+import SheetSearchProducts from "@/app/(vendedor)/abm/components/sheet-search-productos";
 
 const Items = () => {
   const user = useUser();
   const [items, setItems] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [cart, setCart] = useState<Product[]>([]); // Estado para el carrito
+  const [cart, setCart] = useState<Product[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
-  /* ========== Cargar los productos en la tabla ========== */
-  const getItems = async () => {
+  const getItems = useCallback(async () => {
     setIsLoading(true);
-
     try {
-      const res = await getProducts();
-      setItems(res);
+      const res = await getProducts(page, 12);
+      setItems((prevItems) => {
+        const newItems = [...prevItems, ...res.data];
+        const uniqueItems = Array.from(
+          new Set(newItems.map((item) => item.id))
+        ).map((id) => newItems.find((item) => item.id === id)!);
+        return uniqueItems;
+      });
+      setTotalPages(res.totalPages);
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [page]);
 
   useEffect(() => {
     if (user) getItems();
   }, [user]);
+
+  useEffect(() => {
+    if (page > 0) {
+      getItems();
+    }
+  }, [page, getItems]);
+
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    const bottom =
+      e.currentTarget.scrollHeight ===
+      e.currentTarget.scrollTop + e.currentTarget.clientHeight;
+    if (bottom && !isLoading && page < totalPages - 1) {
+      setPage((prevPage) => {
+        console.log("Setting page to:", prevPage + 1);
+        return prevPage + 1;
+      });
+    }
+  };
 
   /* ========== Agregar un item al carrito ========== */
   const addItemToCart = (item: Product) => {
@@ -55,11 +81,11 @@ const Items = () => {
   };
 
   /* ========== Lógica para concretar la compra ========== */
-  const handlePurchase = () => {
-    console.log("Comprando los productos en el carrito:", cart);
-    toast.success("Compra realizada correctamente", { duration: 2500 });
-    setCart([]);
-  };
+  //   const handlePurchase = () => {
+  //     console.log("Comprando los productos en el carrito:", cart);
+  //     toast.success("Compra realizada correctamente", { duration: 2500 });
+  //     setCart([]);
+  //   };
 
   return (
     <>
@@ -72,19 +98,37 @@ const Items = () => {
             </Badge>
           )}
         </div>
-        <BuyCart cartItems={cart} removeItem={removeItemFromCart}>
-          <Button className="px-6">
-            <span className="flex items-center">
-              Ver Carrito
-              <span className="inline-block bg-gray-200 rounded-full p-1 ml-2">
-                <ShoppingCart className="text-gray-600" size={20} />
+        <div>
+          {/* ========== Opción de filtrar productos ========== */}
+          <SheetSearchProducts
+            items={items}
+            setItems={setItems}
+            getItems={getItems}
+          ></SheetSearchProducts>
+          <BuyCart cartItems={cart} removeItem={removeItemFromCart}>
+            <Button className="px-6">
+              <span className="flex items-center">
+                Ver Carrito
+                <span className="inline-block bg-gray-200 rounded-full p-1 ml-2">
+                  <ShoppingCart className="text-gray-600" size={20} />
+                </span>
               </span>
-            </span>
-          </Button>
-        </BuyCart>
+            </Button>
+          </BuyCart>
+        </div>
       </div>
-      <TableView items={items} isLoading={isLoading} addItem={addItemToCart} />
-      <ListView items={items} isLoading={isLoading} addItem={addItemToCart} />
+      <TableView
+        items={items}
+        isLoading={isLoading}
+        addItem={addItemToCart}
+        handleScroll={handleScroll}
+      />
+      <ListView
+        items={items}
+        isLoading={isLoading}
+        addItem={addItemToCart}
+        handleScroll={handleScroll}
+      />
     </>
   );
 };

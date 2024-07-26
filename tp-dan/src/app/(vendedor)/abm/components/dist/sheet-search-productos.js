@@ -118,9 +118,7 @@ function SheetSearchProducts(_a) {
     };
     return (React.createElement(sheet_1.Sheet, { open: isSheetOpen, onOpenChange: setIsSheetOpen },
         React.createElement(sheet_1.SheetTrigger, { asChild: true },
-            React.createElement(button_1.Button, { className: "px-6", onClick: function () { return setIsSheetOpen(true); } },
-                isLoading ? "Filtrando..." : "Buscar Productos",
-                isLoading && React.createElement(lucide_react_1.LoaderCircle, { className: "mr-2 h-4 w-4 animate-spin" }))),
+            React.createElement(button_1.Button, { className: "px-6", onClick: function () { return setIsSheetOpen(true); } }, "Buscar Productos")),
         React.createElement(sheet_1.SheetContent, null,
             React.createElement(sheet_1.SheetHeader, null,
                 React.createElement(sheet_1.SheetTitle, null, "Criterios de b\u00FAsqueda"),
@@ -148,7 +146,7 @@ function SheetSearchProducts(_a) {
                 React.createElement(button_1.Button, { type: "button", onClick: closeWindows }, "Cancelar"),
                 React.createElement(button_1.Button, { type: "button", onClick: searchGo },
                     isLoading && (React.createElement(lucide_react_1.LoaderCircle, { className: "mr-2 h-4 w-4 animate-spin" })),
-                    "Aplicar Filtro")))));
+                    isLoading ? "Filtrando..." : "Aplicar Filtro")))));
 }
 exports.SheetSearchProducts = SheetSearchProducts;
 exports["default"] = SheetSearchProducts;

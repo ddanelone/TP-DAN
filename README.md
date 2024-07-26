@@ -55,7 +55,7 @@ localhost: 9100
 localhost:3030
 Contraseña y usuario por default: admin admin
 
-# JACOCO  (en los 3 microservicios Java)
+# JACOCO (en los 3 microservicios Java)
 
 Ejecutar mvn clean test en el ms-clientes y se creará la carpeta correspondiente /target/site
 Desde el explorador de archivos, entrar al index.html
@@ -132,7 +132,7 @@ Se utilizó Aspect para ello. Sin embargo, no hemos logrado validar el jwt gener
 
 # AOP
 
-Implementado en los ms-pedidos, ms-productos y ms-clientes, para la protección de rutas. Lamentablemente, la formad de validar en token no es la apropiada...
+Implementado en los ms-pedidos, ms-productos y ms-clientes, para la protección de rutas. Lamentablemente, la forma de validar en token no es la apropiada...
 
 # HAPROXY
 
@@ -143,3 +143,5 @@ pass: pass
 # Para ejecutar el Frontend:
 
 http://localhost/
+
+# INFINIT SCROLL EN EL FRONTEND Y "PAGEABLE" (BUENO, PEIYEJEABEL) EN JAVA (MS-PRODUCTOS).

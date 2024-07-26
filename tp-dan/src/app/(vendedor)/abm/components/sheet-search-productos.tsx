@@ -90,8 +90,7 @@ export function SheetSearchProducts({
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
       <SheetTrigger asChild>
         <Button className="px-6" onClick={() => setIsSheetOpen(true)}>
-          {isLoading ? "Filtrando..." : "Buscar Productos"}
-          {isLoading && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+          Buscar Productos
         </Button>
       </SheetTrigger>
       <SheetContent>
@@ -169,7 +168,7 @@ export function SheetSearchProducts({
             {isLoading && (
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Aplicar Filtro
+            {isLoading ? "Filtrando..." : "Aplicar Filtro"}
           </Button>
         </SheetFooter>
       </SheetContent>
