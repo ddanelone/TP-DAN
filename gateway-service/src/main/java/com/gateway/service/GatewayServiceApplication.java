@@ -29,7 +29,7 @@ public class GatewayServiceApplication {
    // }
 
    @Bean
-   public CorsWebFilter corsWebFilter() {
+   CorsWebFilter corsWebFilter() {
       CorsConfiguration config = new CorsConfiguration();
       config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
       config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
