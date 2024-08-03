@@ -1,8 +1,9 @@
 # tp-dan-2024# TP-DAN
 
-# RAMA A CLONAR: ASPECT
+# RAMA A CLONAR: MIXED
 
-1. Levantar el microservicio de RabittQM-Zipkin
+1. Levantar los microservicios de RabittQM / Zipkin ---> Recomendado, para que no tire errores en el log
+   Opcional: levantar Graylog y Prometheus
 2. Levantar el config-service (tiene las configuraciones remotas de los demás MS)
 3. eureka-service porque tiene que registrar a los demás microservicios
 4. gateway-service, es el proxy
@@ -14,6 +15,10 @@
 9. si alguna depenencia no se instala, npm i --force
 10. crear el contenedor del frontend; acceder: http://localhost (a través de Haproxy)
 11. sufra con gusto.
+
+# SPRING SECURITY ---> OBSERVACIÓN: hay un ms de usuarios no dockerizado en Java.
+
+Fue armado al final, sólo para probar cómo funciona Spring Security. Corré local sin problemas, se ha probado con Insomnia. Para implementarlo en lugar del ms-usuarios en Node.js, habría que agregar el consumo de mensajes y un servicio para crear un nuevo usuario desde los mensajes.
 
 # 4° MICROSERVICIO IMPLEMENTADO
 
