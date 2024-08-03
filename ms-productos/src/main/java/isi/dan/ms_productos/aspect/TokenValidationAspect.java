@@ -21,8 +21,8 @@ import org.springframework.http.HttpStatus;
 public class TokenValidationAspect {
 
    @Autowired
-   // private JwtUtil jwtUtility;
-   private JwtUtility jwtUtility;
+   private JwtUtil jwtUtility;
+   // private JwtUtility jwtUtility;
 
    private static final Logger log = LoggerFactory.getLogger(TokenValidationAspect.class);
 
@@ -35,15 +35,15 @@ public class TokenValidationAspect {
       log.info("Validando token: {}", token);
 
       try {
-         // boolean isValid = jwtUtility.validateToken(token);
-         // if (!isValid) {
+         boolean isValid = jwtUtility.validateToken(token);
+         if (!isValid) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT token");
+         }
+         // DecodedJWT isValid = jwtUtility.validateToken(token);
+         // if (isValid == null) {
          // throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT
          // token");
          // }
-         DecodedJWT isValid = jwtUtility.validateToken(token);
-         if (isValid == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT token");
-         }
 
          log.info("Token validado correctamente.");
       } catch (Exception e) {

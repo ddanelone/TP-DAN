@@ -1,7 +1,6 @@
 import UserModel from '#Schemas/user.schema.js';
 import { compare } from 'bcrypt';
 import { SignJWT } from 'jose';
-import { TextEncoder } from 'util';
 
 const userLoginController = async (req, res) => {
     const { email, password } = req.body;
