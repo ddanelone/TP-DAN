@@ -76,7 +76,11 @@ En los microservicios de Clientes y Productos: /target/surefire-reports
 
 En el microservicio de Clientes.
 
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8080/clientes/swagger-ui/index.html
+
+En el microservicio de Pedidos.
+
+http://localhost:8080/pedidos/swagger-ui/index.html
 
 # TEST IMPLEMENTADOS
 
