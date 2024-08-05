@@ -31,8 +31,14 @@ import io.micrometer.core.instrument.Gauge;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/pedidos")
+@Tag(name = "PedidoController", description = "Permite gestionar los pedidos - implementa Circuit Breaked")
 public class PedidoController {
 
    @Autowired
@@ -58,6 +64,13 @@ public class PedidoController {
    @Timed(value = "pedidos.create.timed", description = "Tiempo de creación de pedidos")
    @PostMapping
    @TokenValidation
+   @Operation(summary = "Crear un pedido", description = "Permite crear un nuevo pedido")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "Creado correctamente"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido"),
+         @ApiResponse(responseCode = "404", description = "Error en los datos proporcionados")
+   })
    public ResponseEntity<?> createPedido(@RequestBody Pedido pedido) {
       try {
          // Guardar el pedido con los detalles que tienen suficiente stock
@@ -74,6 +87,13 @@ public class PedidoController {
 
    @PutMapping("/{id}")
    @TokenValidation
+   @Operation(summary = "Actualizar un pedido", description = "Permite actualizar un pedido")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "Actualizado correctamente"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido"),
+         @ApiResponse(responseCode = "404", description = "El ID no existe")
+   })
    public ResponseEntity<?> updatePedido(@PathVariable String id, @RequestBody Pedido pedido) {
       try {
          Pedido updatedPedido = pedidoService.updatePedido(id, pedido);
@@ -88,6 +108,13 @@ public class PedidoController {
    @Timed(value = "pedidos.getAll.timed", description = "Tiempo de obtener todos los pedidos")
    @GetMapping
    @TokenValidation
+   @Operation(summary = "Obtener todos los pedidos", description = "Permite obtener la lista de todos los pedidos")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "Obras obtenidos correctamente"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido"),
+         @ApiResponse(responseCode = "404", description = "No se encontraron obras")
+   })
    public List<Pedido> getAllPedidos() {
       log.info("Listando todos los pedidos {}");
       return pedidoService.getAllPedidos();
@@ -96,6 +123,13 @@ public class PedidoController {
    @Timed(value = "pedidos.getById.timed", description = "Tiempo de obtener pedido por ID")
    @GetMapping("/{id}")
    @TokenValidation
+   @Operation(summary = "Obtener Pedido por ID", description = "Permite obtener un pedido por su ID")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "Pedido obtenido correctamente"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido"),
+         @ApiResponse(responseCode = "404", description = "El ID no existe")
+   })
    public ResponseEntity<Pedido> getPedidoById(@PathVariable String id) {
       Pedido pedido = pedidoService.getPedidoById(id);
       log.info("Pedido a buscar con el id: {} ", id);
@@ -105,6 +139,13 @@ public class PedidoController {
    @Timed(value = "pedidos.delete.timed", description = "Tiempo de eliminar pedido")
    @DeleteMapping("/{id}")
    @TokenValidation
+   @Operation(summary = "Eliminar un pedido", description = "Permite eliminar un pedido por su ID")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "204", description = "Eliminado correctamente"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido"),
+         @ApiResponse(responseCode = "404", description = "El ID no existe")
+   })
    public ResponseEntity<Void> deletePedido(@PathVariable String id) {
       pedidoService.deletePedido(id);
       pedidosCount.decrementAndGet();
@@ -115,6 +156,13 @@ public class PedidoController {
    // Método para actualizar el ESTADO del pedido
    @PutMapping("/{id}/estado")
    @TokenValidation
+   @Operation(summary = "Actualizar el Estado de un  pedido", description = "Permite actualizar el estado de un pedido")
+   @ApiResponses(value = {
+         @ApiResponse(responseCode = "200", description = "Actualizado correctamente"),
+         @ApiResponse(responseCode = "401", description = "No autorizado"),
+         @ApiResponse(responseCode = "403", description = "Prohibido"),
+         @ApiResponse(responseCode = "404", description = "El ID no existe")
+   })
    public ResponseEntity<Pedido> updatePedidoEstado(@PathVariable String id, @RequestBody EstadoCambioRequest request) {
       Pedido pedido = pedidoService.getPedidoById(id);
 

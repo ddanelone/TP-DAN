@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ObservationConfig {
    @Bean
-   public ObservationRegistry observationRegistry() {
+   ObservationRegistry observationRegistry() {
       return ObservationRegistry.create();
    }
 }

@@ -49,7 +49,10 @@ localhost:9090
 
 # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E
 
-Actualizar el token en el prometheus.yml porque tiene vigencia 7 días (hasta el 29/07/2024 inclusive)
+Actualizar el token en el prometheus.yml porque tiene vigencia 7 días (hasta el 11/08/2024 inclusive)
+
+Para verlo en actuator:
+http://localhost:8080/actuator/prometheus
 
 # NODE EXPORTER
 
@@ -72,6 +75,7 @@ En los microservicios de Clientes y Productos: /target/surefire-reports
 # SWAGGER (en los 3 microservicios Java)
 
 En el microservicio de Clientes.
+
 http://localhost:8080/swagger-ui/index.html
 
 # TEST IMPLEMENTADOS
