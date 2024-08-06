@@ -251,112 +251,114 @@ export function CreateUpdateBuilding({
             Gestionar la Obra con la siguiente información
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-2">
-            <div className="mb-3">
-              <Label htmlFor="calle">Calle</Label>
-              <Input
-                {...register("calle", {
-                  required: "La calle es obligatoria",
-                })}
-                id="calle"
-                placeholder="Calle pública"
-                type="text"
-                autoComplete="calle"
-              />
-              <p className="form-error">{errors.calle?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="altura">altura</Label>
-              <Input
-                {...register("altura", {
-                  required: "La altura es obligatoria",
-                })}
-                id="altura"
-                placeholder="1234"
-                type="text"
-                autoComplete="altura"
-              />
-              <p className="form-error">{errors.altura?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="dni">Ciudad</Label>
-              <Input
-                {...register("ciudad", {
-                  required: "La ciudad es obligatoria",
-                })}
-                id="ciudad"
-                placeholder="Ascochinga"
-                type="text"
-                autoComplete="ciudad"
-              />
-              <p className="form-error">{errors.ciudad?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="provincia">Provincia</Label>
-              <Input
-                {...register("provincia", {
-                  required: "La provincia es obligatoria",
-                })}
-                id="provincia"
-                placeholder="Córdoba"
-                type="text"
-                autoComplete="provincia"
-              />
-              <p className="form-error">{errors.provincia?.message}</p>
-            </div>
+        <div className="overflow-y-auto max-h-[80vh]">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-2">
+              <div className="mb-3">
+                <Label htmlFor="calle">Calle</Label>
+                <Input
+                  {...register("calle", {
+                    required: "La calle es obligatoria",
+                  })}
+                  id="calle"
+                  placeholder="Calle pública"
+                  type="text"
+                  autoComplete="calle"
+                />
+                <p className="form-error">{errors.calle?.message}</p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="altura">altura</Label>
+                <Input
+                  {...register("altura", {
+                    required: "La altura es obligatoria",
+                  })}
+                  id="altura"
+                  placeholder="1234"
+                  type="text"
+                  autoComplete="altura"
+                />
+                <p className="form-error">{errors.altura?.message}</p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="dni">Ciudad</Label>
+                <Input
+                  {...register("ciudad", {
+                    required: "La ciudad es obligatoria",
+                  })}
+                  id="ciudad"
+                  placeholder="Ascochinga"
+                  type="text"
+                  autoComplete="ciudad"
+                />
+                <p className="form-error">{errors.ciudad?.message}</p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="provincia">Provincia</Label>
+                <Input
+                  {...register("provincia", {
+                    required: "La provincia es obligatoria",
+                  })}
+                  id="provincia"
+                  placeholder="Córdoba"
+                  type="text"
+                  autoComplete="provincia"
+                />
+                <p className="form-error">{errors.provincia?.message}</p>
+              </div>
 
-            <div className="mb-3">
-              <Label htmlFor="presupuesto">Presupuesto</Label>
-              <Input
-                {...register("presupuesto", {
-                  required: "presupuesto",
-                })}
-                id="presupuesto"
-                placeholder="0.00"
-                step="0.01"
-                type="number"
-              />
-              <p className="form-error">{errors.presupuesto?.message}</p>
+              <div className="mb-3">
+                <Label htmlFor="presupuesto">Presupuesto</Label>
+                <Input
+                  {...register("presupuesto", {
+                    required: "presupuesto",
+                  })}
+                  id="presupuesto"
+                  placeholder="0.00"
+                  step="0.01"
+                  type="number"
+                />
+                <p className="form-error">{errors.presupuesto?.message}</p>
+              </div>
+
+              {/* ========== Estado ========== */}
+              <div className="mb-3">
+                <Label htmlFor="estado">Estado</Label>
+                <SelectStatus
+                  selectedStatus={form.watch("estado") || null}
+                  onStatusChange={handleStatusChange}
+                />
+                <p className="form-error">{errors.estado?.message}</p>
+              </div>
+
+              {/* Campo Tipo de Obra */}
+              <div className="mb-3">
+                <Label htmlFor="esRemodelacion">Tipo de Obra</Label>
+                <SelectType
+                  selectedType={form.watch("esRemodelacion")}
+                  onTypeChange={handleTypeChange}
+                />
+                <p className="form-error">{errors.esRemodelacion?.message}</p>
+              </div>
+
+              <DialogFooter>
+                <SheetSearchClient
+                  buildingToUpdate={buildingToUpdate}
+                  isLoading={isLoading}
+                  clients={clients}
+                  onSelectClient={handleClientSelect}
+                ></SheetSearchClient>
+
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading && (
+                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {buildingToUpdate ? "Actualizar" : "Crear"}
+                </Button>
+              </DialogFooter>
             </div>
-
-            {/* ========== Estado ========== */}
-            <div className="mb-3">
-              <Label htmlFor="estado">Estado</Label>
-              <SelectStatus
-                selectedStatus={form.watch("estado") || null}
-                onStatusChange={handleStatusChange}
-              />
-              <p className="form-error">{errors.estado?.message}</p>
-            </div>
-
-            {/* Campo Tipo de Obra */}
-            <div className="mb-3">
-              <Label htmlFor="esRemodelacion">Tipo de Obra</Label>
-              <SelectType
-                selectedType={form.watch("esRemodelacion")}
-                onTypeChange={handleTypeChange}
-              />
-              <p className="form-error">{errors.esRemodelacion?.message}</p>
-            </div>
-
-            <DialogFooter>
-              <SheetSearchClient
-                buildingToUpdate={buildingToUpdate}
-                isLoading={isLoading}
-                clients={clients}
-                onSelectClient={handleClientSelect}
-              ></SheetSearchClient>
-
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && (
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                {buildingToUpdate ? "Actualizar" : "Crear"}
-              </Button>
-            </DialogFooter>
-          </div>
-        </form>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

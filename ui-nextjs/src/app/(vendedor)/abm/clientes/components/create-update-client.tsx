@@ -148,108 +148,114 @@ export function CreateUpdateClient({
             Gestiona el cliente con la siguiente información
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-2">
-            <div className="mb-3">
-              <Label htmlFor="nombre">Nombre</Label>
-              <Input
-                {...register("nombre", {
-                  required: "El nombre es obligatorio",
-                })}
-                id="nombre"
-                placeholder="Juan Pérez"
-                type="text"
-                autoComplete="nombre"
-              />
-              <p className="form-error">{errors.nombre?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="apellido">Apellido</Label>
-              <Input
-                {...register("apellido", {
-                  required: "El apellido es obligatorio",
-                })}
-                id="apellido"
-                placeholder="Apellido"
-                type="text"
-                autoComplete="apellido"
-              />
-              <p className="form-error">{errors.apellido?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="dni">Documento</Label>
-              <Input
-                {...register("dni", {
-                  required: "El documento es obligatorio",
-                })}
-                id="dni"
-                placeholder="22222222"
-                type="text"
-                autoComplete="dni"
-              />
-              <p className="form-error">{errors.dni?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="correoElectronico">Correo Electrónico</Label>
-              <Input
-                {...register("correoElectronico", {
-                  required: "El correo es obligatorio",
-                })}
-                id="correoElectronico"
-                placeholder="nombre@ejemplo.com"
-                type="correoElectronico"
-                autoComplete="correoElectronico"
-              />
-              <p className="form-error">{errors.correoElectronico?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="cuit">Cuit</Label>
-              <Input
-                {...register("cuit")}
-                id="cuit"
-                placeholder="12-12345678-1"
-                type="text"
-              />
-              <p className="form-error">{errors.cuit?.message}</p>
-            </div>
-            <div className="mb-3">
-              <Label htmlFor="maximoDescubierto">Máximo Descubierto</Label>
-              <Input
-                {...register("maximoDescubierto", {
-                  required: "Máximo descubierto",
-                })}
-                id="maximoDescubierto"
-                placeholder="0.00"
-                step="0.01"
-                type="number"
-              />
-              <p className="form-error">{errors.maximoDescubierto?.message}</p>
-            </div>
+        <div className="overflow-y-auto max-h-[80vh]">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-2">
+              <div className="mb-3">
+                <Label htmlFor="nombre">Nombre</Label>
+                <Input
+                  {...register("nombre", {
+                    required: "El nombre es obligatorio",
+                  })}
+                  id="nombre"
+                  placeholder="Juan Pérez"
+                  type="text"
+                  autoComplete="nombre"
+                />
+                <p className="form-error">{errors.nombre?.message}</p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="apellido">Apellido</Label>
+                <Input
+                  {...register("apellido", {
+                    required: "El apellido es obligatorio",
+                  })}
+                  id="apellido"
+                  placeholder="Apellido"
+                  type="text"
+                  autoComplete="apellido"
+                />
+                <p className="form-error">{errors.apellido?.message}</p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="dni">Documento</Label>
+                <Input
+                  {...register("dni", {
+                    required: "El documento es obligatorio",
+                  })}
+                  id="dni"
+                  placeholder="22222222"
+                  type="text"
+                  autoComplete="dni"
+                />
+                <p className="form-error">{errors.dni?.message}</p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="correoElectronico">Correo Electrónico</Label>
+                <Input
+                  {...register("correoElectronico", {
+                    required: "El correo es obligatorio",
+                  })}
+                  id="correoElectronico"
+                  placeholder="nombre@ejemplo.com"
+                  type="correoElectronico"
+                  autoComplete="correoElectronico"
+                />
+                <p className="form-error">
+                  {errors.correoElectronico?.message}
+                </p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="cuit">Cuit</Label>
+                <Input
+                  {...register("cuit")}
+                  id="cuit"
+                  placeholder="12-12345678-1"
+                  type="text"
+                />
+                <p className="form-error">{errors.cuit?.message}</p>
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="maximoDescubierto">Máximo Descubierto</Label>
+                <Input
+                  {...register("maximoDescubierto", {
+                    required: "Máximo descubierto",
+                  })}
+                  id="maximoDescubierto"
+                  placeholder="0.00"
+                  step="0.01"
+                  type="number"
+                />
+                <p className="form-error">
+                  {errors.maximoDescubierto?.message}
+                </p>
+              </div>
 
-            <div className="mb-3">
-              <Label htmlFor="cantidad_obras">Máxima Cantidad Obras</Label>
-              <Input
-                {...register("cantidad_obras", {
-                  required: "Máxima cantidad de obras",
-                })}
-                id="cantidad_obras"
-                placeholder="0"
-                step="1"
-                type="number"
-              />
-              <p className="form-error">{errors.cantidad_obras?.message}</p>
-            </div>
+              <div className="mb-3">
+                <Label htmlFor="cantidad_obras">Máxima Cantidad Obras</Label>
+                <Input
+                  {...register("cantidad_obras", {
+                    required: "Máxima cantidad de obras",
+                  })}
+                  id="cantidad_obras"
+                  placeholder="0"
+                  step="1"
+                  type="number"
+                />
+                <p className="form-error">{errors.cantidad_obras?.message}</p>
+              </div>
 
-            <DialogFooter>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && (
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                {clientToUpdate ? "Actualizar" : "Crear"}
-              </Button>
-            </DialogFooter>
-          </div>
-        </form>
+              <DialogFooter>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading && (
+                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {clientToUpdate ? "Actualizar" : "Crear"}
+                </Button>
+              </DialogFooter>
+            </div>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

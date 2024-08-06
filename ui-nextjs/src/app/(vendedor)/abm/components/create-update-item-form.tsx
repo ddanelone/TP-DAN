@@ -147,105 +147,107 @@ export function CreateUpdateItem({
             Gestiona tus productos con la siguiente información
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-2">
-            {/* ========== Nombre ========== */}
-            <div className="mb-3">
-              <Label htmlFor="nombre">Nombre</Label>
-              <Input
-                {...register("nombre")}
-                id="nombre"
-                placeholder="Nombre del producto"
-                type="text"
-                autoComplete="nombre"
-              />
-              <p className="form-error">{errors.nombre?.message}</p>
-            </div>
-            {/* ========== Descripción ========== */}
-            <div className="mb-3">
-              <Label htmlFor="descripcion">Descripción</Label>
-              <Input
-                {...register("descripcion")}
-                id="descripcion"
-                placeholder="Descripción del producto"
-                type="text"
-                autoComplete="descripcion"
-              />
-              <p className="form-error">{errors.descripcion?.message}</p>
-            </div>
-            {/* ========== Categoria ========== */}
-            <div className="mb-3">
-              <Label htmlFor="categoria">Categoría</Label>
-              <SelectCategoryes
-                selectedCategory={form.watch("categoria") || null}
-                onCategoryChange={handleCategoryChange}
-              />
-              <p className="form-error">{errors.categoria?.message}</p>
-            </div>
+        <div className="overflow-y-auto max-h-[80vh]">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-2">
+              {/* ========== Nombre ========== */}
+              <div className="mb-3">
+                <Label htmlFor="nombre">Nombre</Label>
+                <Input
+                  {...register("nombre")}
+                  id="nombre"
+                  placeholder="Nombre del producto"
+                  type="text"
+                  autoComplete="nombre"
+                />
+                <p className="form-error">{errors.nombre?.message}</p>
+              </div>
+              {/* ========== Descripción ========== */}
+              <div className="mb-3">
+                <Label htmlFor="descripcion">Descripción</Label>
+                <Input
+                  {...register("descripcion")}
+                  id="descripcion"
+                  placeholder="Descripción del producto"
+                  type="text"
+                  autoComplete="descripcion"
+                />
+                <p className="form-error">{errors.descripcion?.message}</p>
+              </div>
+              {/* ========== Categoria ========== */}
+              <div className="mb-3">
+                <Label htmlFor="categoria">Categoría</Label>
+                <SelectCategoryes
+                  selectedCategory={form.watch("categoria") || null}
+                  onCategoryChange={handleCategoryChange}
+                />
+                <p className="form-error">{errors.categoria?.message}</p>
+              </div>
 
-            {/* ========== Precio ========== */}
-            <div className="mb-3">
-              <Label htmlFor="Precio">Precio</Label>
-              <Input
-                {...register("precio")}
-                id="precio"
-                placeholder="0.00"
-                step="0.01"
-                type="number"
-              />
-              <p className="form-error">{errors.precio?.message}</p>
-            </div>
+              {/* ========== Precio ========== */}
+              <div className="mb-3">
+                <Label htmlFor="Precio">Precio</Label>
+                <Input
+                  {...register("precio")}
+                  id="precio"
+                  placeholder="0.00"
+                  step="0.01"
+                  type="number"
+                />
+                <p className="form-error">{errors.precio?.message}</p>
+              </div>
 
-            {/* ========== Descuento ========== */}
-            <div className="mb-3">
-              <Label htmlFor="Descuento">Descuento</Label>
-              <Input
-                {...register("descuento")}
-                id="descuento"
-                placeholder="0.00"
-                step="0.01"
-                type="number"
-              />
-              <p className="form-error">{errors.descuento?.message}</p>
-            </div>
-            {/* ========== Stock ACtual ========== */}
-            <div className="mb-3">
-              <Label htmlFor="stockActual">Stock Actual</Label>
-              <Input
-                {...register("stockActual")}
-                id="stockActual"
-                placeholder="0"
-                step="1"
-                type="number"
-                min="0"
-              />
-              <p className="form-error">{errors.stockActual?.message} </p>
-            </div>
-            {/* ========== Stock Mínimo ========== */}
-            <div className="mb-3">
-              <Label htmlFor="stockMinimo">Stock Mínimo</Label>
-              <Input
-                {...register("stockMinimo")}
-                id="stockMinimo"
-                placeholder="0"
-                step="1"
-                type="number"
-                min="0"
-              />
-              <p className="form-error">{errors.stockMinimo?.message}</p>
-            </div>
+              {/* ========== Descuento ========== */}
+              <div className="mb-3">
+                <Label htmlFor="Descuento">Descuento</Label>
+                <Input
+                  {...register("descuento")}
+                  id="descuento"
+                  placeholder="0.00"
+                  step="0.01"
+                  type="number"
+                />
+                <p className="form-error">{errors.descuento?.message}</p>
+              </div>
+              {/* ========== Stock ACtual ========== */}
+              <div className="mb-3">
+                <Label htmlFor="stockActual">Stock Actual</Label>
+                <Input
+                  {...register("stockActual")}
+                  id="stockActual"
+                  placeholder="0"
+                  step="1"
+                  type="number"
+                  min="0"
+                />
+                <p className="form-error">{errors.stockActual?.message} </p>
+              </div>
+              {/* ========== Stock Mínimo ========== */}
+              <div className="mb-3">
+                <Label htmlFor="stockMinimo">Stock Mínimo</Label>
+                <Input
+                  {...register("stockMinimo")}
+                  id="stockMinimo"
+                  placeholder="0"
+                  step="1"
+                  type="number"
+                  min="0"
+                />
+                <p className="form-error">{errors.stockMinimo?.message}</p>
+              </div>
 
-            {/* ========== Botón de enviar ========== */}
-            <DialogFooter>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && (
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                {itemToUpdate ? "Actualizar" : "Crear"}
-              </Button>
-            </DialogFooter>
-          </div>
-        </form>
+              {/* ========== Botón de enviar ========== */}
+              <DialogFooter>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading && (
+                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {itemToUpdate ? "Actualizar" : "Crear"}
+                </Button>
+              </DialogFooter>
+            </div>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

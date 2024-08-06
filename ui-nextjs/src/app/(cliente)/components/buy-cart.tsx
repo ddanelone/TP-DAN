@@ -189,7 +189,7 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
             carrito.
           </DialogDescription>
         </DialogHeader>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-h-[80vh]">
           <table className="min-w-full bg-white">
             <thead>
               <tr>

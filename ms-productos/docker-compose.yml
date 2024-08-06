@@ -30,7 +30,7 @@ services:
   ms-productos-svc:
     image: ms-productos-svc:latest
     deploy:
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     #container_name: ms-productos-svc

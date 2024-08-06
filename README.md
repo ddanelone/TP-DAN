@@ -2,6 +2,8 @@
 
 # RAMA A CLONAR: MIXED
 
+# Crear la red backend-net --> docker network create backend-net
+
 1. Levantar los microservicios de RabittQM / Zipkin ---> Recomendado, para que no tire errores en el log
    Opcional: levantar Graylog y Prometheus
 2. Levantar el config-service (tiene las configuraciones remotas de los demás MS)
@@ -76,11 +78,11 @@ En los microservicios de Clientes y Productos: /target/surefire-reports
 
 En el microservicio de Clientes.
 
-http://localhost:8080/clientes/swagger-ui/index.html
+http://localhost:8080/swagger-ui/index.html
 
 En el microservicio de Pedidos.
 
-http://localhost:8080/pedidos/swagger-ui/index.html
+http://localhost:8080/swagger-ui/index.html
 
 # TEST IMPLEMENTADOS
 
@@ -105,7 +107,7 @@ http://localhost:8080/pedidos/swagger-ui/index.html
 
      -- ProductoController
 
-     --PedidosController
+     -- PedidosController
 
    - 3.2 Con RestControllerTest
      -- ClienteController
