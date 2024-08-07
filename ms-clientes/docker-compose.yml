@@ -31,7 +31,7 @@ services:
   ms-clientes-svc:
     image: ms-clientes-svc:latest
     deploy:
-      replicas: 4
+      replicas: 1
       restart_policy:
         condition: on-failure
     #container_name: ms-clientes-svc

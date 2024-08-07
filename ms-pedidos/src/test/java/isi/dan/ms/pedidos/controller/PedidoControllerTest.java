@@ -1,7 +1,7 @@
 package isi.dan.ms.pedidos.controller;
 
 import isi.dan.ms.pedidos.MessageSenderService;
-import isi.dan.ms.pedidos.aspect.JwtUtil;
+import isi.dan.ms.pedidos.aspect.JwtUtility;
 import isi.dan.ms.pedidos.conf.EmbeddedMongoConfig;
 import isi.dan.ms.pedidos.modelo.Estado;
 import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
@@ -35,6 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import java.util.ArrayList;
@@ -60,7 +63,7 @@ public class PedidoControllerTest {
    private MeterRegistry meterRegistry;
 
    @MockBean
-   private JwtUtil jwtUtil;
+   private JwtUtility jwtUtil;
 
    String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
 
@@ -69,7 +72,10 @@ public class PedidoControllerTest {
       mockMvc = MockMvcBuilders
             .standaloneSetup(new PedidoController(meterRegistry, pedidoService, messageSenderService)).build();
 
-      when(jwtUtil.validateToken(anyString())).thenReturn(true);
+      Claims claims = new DefaultClaims();
+      claims.setSubject("user");
+
+      when(jwtUtil.validateToken(anyString())).thenReturn(claims);
 
    }
 

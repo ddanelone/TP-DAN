@@ -1,4 +1,4 @@
-package isi.dan.ms_productos.aspect;
+package isi.dan.msclientes.aspect;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

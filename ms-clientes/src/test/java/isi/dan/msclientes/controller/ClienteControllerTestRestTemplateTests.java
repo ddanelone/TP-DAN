@@ -1,6 +1,6 @@
 package isi.dan.msclientes.controller;
 
-import isi.dan.msclientes.aspect.JwtUtil;
+import isi.dan.msclientes.aspect.JwtUtility;
 import isi.dan.msclientes.conf.MessageSenderService;
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.servicios.ClienteService;
@@ -18,6 +18,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -45,7 +48,7 @@ public class ClienteControllerTestRestTemplateTests {
    private Cliente cliente;
 
    @MockBean
-   private JwtUtil jwtUtil;
+   private JwtUtility jwtUtil;
 
    String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
 
@@ -61,7 +64,10 @@ public class ClienteControllerTestRestTemplateTests {
       // Guardar el cliente en la base de datos antes de cada prueba
       cliente = clienteService.save(cliente);
 
-      when(jwtUtil.validateToken(anyString())).thenReturn(true);
+      Claims claims = new DefaultClaims();
+      claims.setSubject("user");
+
+      when(jwtUtil.validateToken(anyString())).thenReturn(claims);
    }
 
    @AfterEach

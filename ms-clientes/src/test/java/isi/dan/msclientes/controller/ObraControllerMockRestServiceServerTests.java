@@ -10,6 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -26,7 +30,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.web.client.MockRestServiceServer;
 
-import isi.dan.msclientes.aspect.JwtUtil;
+import isi.dan.msclientes.aspect.JwtUtility;
 import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
 import isi.dan.msclientes.servicios.GeocodingService;
@@ -66,14 +70,18 @@ public class ObraControllerMockRestServiceServerTests {
    private MockRestServiceServer mockRestServiceServer;
 
    @MockBean
-   private JwtUtil jwtUtil;
+   private JwtUtility jwtUtil;
 
    String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
 
    @BeforeEach
    public void setUp() {
       mockRestServiceServer = MockRestServiceServer.createServer(restTemplate.getRestTemplate());
-      when(jwtUtil.validateToken(anyString())).thenReturn(true);
+
+      Claims claims = new DefaultClaims();
+      claims.setSubject("user");
+
+      when(jwtUtil.validateToken(anyString())).thenReturn(claims);
    }
 
    @Test

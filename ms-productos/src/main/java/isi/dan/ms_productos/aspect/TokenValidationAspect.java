@@ -10,7 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.Claims;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,7 @@ import org.springframework.http.HttpStatus;
 public class TokenValidationAspect {
 
    @Autowired
-   private JwtUtil jwtUtility;
-   // private JwtUtility jwtUtility;
+   private JwtUtility jwtUtility;
 
    private static final Logger log = LoggerFactory.getLogger(TokenValidationAspect.class);
 
@@ -35,20 +34,15 @@ public class TokenValidationAspect {
       log.info("Validando token: {}", token);
 
       try {
-         boolean isValid = jwtUtility.validateToken(token);
-         if (!isValid) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT token");
+         Claims claims = jwtUtility.validateToken(token);
+         if (claims == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT token --> TokenValidationAspect");
          }
-         // DecodedJWT isValid = jwtUtility.validateToken(token);
-         // if (isValid == null) {
-         // throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT
-         // token");
-         // }
 
-         log.info("Token validado correctamente.");
+         log.info("Token validado correctamente. Claims: {}", claims);
       } catch (Exception e) {
          log.error("Token inválido", e);
-         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT token");
+         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT token --> TokenValidationAspect");
       }
    }
 

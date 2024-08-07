@@ -40,6 +40,13 @@ const userLoginController = async (req, res) => {
             .setExpirationTime('7d')
             .sign(encoder.encode(process.env.JWT_PRIVATE_KEY));
 
+        const key = encoder.encode(process.env.JWT_PRIVATE_KEY);
+        console.log(
+            'Clave secreta SIN codificar: ',
+            process.env.JWT_PRIVATE_KEY
+        );
+        console.log('Clave secreta utilizada para HMAC256 (Node.js):', key);
+
         // Obtener datos del usuario (excepto contraseña)
         const userData = {
             id: existingUserByEmail.id,
