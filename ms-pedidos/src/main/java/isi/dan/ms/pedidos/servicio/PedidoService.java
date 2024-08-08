@@ -212,6 +212,8 @@ public class PedidoService {
          log.info("El cliente no tiene saldo suficiente para aceptar el pedido");
          pedido.setEstado(Estado.RECHAZADO);
          throw new RuntimeException("El cliente no tiene saldo suficiente para aceptar el pedido");
+      } else {
+         pedido.setEstado(Estado.ACEPTADO);
       }
    }
 
@@ -242,6 +244,7 @@ public class PedidoService {
       }
 
       if (!stockSuficienteParaTodosLosProductos) {
+         pedido.setEstado(Estado.CANCELADO);
          throw new RuntimeException("No hay suficiente stock para uno o más productos del pedido");
       }
    }
