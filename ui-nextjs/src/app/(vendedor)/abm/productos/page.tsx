@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "ABM de Productos",
 };
 
-const VenedorProducto = () => {
+const VendedorProducto = () => {
   return (
     <>
       <Navbar />
@@ -19,4 +19,4 @@ const VenedorProducto = () => {
   );
 };
 
-export default VenedorProducto;
+export default VendedorProducto;

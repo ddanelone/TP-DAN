@@ -13,13 +13,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import org.springframework.stereotype.Service;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 public class GeocodingService {
 

@@ -8,7 +8,6 @@ import { AuthorizedUser } from "@/interfaces/user-authorize.interface";
 import { Building } from "@/interfaces/building.interface";
 import { Coordinates } from "@/interfaces/coordinate.interface";
 import { Address } from "@/interfaces/address.interface";
-import { OrderHistory } from "@/interfaces/order-history.interface";
 
 /* ========== Usuarios  ========== */
 
