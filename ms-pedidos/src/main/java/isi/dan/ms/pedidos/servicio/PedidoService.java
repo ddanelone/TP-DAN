@@ -2,6 +2,9 @@ package isi.dan.ms.pedidos.servicio;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -182,7 +185,14 @@ public class PedidoService {
                String ids = String.join(",", productoIds);
                String url = "http://ms-productos/api/productos?ids=" + ids;
                try {
-                  return restTemplate.getForObject(url, List.class);
+                  ResponseEntity<List<Producto>> response = restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<Producto>>() {
+                        });
+                  log.info("Productos encontrados: {}", response.getBody());
+                  return response.getBody();
                } catch (Exception e) {
                   log.error("Error al obtener productos por IDs: {}", e.getMessage());
                   return null;

@@ -1,6 +1,6 @@
 # tp-dan-2024# TP-DAN
 
-# RAMA A CLONAR: MIXED
+# RAMA A CLONAR: MAIN
 
 # Crear la red backend-net --> docker network create backend-net
 
@@ -20,15 +20,23 @@
 
 # SPRING SECURITY ---> OBSERVACIÓN: hay un ms de usuarios no dockerizado en Java.
 
-Fue armado al final, sólo para probar cómo funciona Spring Security. Corré local sin problemas, se ha probado con Insomnia. Para implementarlo en lugar del ms-usuarios en Node.js, habría que agregar el consumo de mensajes y un servicio para crear un nuevo usuario desde los mensajes.
+Fue armado al final, sólo para probar cómo funciona Spring Security. Corre en el localhost sin problemas sin problemas. Tener en cuenta que funciona a la "antigüita: necesita postgresql funcionando en el equipo y hay que crear la base de datos.
 
 # 4° MICROSERVICIO IMPLEMENTADO
 
-ms-usuarios-svc en Node.js --> desde el "Crear cuenta" se crea un usuario con status de "Vendedor". Quedó así porque es razonable tener la posibilidad de autogestionar algún tipo de usuario que sea capaz de crear Clientes. No tiene demasiado sentido en la vida real, pero es práctico para el TP.
+ms-usuarios-svc en Node.js --> desde el "Crear cuenta" se crea un usuario con status de "Vendedor". Quedó así porque es razonable tener la posibilidad de autogestionar algún tipo de usuario que sea capaz de crear Clientes. No tiene demasiado sentido en la vida real, pero es práctico para el TP, dado que no tenemos una interfaz para administrar los usuarios (sí los clientes y, por supuesto, cada usuario puede actualizar su Profile, claro).
 
 # CREACIÓN DE "CLIENTES"
 
-Al darse de alta un "Cliente", el ms-clientes le envía un mensaje a la cola RabbitMQ que luego consume el ms-Usuarios, creando un nuevo usuario. La clave creada por omisión es: primer letra del nombre, en mayúsculas; primer letra del apellido, en minúsculas, y el número de Documento. Así, el usuario "Juan Pérez, DNI 12345678", tendrá como clave: "Jp12345678"
+Al darse de alta un "Cliente", el ms-clientes le envía un mensaje a la cola RabbitMQ que luego consume el ms-Usuarios, creando un nuevo usuario. La clave creada por omisión es:
+
+- primer letra del nombre, en mayúsculas;
+
+- primer letra del apellido, en minúsculas,
+
+- y el número de Documento.
+
+Así, el usuario "Juan Pérez, DNI 12345678", tendrá como clave: "Jp12345678"
 Se puede cambiar en el menú correspondiente.
 
 # EUREKA (MS registrados por el Discovery)

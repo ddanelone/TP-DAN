@@ -1,7 +1,5 @@
 package isi.dan.ms.pedidos.feignClients;
 
-import java.util.List;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +15,8 @@ public interface ClienteFeignClient {
    @PostMapping("api/clientes")
    Cliente guardarCliente(@RequestBody Cliente cliente);
 
-   @GetMapping("/cliente/pedido/{id}")
-   List<Cliente> getClientes(@PathVariable("id") String id);
+   @GetMapping("api/clientes/{id}")
+   Cliente getCliente(@PathVariable("id") Integer id);
 
    @GetMapping("/api/clientes/{id}/verificar-saldo")
    Boolean verificarSaldo(@PathVariable("id") Integer id, @RequestParam("montoTotal") double montoTotal);
