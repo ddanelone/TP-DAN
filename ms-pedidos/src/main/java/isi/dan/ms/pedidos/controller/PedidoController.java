@@ -11,6 +11,8 @@ import isi.dan.ms.pedidos.MessageSenderService;
 import isi.dan.ms.pedidos.aspect.TokenValidation;
 import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dto.StockUpdateDTO;
+import isi.dan.ms.pedidos.feignClients.ClienteFeignClient;
+import isi.dan.ms.pedidos.feignClients.ProductoFeignClient;
 import isi.dan.ms.pedidos.modelo.Cliente;
 import isi.dan.ms.pedidos.modelo.DetallePedido;
 import isi.dan.ms.pedidos.modelo.Estado;
@@ -46,6 +48,12 @@ public class PedidoController {
 
    @Autowired
    private MessageSenderService messageSenderService;
+
+   @Autowired
+   private ProductoFeignClient productoFeignClient;
+
+   @Autowired
+   private ClienteFeignClient clienteFeignClient;
 
    private static final Logger log = LoggerFactory.getLogger(PedidoController.class);
 
@@ -195,8 +203,10 @@ public class PedidoController {
    @TokenValidation
    @CircuitBreaker(name = "clientesCB", fallbackMethod = "fallbackSaveCliente")
    public ResponseEntity<Pedido> addClienteToPedido(@PathVariable String id, @RequestBody Cliente cliente) {
-      Pedido updatedPedido = pedidoService.addClienteToPedido(id, cliente);
-      log.info("Cliente agregado al pedido: {} ", cliente);
+      Cliente savedCliente = clienteFeignClient.guardarCliente(cliente);
+
+      Pedido updatedPedido = pedidoService.addClienteToPedido(id, savedCliente);
+      log.info("Cliente agregado al pedido: {} ", savedCliente);
       return ResponseEntity.ok(updatedPedido);
    }
 
@@ -205,6 +215,9 @@ public class PedidoController {
    @TokenValidation
    @CircuitBreaker(name = "productosCB", fallbackMethod = "fallbackSaveProducto")
    public ResponseEntity<Pedido> addProductoToDetalle(@PathVariable String id, @RequestBody DetallePedido detalle) {
+      Producto savedProducto = productoFeignClient.agregarProducto(detalle.getProducto());
+
+      detalle.setProducto(savedProducto);
       Pedido updatedPedido = pedidoService.addProductoToDetalle(id, detalle);
       log.info("Pedido después de agregar detalle: {} ", updatedPedido);
       return ResponseEntity.ok(updatedPedido);
@@ -217,17 +230,21 @@ public class PedidoController {
    public ResponseEntity<List<Producto>> getProductos(@PathVariable("pedidoId") String pedidoId) {
       Pedido pedido = pedidoService.getPedidoById(pedidoId);
       if (pedido == null) {
+         log.error("Pedido no encontrado: {} ", pedidoId);
          return ResponseEntity.notFound().build();
       }
-      List<String> productoIds = pedido.getDetalle().stream()
-            .map(detalle -> detalle.getProducto().getId().toString())
+      List<Long> productoIds = pedido.getDetalle().stream()
+            .map(detalle -> detalle.getProducto().getId())
             .collect(Collectors.toList());
-      List<Producto> productos = pedidoService.obtenerProductosPorIds(productoIds);
+
+      log.info("Lista de Productos productoIds: {}", productoIds.toString());
+
+      List<Producto> productos = productoFeignClient.getProductosByIds(productoIds);
       return ResponseEntity.ok(productos);
    }
 
    @Retry(name = "clientesRetry")
-   @GetMapping("/clientes/{pedidoId}")
+   @GetMapping("/cliente/{pedidoId}")
    @CircuitBreaker(name = "clientesCB", fallbackMethod = "fallbackGetClientes")
    @TokenValidation
    public ResponseEntity<Cliente> getCliente(@PathVariable("pedidoId") String pedidoId) {
@@ -235,16 +252,16 @@ public class PedidoController {
       if (pedido == null) {
          return ResponseEntity.notFound().build();
       }
-      Cliente cliente = pedidoService.obtenerClientePorPedidoId(pedido.getCliente().getId());
+      Cliente cliente = clienteFeignClient.getCliente(pedido.getCliente().getId());
       return ResponseEntity.ok(cliente);
    }
 
-   private ResponseEntity<Cliente> fallbackGetClientes(@PathVariable("pedidoId") String pedidoId, Throwable e) {
+   private ResponseEntity<Cliente> fallbackGetClientes(String pedidoId, Throwable e) {
       log.error("Error al obtener cliente para pedido {}: {}", pedidoId, e.getMessage());
       return new ResponseEntity("No se pudo obtener el cliente para el pedido", HttpStatus.OK);
    }
 
-   private ResponseEntity<List<Producto>> fallbackGetProductos(@PathVariable("pedidoId") String pedidoId, Throwable e) {
+   private ResponseEntity<List<Producto>> fallbackGetProductos(String pedidoId, Throwable e) {
       log.error("Error al obtener productos para pedido {}: {}", pedidoId, e.getMessage());
       return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
    }
@@ -258,7 +275,7 @@ public class PedidoController {
    private ResponseEntity<Pedido> fallbackSaveProducto(@PathVariable("id") String id,
          @RequestBody DetallePedido detalle, Throwable e) {
       log.error("Error al guardar producto para pedido {}: {}", id, e.getMessage());
-      return new ResponseEntity("No se pudo guardar el producto para el pedido", HttpStatus.OK);
+      return new ResponseEntity("No se pudo guardar los productos para el pedido", HttpStatus.OK);
    }
 
 }
