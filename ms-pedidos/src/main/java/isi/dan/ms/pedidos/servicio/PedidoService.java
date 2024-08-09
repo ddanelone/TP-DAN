@@ -206,12 +206,13 @@ public class PedidoService {
 
       double montoTotal = montoTotalPedidoActual + montoTotalPedidosExistentes;
       totalBigDecimal = BigDecimal.valueOf(montoTotal);
-      pedido.setTotal(totalBigDecimal);
+      pedido.setTotal(BigDecimal.valueOf(montoTotalPedidoActual));
 
       if (!clienteFeignClient.verificarSaldo(pedido.getCliente().getId(), montoTotal)) {
          log.info("El cliente no tiene saldo suficiente para aceptar el pedido");
          pedido.setEstado(Estado.RECHAZADO);
-         throw new RuntimeException("El cliente no tiene saldo suficiente para aceptar el pedido");
+         // throw new RuntimeException("El cliente no tiene saldo suficiente para aceptar
+         // el pedido");
       } else {
          pedido.setEstado(Estado.ACEPTADO);
       }
