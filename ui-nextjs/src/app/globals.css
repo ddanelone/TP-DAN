@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.bg-auth {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1000%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='%231e3266'%3e%3c/rect%3e%3cpath d='M1488 560L0 560 L0 351.46Q39.59 271.05%2c 120 310.65Q167.04 285.69%2c 192 332.72Q207.88 276.61%2c 264 292.49Q307.07 263.56%2c 336 306.63Q419 269.63%2c 456 352.63Q475.99 300.62%2c 528 320.61Q572.48 293.09%2c 600 337.57Q621.64 287.21%2c 672 308.85Q762.48 279.33%2c 792 369.8Q815.39 321.19%2c 864 344.58Q913.38 273.97%2c 984 323.35Q1036.17 255.52%2c 1104 307.69Q1154.66 286.35%2c 1176 337.01Q1247.88 288.88%2c 1296 360.76Q1299.29 292.05%2c 1368 295.34Q1433.87 241.2%2c 1488 307.07z' fill='%23182f5d'%3e%3c/path%3e%3cpath d='M1464 560L0 560 L0 369.57Q56.72 306.29%2c 120 363.01Q177.67 348.68%2c 192 406.35Q248.21 390.56%2c 264 446.78Q288.61 351.39%2c 384 376Q426.29 346.29%2c 456 388.59Q509.35 369.94%2c 528 423.29Q582.94 358.24%2c 648 413.18Q676.69 321.88%2c 768 350.57Q816.85 327.41%2c 840 376.26Q931.92 348.19%2c 960 440.11Q1010.49 370.6%2c 1080 421.08Q1109.21 378.29%2c 1152 407.51Q1206.96 342.48%2c 1272 397.44Q1332.23 385.67%2c 1344 445.9Q1396.72 378.62%2c 1464 431.34z' fill='%2325467d'%3e%3c/path%3e%3cpath d='M1560 560L0 560 L0 504.08Q36.3 420.38%2c 120 456.68Q164.32 429%2c 192 473.33Q234.06 395.38%2c 312 437.44Q365.9 371.34%2c 432 425.23Q521.87 395.1%2c 552 484.97Q626.62 439.59%2c 672 514.2Q692.73 414.93%2c 792 435.66Q835.47 407.13%2c 864 450.6Q918.25 432.86%2c 936 487.11Q962.88 393.99%2c 1056 420.86Q1100.47 393.34%2c 1128 437.81Q1225.26 415.07%2c 1248 512.33Q1282.57 426.9%2c 1368 461.47Q1394.77 416.24%2c 1440 443.01Q1528.63 411.63%2c 1560 500.26z' fill='%23356cb1'%3e%3c/path%3e%3cpath d='M1464 560L0 560 L0 511.89Q55.96 447.85%2c 120 503.8Q214.76 478.56%2c 240 573.32Q293.4 506.73%2c 360 560.13Q414.87 495%2c 480 549.87Q494.44 492.31%2c 552 506.74Q621.05 455.79%2c 672 524.83Q713.76 494.59%2c 744 536.35Q788.64 460.99%2c 864 505.63Q959.49 481.12%2c 984 576.61Q1000.73 473.34%2c 1104 490.06Q1172.67 438.73%2c 1224 507.4Q1298.64 462.04%2c 1344 536.68Q1397.37 470.05%2c 1464 523.42z' fill='white'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1000'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+}
+
+.form-error {
+  font-size: 13px;
+  color: red;
+  opacity: 70%;
+  margin-top: 5px;
+}

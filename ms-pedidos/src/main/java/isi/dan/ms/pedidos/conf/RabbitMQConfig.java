@@ -10,7 +10,7 @@ public class RabbitMQConfig {
     public static final String STOCK_UPDATE_QUEUE = "stock-update-queue";
 
     @Bean
-    public Queue stockUpdateQueue() {
+    Queue stockUpdateQueue() {
         return new Queue(STOCK_UPDATE_QUEUE, true);
     }
 }

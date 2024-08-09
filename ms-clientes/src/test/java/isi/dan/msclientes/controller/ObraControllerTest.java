@@ -2,102 +2,148 @@ package isi.dan.msclientes.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
+import isi.dan.msclientes.aspect.JwtUtility;
 import isi.dan.msclientes.model.Obra;
+import isi.dan.msclientes.servicios.GeocodingService;
 import isi.dan.msclientes.servicios.ObraService;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Optional;
-
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ObraController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ObraControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+   @Autowired
+   private MockMvc mockMvc;
 
-    @MockBean
-    private ObraService obraService;
+   @MockBean
+   private ObraService obraService;
 
-    private Obra obra;
+   @MockBean
+   private GeocodingService geocodingService;
 
-    @BeforeEach
-    void setUp() {
-        obra = new Obra();
-        obra.setId(1);
-        obra.setDireccion("Direccion Test Obra");
-        obra.setPresupuesto(BigDecimal.valueOf(100));
-    }
+   private Obra obra;
 
-    @Test
-    void testGetAll() throws Exception {
-        Mockito.when(obraService.findAll()).thenReturn(Collections.singletonList(obra));
+   @MockBean
+   private JwtUtility jwtUtil;
 
-        mockMvc.perform(get("/api/obras"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].direccion").value("Direccion Test Obra"));
-    }
+   String validJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjE2NzgzOTAsImV4cCI6MTcyMjI4MzE5MH0.4GsTGu0Yc9-irygXLqg6cCh05IES4VVHzgsxCp-y4cE";
 
-    @Test
-    void testGetById() throws Exception {
-        Mockito.when(obraService.findById(1)).thenReturn(Optional.of(obra));
+   @BeforeEach
+   void setUp() {
+      obra = new Obra();
+      obra.setId(1);
+      obra.setCalle("calle 1");
+      obra.setCiudad("ciudad 1");
+      obra.setAltura("1111");
+      obra.setProvincia("provincia 1");
+      obra.setPais("pais 1");
+      obra.setPresupuesto(BigDecimal.valueOf(100));
 
-        mockMvc.perform(get("/api/obras/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.direccion").value("Direccion Test Obra"));
-    }
+      Claims claims = new DefaultClaims();
+      claims.setSubject("user");
 
-    @Test
-    void testCreate() throws Exception {
-        Mockito.when(obraService.save(Mockito.any(Obra.class))).thenReturn(obra);
+      when(jwtUtil.validateToken(anyString())).thenReturn(claims);
+   }
 
-        mockMvc.perform(post("/api/obras")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(obra)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.direccion").value("Direccion Test Obra"));
-    }
+   @Test
+   void testGetAll() throws Exception {
+      Mockito.when(obraService.findAll()).thenReturn(Collections.singletonList(obra));
 
-    @Test
-    void testUpdate() throws Exception {
-        Mockito.when(obraService.findById(1)).thenReturn(Optional.of(obra));
-        Mockito.when(obraService.update(Mockito.any(Obra.class))).thenReturn(obra);
+      mockMvc.perform(get("/api/obras").header("Authorization", "Bearer "
+            + validJwtToken))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$[0].calle").value("calle 1"))
+            .andExpect(jsonPath("$[0].ciudad").value("ciudad 1"))
+            .andExpect(jsonPath("$[0].altura").value("1111"))
+            .andExpect(jsonPath("$[0].provincia").value("provincia 1"))
+            .andExpect(jsonPath("$[0].pais").value("pais 1"));
+   }
 
-        mockMvc.perform(put("/api/obras/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(obra)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.direccion").value("Direccion Test Obra"));
-    }
+   @Test
+   void testGetById() throws Exception {
+      Mockito.when(obraService.findById(1)).thenReturn(Optional.of(obra));
 
-    @Test
-    void testDelete() throws Exception {
-        Mockito.when(obraService.findById(1)).thenReturn(Optional.of(obra));
-        Mockito.doNothing().when(obraService).deleteById(1);
+      mockMvc.perform(get("/api/obras/1").header("Authorization", "Bearer "
+            + validJwtToken))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.calle").value("calle 1"))
+            .andExpect(jsonPath("$.ciudad").value("ciudad 1"))
+            .andExpect(jsonPath("$.altura").value("1111"))
+            .andExpect(jsonPath("$.provincia").value("provincia 1"))
+            .andExpect(jsonPath("$.pais").value("pais 1"));
+   }
 
-        mockMvc.perform(delete("/api/obras/1"))
-                .andExpect(status().isNoContent());
-    }
+   @Test
+   void testCreate() throws Exception {
+      Mockito.when(obraService.save(Mockito.any(Obra.class))).thenReturn(obra);
 
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+      mockMvc.perform(post("/api/obras")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(obra)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.calle").value("calle 1"))
+            .andExpect(jsonPath("$.ciudad").value("ciudad 1"))
+            .andExpect(jsonPath("$.altura").value("1111"))
+            .andExpect(jsonPath("$.provincia").value("provincia 1"))
+            .andExpect(jsonPath("$.pais").value("pais 1"));
+   }
+
+   @Test
+   void testUpdate() throws Exception {
+      Mockito.when(obraService.findById(1)).thenReturn(Optional.of(obra));
+      Mockito.when(obraService.update(Mockito.any(Obra.class))).thenReturn(obra);
+
+      mockMvc.perform(put("/api/obras/1")
+            .header("Authorization", "Bearer "
+                  + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(obra)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.calle").value("calle 1"))
+            .andExpect(jsonPath("$.ciudad").value("ciudad 1"))
+            .andExpect(jsonPath("$.altura").value("1111"))
+            .andExpect(jsonPath("$.provincia").value("provincia 1"))
+            .andExpect(jsonPath("$.pais").value("pais 1"));
+   }
+
+   @Test
+   void testDelete() throws Exception {
+      Mockito.when(obraService.findById(1)).thenReturn(Optional.of(obra));
+      Mockito.doNothing().when(obraService).deleteById(1);
+
+      mockMvc.perform(delete("/api/obras/1").header("Authorization", "Bearer "
+            + validJwtToken))
+            .andExpect(status().isNoContent());
+   }
+
+   private static String asJsonString(final Object obj) {
+      try {
+         return new ObjectMapper().writeValueAsString(obj);
+      } catch (Exception e) {
+         throw new RuntimeException(e);
+      }
+   }
 }
-

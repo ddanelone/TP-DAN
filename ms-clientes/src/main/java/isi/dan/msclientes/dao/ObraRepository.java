@@ -11,6 +11,7 @@ import isi.dan.msclientes.model.Obra;
 @Repository
 public interface ObraRepository extends JpaRepository<Obra, Integer> {
 
-    List<Obra> findByPresupuestoGreaterThanEqual(BigDecimal price);
-}
+   List<Obra> findByPresupuestoGreaterThanEqual(BigDecimal price);
 
+   List<Obra> findByClienteId(Integer clienteId);
+}

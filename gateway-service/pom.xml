@@ -18,12 +18,8 @@
       <java.version>17</java.version>
       <spring-cloud.version>2023.0.2</spring-cloud.version>
    </properties>
-   <dependencies>
 
-      <dependency>
-         <groupId>org.springframework.cloud</groupId>
-         <artifactId>spring-cloud-starter</artifactId>
-      </dependency>
+   <dependencies>
       <dependency>
          <groupId>org.springframework.cloud</groupId>
          <artifactId>spring-cloud-starter-config</artifactId>
@@ -44,19 +40,49 @@
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>org.projectlombok</groupId>
-         <artifactId>lombok</artifactId>
-         <optional>true</optional>
-      </dependency>
-      <dependency>
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-test</artifactId>
          <scope>test</scope>
       </dependency>
+
       <dependency>
          <groupId>org.springframework.cloud</groupId>
          <artifactId>spring-cloud-starter-bootstrap</artifactId>
       </dependency>
+
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-webflux</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-actuator</artifactId>
+      </dependency>
+
+      <!-- observabilidad -->
+      <dependency>
+         <groupId>io.micrometer</groupId>
+         <artifactId>micrometer-tracing-bridge-brave</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>io.micrometer</groupId>
+         <artifactId>micrometer-registry-prometheus</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>io.zipkin.reporter2</groupId>
+         <artifactId>zipkin-reporter-brave</artifactId>
+      </dependency>
+
+      <!-- Dependencias necesarias para implemntar a validacion de token JWT -->
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-security</artifactId>
+      </dependency>
+
+
 
    </dependencies>
    <dependencyManagement>

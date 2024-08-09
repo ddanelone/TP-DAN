@@ -1,0 +1,3 @@
+-Perdón, los pedidos no están guardado el estado al ser creados.
+
+-No veo el estado de los pedidos cuando entro como Cliente

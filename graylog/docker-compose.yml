@@ -1,0 +1,73 @@
+services:
+  graylog-mongo:
+    image: mongo
+    volumes:
+      - "graylog-mongo:/data/db"
+    restart: "on-failure"
+    networks:
+      - graylog
+
+  opensearch:
+    image: "opensearchproject/opensearch:2.12.0"
+    environment:
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "bootstrap.memory_lock=true"
+      - "discovery.type=single-node"
+      - "action.auto_create_index=false"
+      - "plugins.security.ssl.http.enabled=false"
+      - "plugins.security.disabled=true"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=+_8r#wliY
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    restart: "on-failure"
+    networks:
+      - graylog
+
+  graylog:
+    hostname: "server"
+    image: "graylog/graylog:6.0.0"
+    depends_on:
+      - graylog-mongo
+      - opensearch
+    entrypoint: "/usr/bin/tini -- wait-for-it elasticsearch:9200 -- /docker-entrypoint.sh"
+    environment:
+      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/config/node-id"
+      GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
+      GRAYLOG_ELASTICSEARCH_HOSTS: "http://opensearch:9200"
+      GRAYLOG_MONGODB_URI: "mongodb://graylog-mongo:27017/graylog"
+      GRAYLOG_REPORT_DISABLE_SANDBOX: "true"
+      GRAYLOG_PASSWORD_SECRET: "somepasswordpepper"
+      GRAYLOG_ROOT_PASSWORD_SHA2: "8ACC97451F99D3853132AEED39D59682681562E6C13F496CECC831DE7A49E194"
+      GRAYLOG_HTTP_EXTERNAL_URI: "http://127.0.0.1:9000/"
+    ports:
+      - "9800:9000/tcp" # UI
+      - "5044:5044/tcp" # Beats
+      - "5140:5140/tcp" # Syslog TCP
+      - "5140:5140/udp" # Syslog UDP
+      - "12201:12201/tcp" # GELF TCP
+      - "12201:12201/udp" # GELF UDP
+      - "13301:13301/tcp" # Forwarder data
+      - "13302:13302/tcp" # Forwarder config
+    volumes:
+      - "graylog_data:/usr/share/graylog/data/data"
+      - "graylog_journal:/usr/share/graylog/data/journal"
+    restart: "on-failure"
+    networks:
+      - backend-net
+      - graylog
+
+networks:
+  backend-net:
+    external: true
+  graylog:
+    driver: bridge
+
+volumes:
+  graylog-mongo:
+  graylog_data:
+  graylog_journal:

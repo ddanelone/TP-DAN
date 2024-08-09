@@ -8,12 +8,16 @@ import lombok.Data;
 
 @Data
 public class DetallePedido {
-    @Field("producto")
-    private Producto producto;
-    private Integer cantidad;
-    private BigDecimal precioUnitario;
-    private BigDecimal descuento;
-    private BigDecimal precioFinal;
+   @Field("producto")
+   private Producto producto;
+   private Integer cantidad;
+   private BigDecimal precioUnitario;
+   private BigDecimal descuento;
+   private BigDecimal precioFinal;
 
+   public DetallePedido(Producto producto, Integer cantidad) {
+      this.producto = producto;
+      this.cantidad = cantidad;
 
+   }
 }
