@@ -69,7 +69,6 @@ public class PedidoService {
       return Observation.createNotStarted("pedido.save", observationRegistry)
             .observe(() -> {
                validarYCalcularTotales(pedido);
-               verificarStockProductos(pedido);
                pedido.setNumeroPedido((int) sequenceGeneratorService.generateSequence(Pedido.SEQUENCE_NAME));
                pedido.setFecha(Instant.now());
                agregarEstadoInicial(pedido, Estado.ACEPTADO);
@@ -89,7 +88,6 @@ public class PedidoService {
                Pedido pedidoExistente = optionalPedidoExistente.get();
                actualizarCamposPermitidos(pedidoExistente, pedido);
                validarYCalcularTotales(pedidoExistente);
-               verificarStockProductos(pedidoExistente);
                agregarEstadoCambio(pedidoExistente, pedido.getEstado(), pedido.getUsuario());
                return pedidoRepository.save(pedidoExistente);
             });
@@ -152,11 +150,7 @@ public class PedidoService {
                      detalle.setProducto(savedProducto);
                      pedido.getDetalle().add(detalle);
                      Pedido updatedPedido = pedidoRepository.save(pedido);
-                     if (updatedPedido != null) {
-                        log.info("Pedido después de agregar detalle: {}", updatedPedido);
-                     } else {
-                        log.warn("No se pudo actualizar el pedido");
-                     }
+                     log.info("Pedido después de agregar detalle: {}", updatedPedido);
                      return updatedPedido;
                   } catch (Exception e) {
                      log.error("Error al agregar producto al detalle del pedido: {}", e.getMessage());
@@ -225,11 +219,11 @@ public class PedidoService {
          // el pedido");
       } else {
          pedido.setEstado(Estado.ACEPTADO);
+         verificarStockProductos(pedido);
       }
    }
 
    private void verificarStockProductos(Pedido pedido) {
-      boolean stockSuficienteParaTodosLosProductos = true;
 
       for (DetallePedido dp : pedido.getDetalle()) {
          Map<String, Integer> requestBody = new HashMap<>();
@@ -241,7 +235,6 @@ public class PedidoService {
             Boolean stockSuficiente = stockResponse.get("stockDisponible");
             if (!stockSuficiente) {
                log.info("No hay suficiente stock para el producto {}", dp.getProducto().getId());
-               stockSuficienteParaTodosLosProductos = false;
                pedido.setEstado(Estado.EN_PREPARACION);
             } else {
                productoFeignClient.actualizarStock(dp.getProducto().getId(), requestBody);
@@ -249,15 +242,10 @@ public class PedidoService {
          } catch (FeignException e) {
             log.error(String.format("Error verificando stock para el producto %d: %s", dp.getProducto().getId(),
                   e.getMessage()));
-            stockSuficienteParaTodosLosProductos = false;
             pedido.setEstado(Estado.EN_PREPARACION);
          }
       }
 
-      if (!stockSuficienteParaTodosLosProductos) {
-         pedido.setEstado(Estado.CANCELADO);
-         throw new RuntimeException("No hay suficiente stock para uno o más productos del pedido");
-      }
    }
 
    private void agregarEstadoInicial(Pedido pedido, Estado estado) {
