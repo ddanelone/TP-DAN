@@ -61,6 +61,7 @@ public class PedidoController {
 
    @Autowired
    public PedidoController(MeterRegistry meterRegistry, PedidoService pedidoService,
+
          MessageSenderService messageSenderService) {
       this.pedidoService = pedidoService;
       this.messageSenderService = messageSenderService;

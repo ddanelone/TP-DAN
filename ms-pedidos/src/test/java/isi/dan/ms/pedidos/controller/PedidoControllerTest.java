@@ -3,6 +3,8 @@ package isi.dan.ms.pedidos.controller;
 import isi.dan.ms.pedidos.MessageSenderService;
 import isi.dan.ms.pedidos.aspect.JwtUtility;
 import isi.dan.ms.pedidos.conf.EmbeddedMongoConfig;
+import isi.dan.ms.pedidos.feignClients.ClienteFeignClient;
+import isi.dan.ms.pedidos.feignClients.ProductoFeignClient;
 import isi.dan.ms.pedidos.modelo.Estado;
 import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
 import isi.dan.ms.pedidos.modelo.Pedido;
@@ -58,6 +60,12 @@ public class PedidoControllerTest {
 
    @MockBean
    private MessageSenderService messageSenderService;
+
+   @MockBean
+   private ProductoFeignClient productoFeignClient;
+
+   @MockBean
+   private ClienteFeignClient clienteFeignClient;
 
    @MockBean
    private MeterRegistry meterRegistry;
