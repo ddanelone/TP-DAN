@@ -5,9 +5,12 @@ import isi.dan.ms.pedidos.aspect.JwtUtility;
 import isi.dan.ms.pedidos.conf.EmbeddedMongoConfig;
 import isi.dan.ms.pedidos.feignClients.ClienteFeignClient;
 import isi.dan.ms.pedidos.feignClients.ProductoFeignClient;
+import isi.dan.ms.pedidos.modelo.Cliente;
+import isi.dan.ms.pedidos.modelo.DetallePedido;
 import isi.dan.ms.pedidos.modelo.Estado;
 import isi.dan.ms.pedidos.modelo.EstadoCambioRequest;
 import isi.dan.ms.pedidos.modelo.Pedido;
+import isi.dan.ms.pedidos.modelo.Producto;
 import isi.dan.ms.pedidos.servicio.PedidoService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +29,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,13 +45,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
 import io.micrometer.core.instrument.MeterRegistry;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @AutoConfigureMockMvc
 @WebMvcTest(controllers = PedidoController.class)
@@ -119,6 +130,165 @@ public class PedidoControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value("123"));
    }
+
+   // Nuevos test
+   @Test
+   public void testCreatePedido_ClienteSinSaldoSuficiente() throws Exception {
+      // Crear cliente
+      Cliente cliente = new Cliente();
+      cliente.setId(1);
+
+      // Crear detalles del pedido
+      Producto producto = new Producto();
+      producto.setId(1L);
+      producto.setPrecio(BigDecimal.valueOf(100));
+
+      DetallePedido detalle = new DetallePedido();
+      detalle.setProducto(producto);
+      detalle.setCantidad(2);
+      detalle.setPrecioUnitario(BigDecimal.valueOf(100));
+
+      // Crear pedido
+      Pedido pedido = new Pedido();
+      pedido.setCliente(cliente);
+      pedido.setDetalle(List.of(detalle));
+
+      // Simular que el cliente no tiene saldo suficiente
+      when(clienteFeignClient.verificarSaldo(eq(1), anyDouble())).thenReturn(false);
+
+      // Simular que el servicio lanza una RuntimeException
+      doThrow(new RuntimeException("El cliente no tiene saldo suficiente para aceptar el pedido"))
+            .when(pedidoService).savePedido(any(Pedido.class));
+
+      mockMvc.perform(post("/api/pedidos")
+            .header("Authorization", "Bearer " + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(pedido)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("El cliente no tiene saldo suficiente para aceptar el pedido"));
+   }
+
+   @Test
+   public void testCreatePedido_ClienteConSaldoSuficienteYStockDisponible() throws Exception {
+      // Crear cliente
+      Cliente cliente = new Cliente();
+      cliente.setId(1);
+
+      // Crear detalles del pedido
+      Producto producto = new Producto();
+      producto.setId(1L);
+      producto.setPrecio(BigDecimal.valueOf(100));
+
+      DetallePedido detalle = new DetallePedido();
+      detalle.setProducto(producto);
+      detalle.setCantidad(2);
+      detalle.setPrecioUnitario(BigDecimal.valueOf(100));
+
+      // Crear pedido
+      Pedido pedido = new Pedido();
+      pedido.setCliente(cliente);
+      pedido.setDetalle(List.of(detalle));
+
+      when(clienteFeignClient.verificarSaldo(eq(1), anyDouble())).thenReturn(true);
+      when(productoFeignClient.verificarStock(eq(1L), anyMap())).thenReturn(Map.of("stockDisponible", true));
+
+      // Mockear savePedido para devolver el pedido con estado ACEPTADO
+      when(pedidoService.savePedido(any(Pedido.class))).thenAnswer(invocation -> {
+         Pedido pedidoGuardado = invocation.getArgument(0);
+         pedidoGuardado.setEstado(Estado.ACEPTADO);
+         return pedidoGuardado;
+      });
+
+      mockMvc.perform(post("/api/pedidos")
+            .header("Authorization", "Bearer " + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(pedido)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value(Estado.ACEPTADO.name()));
+   }
+
+   @Test
+   public void testCreatePedido_ClienteConSaldoSuficienteSinStockSuficiente() throws Exception {
+      // Crear cliente
+      Cliente cliente = new Cliente();
+      cliente.setId(1);
+
+      // Crear detalles del pedido
+      Producto producto = new Producto();
+      producto.setId(1L);
+      producto.setPrecio(BigDecimal.valueOf(100));
+
+      DetallePedido detalle = new DetallePedido();
+      detalle.setProducto(producto);
+      detalle.setCantidad(2);
+      detalle.setPrecioUnitario(BigDecimal.valueOf(100));
+
+      // Crear pedido
+      Pedido pedido = new Pedido();
+      pedido.setCliente(cliente);
+      pedido.setDetalle(List.of(detalle));
+
+      when(clienteFeignClient.verificarSaldo(eq(1), anyDouble())).thenReturn(true);
+      when(productoFeignClient.verificarStock(eq(1L), anyMap())).thenReturn(Map.of("stockDisponible", false));
+
+      // Mockear savePedido para devolver el pedido con estado EN_PREPARACION
+      when(pedidoService.savePedido(any(Pedido.class))).thenAnswer(invocation -> {
+         Pedido pedidoGuardado = invocation.getArgument(0);
+         pedidoGuardado.setEstado(Estado.EN_PREPARACION);
+         return pedidoGuardado;
+      });
+
+      mockMvc.perform(post("/api/pedidos")
+            .header("Authorization", "Bearer " + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(pedido)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value(Estado.EN_PREPARACION.name()));
+   }
+
+   @Test
+   public void testUpdatePedido_ClienteConSaldo_StockInsuficiente() throws Exception {
+      // Crear cliente
+      Cliente cliente = new Cliente();
+      cliente.setId(1);
+
+      // Crear detalles del pedido con producto
+      Producto producto = new Producto();
+      producto.setId(1L);
+      producto.setPrecio(BigDecimal.valueOf(100));
+
+      DetallePedido detalle = new DetallePedido();
+      detalle.setProducto(producto);
+      detalle.setCantidad(2);
+      detalle.setPrecioUnitario(BigDecimal.valueOf(100));
+
+      // Crear pedido con detalles
+      Pedido pedido = new Pedido();
+      pedido.setId("123");
+      pedido.setCliente(cliente);
+      pedido.setDetalle(List.of(detalle));
+
+      // Configurar mocks
+      when(clienteFeignClient.verificarSaldo(eq(1), anyDouble())).thenReturn(true);
+      when(productoFeignClient.verificarStock(eq(1L), anyMap()))
+            .thenReturn(Collections.singletonMap("stockDisponible", false));
+
+      // Simular la lógica de actualización en el servicio
+      when(pedidoService.updatePedido(eq("123"), any(Pedido.class))).thenAnswer(invocation -> {
+         Pedido pedidoActualizado = invocation.getArgument(1);
+         pedidoActualizado.setEstado(Estado.EN_PREPARACION);
+         return pedidoActualizado;
+      });
+
+      mockMvc.perform(put("/api/pedidos/{id}", "123")
+            .header("Authorization", "Bearer " + validJwtToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(pedido)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value(Estado.EN_PREPARACION.name()));
+   }
+
+   // Fin de nuevos test
 
    @Test
    public void testGetAllPedidos() throws Exception {
