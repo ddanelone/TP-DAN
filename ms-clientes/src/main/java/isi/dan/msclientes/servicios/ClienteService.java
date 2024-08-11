@@ -19,8 +19,11 @@ import java.util.Optional;
 @Service
 public class ClienteService {
 
-   @Value("${cliente.maximo_descubierto.default}")
+   @Value("${maximo_descubierto_default}")
    private BigDecimal defaultMaximoDescubierto;
+
+   @Value("${cantidad_maxima_habilitadas}")
+   private int cantidadMaximaObrasHabilitadas;
 
    @Autowired
    private ClienteRepository clienteRepository;
@@ -53,9 +56,18 @@ public class ClienteService {
                   throw new ResourceNotFoundException(
                         "Cliente con correo electrónico ya existe");
                }
+
+               if (cliente.getCantidad_obras() == null || cliente.getCantidad_obras() == 0) {
+                  cliente.setCantidad_obras(cantidadMaximaObrasHabilitadas);
+               }
+
                if (cliente.getMaximoDescubierto() == null
                      || cliente.getMaximoDescubierto().compareTo(BigDecimal.ZERO) == 0) {
                   cliente.setMaximoDescubierto(defaultMaximoDescubierto);
+                  log.info("Se asignó el máximo descubierto por defecto al cliente: {} ", defaultMaximoDescubierto);
+               } else {
+                  log.info("No se asignó el máximo descubierto porque trajo un valor: {} ",
+                        cliente.getMaximoDescubierto());
                }
 
                return clienteRepository.save(cliente);

@@ -18,12 +18,16 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import isi.dan.msclientes.aspect.JwtUtility;
+import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
+import isi.dan.msclientes.servicios.ClienteService;
 import isi.dan.msclientes.servicios.ObraService;
 
 import java.math.BigDecimal;
@@ -42,6 +46,9 @@ public class ObraControllerTestRestTemplateTests {
    @Autowired
    private ObraService obraService;
 
+   @Autowired
+   private ClienteService clienteService;
+
    private Obra obra;
 
    @MockBean
@@ -51,7 +58,18 @@ public class ObraControllerTestRestTemplateTests {
 
    @BeforeEach
    void setUp() {
-      // Crear una obra nueva para usar en cada prueba
+      // Crear un cliente nuevo para usar en cada prueba
+      Cliente cliente = new Cliente();
+      cliente.setNombre("Cliente Test");
+      cliente.setApellido("Apellido Test");
+      cliente.setDni("12345678");
+      cliente.setCantidad_obras(3);
+      cliente.setCorreoElectronico("test@example.com");
+      cliente.setCuit("20-12345678-9");
+      cliente.setMaximoDescubierto(new BigDecimal("50000.00"));
+      clienteService.save(cliente);
+
+      // Asignar el cliente a la obra
       obra = new Obra();
       obra.setCalle("Calle Falsa");
       obra.setCiudad("Ciudad Test");
@@ -63,6 +81,7 @@ public class ObraControllerTestRestTemplateTests {
       obra.setLng(-58.381592f);
       obra.setPresupuesto(new BigDecimal("10000.00"));
       obra.setEstado(Estado.HABILITADA);
+      obra.setCliente(cliente);
 
       // Guardar la obra en la base de datos antes de cada prueba
       obra = obraService.save(obra);
@@ -71,17 +90,33 @@ public class ObraControllerTestRestTemplateTests {
       claims.setSubject("user");
 
       when(jwtUtil.validateToken(anyString())).thenReturn(claims);
+
    }
 
    @AfterEach
    void tearDown() {
-      // Limpiar la base de datos después de cada prueba
-      obraService.deleteById(obra.getId());
+      // Eliminar la obra y cliente creado después de cada prueba
+      if (obra != null && obra.getId() != null) {
+         obraService.deleteById(obra.getId());
+      }
+      if (obra.getCliente() != null) {
+         clienteService.deleteById(obra.getCliente().getId());
+      }
    }
 
    @Test
    @Order(1)
    void testCreate() {
+      Cliente cliente = new Cliente();
+      cliente.setNombre("Cliente Test 1");
+      cliente.setApellido("Apellido Test 1");
+      cliente.setDni("11234567");
+      cliente.setCantidad_obras(3);
+      cliente.setCorreoElectronico("test1@example.com");
+      cliente.setCuit("20-11234567-9");
+      cliente.setMaximoDescubierto(new BigDecimal("50000.00"));
+      clienteService.save(cliente);
+
       Obra newObra = new Obra();
       newObra.setCalle("Avenida Siempreviva");
       newObra.setCiudad("Ciudad Nueva");
@@ -92,18 +127,23 @@ public class ObraControllerTestRestTemplateTests {
       newObra.setLat(-34.603722f);
       newObra.setLng(-58.381592f);
       newObra.setPresupuesto(new BigDecimal("20000.00"));
-      newObra.setEstado(Estado.PENDIENTE);
+      newObra.setEstado(Estado.HABILITADA);
+      newObra.setCliente(cliente);
 
       HttpHeaders headers = new HttpHeaders();
       headers.setBearerAuth(validJwtToken);
       headers.setContentType(MediaType.APPLICATION_JSON);
       HttpEntity<Obra> request = new HttpEntity<>(newObra, headers);
 
-      ResponseEntity<Obra> response = restTemplate.postForEntity(getUrl("/api/obras"), request, Obra.class);
+      ResponseEntity<Obra> response = restTemplate.exchange(getUrl("/api/obras"), HttpMethod.POST,
+            request, Obra.class);
 
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
       assertThat(response.getBody()).isNotNull();
       assertThat(response.getBody().getCalle()).isEqualTo("Avenida Siempreviva");
+
+      // Verificar estado actualizado
+      assertThat(response.getBody().getEstado()).isEqualTo(Estado.HABILITADA);
    }
 
    @Test

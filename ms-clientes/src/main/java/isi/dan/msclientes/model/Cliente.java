@@ -82,8 +82,6 @@ public class Cliente {
       int result = 1;
       result = prime * result + ((id == null) ? 0 : id.hashCode());
       result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
-      // No incluir los usuarios habilitados en el hashCode para evitar la recursión
-      // infinita
       return result;
    }
 
