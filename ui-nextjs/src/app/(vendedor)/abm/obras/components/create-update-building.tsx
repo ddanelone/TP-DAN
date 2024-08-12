@@ -114,10 +114,10 @@ export function CreateUpdateBuilding({
   const getCoordinatesFromAPI = async (address: Address) => {
     try {
       const coordinates = await getCoordinates(address);
-      console.log("Coordinates: ", coordinates);
+      console.log("Coordenadas: ", coordinates);
       return coordinates;
     } catch (error) {
-      console.error("Error getting coordinates: ", error);
+      console.error("Error recuperando las coordenadas: ", error);
       throw error;
     }
   };
@@ -132,7 +132,7 @@ export function CreateUpdateBuilding({
       console.log("Response: ", response);
       return response;
     } catch (error) {
-      console.error("Error validating building status: ", error);
+      console.error("Error validando el estado de la obra: ", error);
       throw error;
     }
   };
@@ -140,7 +140,7 @@ export function CreateUpdateBuilding({
   const onSubmit = async (building: z.infer<typeof formSchema>) => {
     if (!selectedClient) {
       toast.error("Debe seleccionar un cliente antes de guardar la obra.", {
-        duration: 3000,
+        duration: 2500,
       });
       return;
     }
@@ -164,6 +164,9 @@ export function CreateUpdateBuilding({
         cliente: selectedClient,
       };
 
+      /*
+      // Lo comento a este bloque porque la validación la hace el propio backend
+      
       const validationResponse = await buildingStatusValidator(
         selectedClient.id,
         newBuilding
@@ -172,9 +175,10 @@ export function CreateUpdateBuilding({
       console.log("Validation response: ", validationResponse);
 
       if (validationResponse.status !== 200) {
-        toast.error(validationResponse.error, { duration: 3000 });
+        toast.error(validationResponse.error, { duration: 2000 });
         return;
       }
+      */
 
       if (buildingToUpdate) {
         await updateBuilding(newBuilding);
@@ -182,9 +186,9 @@ export function CreateUpdateBuilding({
         await createBuilding(newBuilding);
       }
     } catch (error) {
-      console.error("Error creating or updating building: ", error);
+      console.error("Error creando o actualizando la obra: ", error);
       toast.error("¡¡¡ " + error + " !!!", {
-        duration: 4000,
+        duration: 2500,
       });
     } finally {
       setIsLoading(false);

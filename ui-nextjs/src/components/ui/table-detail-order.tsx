@@ -44,7 +44,6 @@ export function TableOrderDetail({
             <TableHead>Descripcion</TableHead>
             <TableHead>Precio unitario</TableHead>
             <TableHead>Descuento</TableHead>
-            <TableHead>Precio final</TableHead>
             <TableHead>Total</TableHead>
           </TableRow>
         </TableHeader>
@@ -59,9 +58,6 @@ export function TableOrderDetail({
                 <TableCell>{formatPrice(detail.precioUnitario)}</TableCell>
                 <TableCell>{formatPrice(detail.descuento)}</TableCell>
                 <TableCell>{formatPrice(detail.precioFinal)}</TableCell>
-                <TableCell>
-                  {formatPrice(detail.precioFinal * detail.cantidad)}
-                </TableCell>
               </TableRow>
             ))
           ) : !isLoading && orderDetail.length === 0 ? (
@@ -84,6 +80,8 @@ export function TableOrderDetail({
                 <TableCell colSpan={7}>
                   <div className="flex justify-between">
                     <Skeleton className="w-16 h-16 rounded-xl" />
+                    <Skeleton className="w-full h-4 mx-2" />
+                    <Skeleton className="w-full h-4 mx-2" />
                     <Skeleton className="w-full h-4 mx-2" />
                     <Skeleton className="w-full h-4 mx-2" />
                     <Skeleton className="w-full h-4 mx-2" />

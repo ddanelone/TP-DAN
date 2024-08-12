@@ -63,7 +63,9 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
 
   const handlePurchase = async () => {
     if (cartItems.length === 0) {
-      toast.error("El carrito está vacío. No se puede realizar la compra.");
+      toast.error("El carrito está vacío. No se puede realizar la compra.", {
+        duration: 2500,
+      });
       return;
     }
 
@@ -72,14 +74,19 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
       "selectedBuilding" || "null"
     ) as Building | null;
     if (!selectedBuilding) {
-      toast.error("Debe elegir una obra a la cual enviar el pedido.");
+      toast.error("Debe elegir una obra a la cual enviar el pedido.", {
+        duration: 2500,
+      });
       router.push("/obras");
       return;
     }
 
     if (!client) {
       toast.error(
-        "No se pudo recuperar los datos del cliente. Inténtalo nuevamente."
+        "No se pudo recuperar los datos del cliente. Inténtalo nuevamente.",
+        {
+          duration: 2500,
+        }
       );
       return;
     } else {
@@ -101,13 +108,25 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
         try {
           await checkStockProducto(item.id, item.cantidad!);
         } catch (error: any) {
-          toast.error(error.message, { duration: 2500 });
+          toast.error(error.message, { duration: 1000 });
           setIsLoading(false);
 
           /* ========== Le saco el return, para que avise que no hay stock pero que procese igual ========== */
           //return;
         }
       }
+
+      const totalSinDescuento = cartItems.reduce(
+        (acc, item) => acc + item.precio * item.cantidad!,
+        0
+      );
+
+      const totalConDescuento = cartItems.reduce(
+        (acc, item) => acc + (item.precio - item.descuento) * item.cantidad!,
+        0
+      );
+
+      console.log({ totalSinDescuento, totalConDescuento });
 
       const newOrder: Order = {
         fecha: new Date(),
@@ -135,17 +154,13 @@ export function BuyCart({ children, cartItems, removeItem }: BuyCartProps) {
           presupuesto: selectedBuilding.presupuesto,
           estado: selectedBuilding.estado,
         },
-        total: cartItems.reduce(
-          (acc, item) => acc + item.precio * item.cantidad!,
-          0
-        ),
-        //estado: Status.EN_PREPARACION,
+        total: totalConDescuento,
         detalle: cartItems.map((item) => ({
           cantidad: item.cantidad!,
           producto: item as Product,
           precioUnitario: item.precio,
           descuento: item.descuento,
-          precioFinal: item.precio * item.cantidad!,
+          precioFinal: (item.precio - item.descuento) * item.cantidad!,
         })),
         historialEstado: [],
       };
