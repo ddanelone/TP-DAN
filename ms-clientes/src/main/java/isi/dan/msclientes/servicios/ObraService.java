@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import isi.dan.msclientes.dao.ObraRepository;
+import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.model.Estado;
 import isi.dan.msclientes.model.Obra;
 
@@ -41,11 +42,13 @@ public class ObraService {
    }
 
    public Obra save(Obra obra) {
+      validarEstadoObra(obra);
       return Observation.createNotStarted("obra.save", observationRegistry)
             .observe(() -> obraRepository.save(obra));
    }
 
    public Obra update(Obra obra) {
+      validarEstadoObra(obra);
       return Observation.createNotStarted("obra.update", observationRegistry)
             .observe(() -> obraRepository.save(obra));
    }
@@ -97,6 +100,21 @@ public class ObraService {
                response.put("message", "Obra validada");
                return ResponseEntity.ok(response);
             });
+   }
+
+   public void validarEstadoObra(Obra obra) {
+      Cliente cliente = obra.getCliente();
+      List<Obra> obrasCliente = obraRepository.findByClienteId(cliente.getId());
+
+      if (obra.getEstado() == Estado.HABILITADA) {
+         long obrasHabilitadasCount = obrasCliente.stream()
+               .filter(o -> o.getEstado() == Estado.HABILITADA)
+               .count();
+
+         if (obrasHabilitadasCount >= cliente.getCantidad_obras()) {
+            obra.setEstado(Estado.PENDIENTE);
+         }
+      }
    }
 
 }

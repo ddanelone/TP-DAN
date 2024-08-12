@@ -36,9 +36,6 @@ public class ObraController {
    @Autowired
    private GeocodingService geocodingService;
 
-   @Value("${obras.cantidad_maxima_habilitadas}")
-   private int cantidadMaximaObrasHabilitadas;
-
    private static final Logger log = LoggerFactory.getLogger(ObraController.class);
 
    @Timed(value = "obra.getAll.time", description = "Time taken to return all obras")
@@ -193,6 +190,6 @@ public class ObraController {
    @TokenValidation
    public ResponseEntity<Map<String, Object>> validarObra(@PathVariable Integer idCliente, @RequestBody Obra obra) {
       log.info("Validating obra for cliente with id: {}", idCliente);
-      return obraService.validarObra(idCliente, obra, cantidadMaximaObrasHabilitadas);
+      return obraService.validarObra(idCliente, obra, obra.getCliente().getCantidad_obras());
    }
 }
