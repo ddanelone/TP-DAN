@@ -139,7 +139,7 @@ export const searchProducts = async (
 
 // Función para obtener un producto específico por su ID
 export const getProductById = async (
-  productId: number
+  productId?: number
 ): Promise<Product | null> => {
   try {
     const response = await api.get(`/productos/${productId}`, getAuthHeaders());

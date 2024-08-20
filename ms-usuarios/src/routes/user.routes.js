@@ -57,9 +57,10 @@ userRouter.delete(
     userUnregisterController
 );
 
+// Nuevo endpoint para eliminar un usuario por id (lo agregué a los fines prácticos)
 userRouter.delete('/:id', userJWTDTO, userDeleteController);
 
-// Nuevo endpoint para validar el token
+// Nuevo endpoint para validar el token ---> Una crotera cósmica
 userRouter.get('/validate', validateTokenController);
 
 export default userRouter;

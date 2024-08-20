@@ -16,19 +16,19 @@ export const nameDTOSchema = Type.String({
 });
 
 export const surnameDTOSchema = Type.String({
-    minLength: 4,
+    minLength: 3,
     maxLength: 50,
     errorMessage: {
-        minLength: 'Apellido debe tener al menos 4 caracteres de longitud',
+        minLength: 'Apellido debe tener al menos 3 caracteres de longitud',
         maxLength: 'Apellido debe tener como máximo 50 caracteres de longitud',
     },
 });
 
 export const dniDTOSchema = Type.String({
-    minLength: 6,
+    minLength: 8,
     maxLength: 10,
     errorMessage: {
-        minLength: 'El DNI debe tener al menos 6 dígitos de longitud',
+        minLength: 'El DNI debe tener al menos 8 dígitos de longitud',
         maxLength: 'El DNI debe tener como máximo 10 dígitos de longitud',
     },
 });

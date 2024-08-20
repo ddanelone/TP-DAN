@@ -21,14 +21,14 @@ function SignUpForm() {
     name: z.string().min(2, {
       message: "Nombre debe tener al menos 2 caracteres de longitud",
     }),
-    surname: z.string().min(4, {
-      message: "Apellido debe tener al menos 4 caracteres de longitud",
+    surname: z.string().min(3, {
+      message: "Apellido debe tener al menos 3 caracteres de longitud",
     }),
     dni: z
       .string()
-      .min(1, {
+      .min(8, {
         message:
-          "El número de documento no es válido, debe ser un número entero",
+          "El número de documento no es válido, debe ser un número entero y tener 8 dígitos",
       })
       .regex(/^\d+$/, {
         message: "El número de documento debe contener solo dígitos",

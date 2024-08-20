@@ -9,7 +9,7 @@ import { CirclePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 
-import { deleteProductById, getProducts } from "@/lib/auth";
+import { deleteProductById, getProductById, getProducts } from "@/lib/auth";
 import { TableView } from "@/components/ui/table-view";
 import ListView from "@/components/ui/list-view";
 import SheetSearchProducts from "./sheet-search-productos";
@@ -17,29 +17,63 @@ import SheetSearchProducts from "./sheet-search-productos";
 function Items() {
   const user = useUser();
   const [items, setItems] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasFetched, setHasFetched] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
 
-  const getItems = useCallback(async () => {
+  const getItems = useCallback(
+    async (resetPage = false) => {
+      setIsLoading(true);
+      try {
+        const currentPage = resetPage ? 0 : page;
+        const res = await getProducts(currentPage, 12);
+
+        if (currentPage === 0) {
+          setItems(res.data);
+        } else {
+          setItems((prevItems) => {
+            const newItems = [...prevItems, ...res.data];
+            const uniqueItems = Array.from(
+              new Set(newItems.map((item) => item.id))
+            ).map((id) => newItems.find((item) => item.id === id)!);
+            return uniqueItems;
+          });
+        }
+
+        setPage(currentPage);
+        setTotalPages(res.totalPages);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [page]
+  );
+
+  const updateItem = async (item: Product) => {
     setIsLoading(true);
     try {
-      const res = await getProducts(page, 12);
-      setItems((prevItems) => {
-        const newItems = [...prevItems, ...res.data];
-        const uniqueItems = Array.from(
-          new Set(newItems.map((item) => item.id))
-        ).map((id) => newItems.find((item) => item.id === id)!);
-        return uniqueItems;
-      });
-      setTotalPages(res.totalPages);
-    } catch (error) {
-      console.error(error);
+      const updatedItem = await getProductById(item.id);
+
+      if (updatedItem) {
+        setItems((prevItems) =>
+          prevItems.map((i) => (i.id === item.id ? updatedItem : i))
+        );
+        toast.success("Item actualizado correctamente");
+      } else {
+        toast.error(
+          "Error al actualizar el item: no se encontró el producto actualizado",
+          { duration: 2500 }
+        );
+      }
+    } catch (error: any) {
+      toast.error(error.message, { duration: 2500 });
     } finally {
       setIsLoading(false);
     }
-  }, [page]);
+  };
 
   const deleteItem = async (item: Product) => {
     setIsLoading(true);
@@ -56,12 +90,13 @@ function Items() {
 
   useEffect(() => {
     if (user && !hasFetched) {
-      getItems().then(() => setHasFetched(true));
+      setPage(0); // Resetea la página al cargar por primera vez
+      getItems(true).then(() => setHasFetched(true));
     }
   }, [user, getItems, hasFetched]);
 
   useEffect(() => {
-    if (page > 0) {
+    if (!isLoading) {
       getItems();
     }
   }, [page, getItems]);
@@ -71,10 +106,7 @@ function Items() {
       e.currentTarget.scrollHeight ===
       e.currentTarget.scrollTop + e.currentTarget.clientHeight;
     if (bottom && !isLoading && page < totalPages - 1) {
-      setPage((prevPage) => {
-        console.log("Setting page to:", prevPage + 1);
-        return prevPage + 1;
-      });
+      setPage((prevPage) => prevPage + 1);
     }
   };
 
