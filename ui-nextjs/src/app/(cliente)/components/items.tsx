@@ -19,34 +19,49 @@ const Items = () => {
   const [items, setItems] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [cart, setCart] = useState<Product[]>([]);
+  const [hasFetched, setHasFetched] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
 
-  const getItems = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const res = await getProducts(page, 12);
-      setItems((prevItems) => {
-        const newItems = [...prevItems, ...res.data];
-        const uniqueItems = Array.from(
-          new Set(newItems.map((item) => item.id))
-        ).map((id) => newItems.find((item) => item.id === id)!);
-        return uniqueItems;
-      });
-      setTotalPages(res.totalPages);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+  const getItems = useCallback(
+    async (resetPage = false) => {
+      setIsLoading(true);
+      try {
+        const currentPage = resetPage ? 0 : page;
+        const res = await getProducts(currentPage, 12);
+
+        if (currentPage === 0) {
+          setItems(res.data);
+        } else {
+          setItems((prevItems) => {
+            const newItems = [...prevItems, ...res.data];
+            const uniqueItems = Array.from(
+              new Set(newItems.map((item) => item.id))
+            ).map((id) => newItems.find((item) => item.id === id)!);
+            return uniqueItems;
+          });
+        }
+
+        setPage(currentPage);
+        setTotalPages(res.totalPages);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [page]
+  );
+
+  useEffect(() => {
+    if (user && !hasFetched) {
+      setPage(0); // Resetea la página al cargar por primera vez
+      getItems(true).then(() => setHasFetched(true));
     }
-  }, [page]);
+  }, [user, getItems, hasFetched]);
 
   useEffect(() => {
-    if (user) getItems();
-  }, [user]);
-
-  useEffect(() => {
-    if (page > 0) {
+    if (!isLoading) {
       getItems();
     }
   }, [page, getItems]);
@@ -56,10 +71,7 @@ const Items = () => {
       e.currentTarget.scrollHeight ===
       e.currentTarget.scrollTop + e.currentTarget.clientHeight;
     if (bottom && !isLoading && page < totalPages - 1) {
-      setPage((prevPage) => {
-        console.log("Setting page to:", prevPage + 1);
-        return prevPage + 1;
-      });
+      setPage((prevPage) => prevPage + 1);
     }
   };
 

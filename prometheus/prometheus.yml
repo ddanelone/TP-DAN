@@ -11,12 +11,12 @@ scrape_configs:
     static_configs:
       - targets:
           - localhost:9090
-    bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM0IiwiaWF0IjoxNzIzMjE1MTA5LCJleHAiOjE3MjM4MTk5MDl9.LYY6zhKtRR3CNk4n9JqYwCyo7bz83DKLu0MIYhAgxSg
+    bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjQxODIzMTEsImV4cCI6MTcyNDc4NzExMX0.jL6BNB275zTkqOAY7lf2LrvugqXirGX0xeF9oV1DSqs
 
   - job_name: "cadvisor"
     static_configs:
       - targets: ["cadvisor:8080"]
-    bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM0IiwiaWF0IjoxNzIzMjE1MTA5LCJleHAiOjE3MjM4MTk5MDl9.LYY6zhKtRR3CNk4n9JqYwCyo7bz83DKLu0MIYhAgxSg
+    bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjQxODIzMTEsImV4cCI6MTcyNDc4NzExMX0.jL6BNB275zTkqOAY7lf2LrvugqXirGX0xeF9oV1DSqs
 
   - job_name: eureka-service
     scrape_interval: 15s
@@ -51,4 +51,4 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: blackbox-exporter:9115
-    bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM0IiwiaWF0IjoxNzIzMjE1MTA5LCJleHAiOjE3MjM4MTk5MDl9.LYY6zhKtRR3CNk4n9JqYwCyo7bz83DKLu0MIYhAgxSg
+    bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJpYXQiOjE3MjQxODIzMTEsImV4cCI6MTcyNDc4NzExMX0.jL6BNB275zTkqOAY7lf2LrvugqXirGX0xeF9oV1DSqs
