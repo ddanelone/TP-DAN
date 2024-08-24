@@ -20,7 +20,7 @@
 
 # SPRING SECURITY ---> OBSERVACIÓN: hay un ms de usuarios no dockerizado en Java.
 
-Fue armado al final, sólo para probar cómo funciona Spring Security. Corre en el localhost sin problemas sin problemas. Tener en cuenta que funciona a la "antigüita: necesita postgresql funcionando en el equipo y hay que crear la base de datos.
+Fue armado al final, sólo para probar cómo funciona Spring Security. Corre en el localhost sin problemas. Tener en cuenta que funciona a la "antigüita: necesita postgresql funcionando en el equipo y hay que crear la base de datos.
 
 # 4° MICROSERVICIO IMPLEMENTADO
 
@@ -38,6 +38,10 @@ Al darse de alta un "Cliente", el ms-clientes le envía un mensaje a la cola Rab
 
 Así, el usuario "Juan Pérez, DNI 12345678", tendrá como clave: "Jp12345678"
 Se puede cambiar en el menú correspondiente.
+
+# CREACION DE "USUARIOS HABILITADOS"
+
+Se crea un usuario nuevo, igual que el caso anterior de alta de "Clientes".
 
 # EUREKA (MS registrados por el Discovery)
 
@@ -59,7 +63,7 @@ localhost:9090
 
 # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E # I M P O R T A N T E
 
-Actualizar el token en el prometheus.yml porque tiene vigencia 7 días (hasta el 11/08/2024 inclusive)
+Actualizar el token en el prometheus.yml porque tiene vigencia 7 días (hasta el 27/08/2024 inclusive)
 
 Para verlo en actuator:
 http://localhost:8080/actuator/prometheus
@@ -88,9 +92,9 @@ En el microservicio de Clientes.
 
 http://localhost:8080/swagger-ui/index.html
 
-En el microservicio de Pedidos.
+# En el microservicio de Pedidos.
 
-http://localhost:8080/swagger-ui/index.html
+# http://localhost:8080/swagger-ui/index.html
 
 # TEST IMPLEMENTADOS
 

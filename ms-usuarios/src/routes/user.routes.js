@@ -8,7 +8,7 @@ import userUpdatePasswordController from '#Controllers/user-update-password.cont
 import getAllUsersController from '#Controllers/user-getAll.controller.js';
 import getUserByIdController from '#Controllers/user-getById.controller.js';
 import userDeleteController from '#Controllers/user-delete.controller.js';
-import validateTokenController from '#Controllers/user-validate-token.controller.js'; // Agrega esta línea
+import validateTokenController from '#Controllers/user-validate-token.controller.js';
 
 import userJWTDTO from '#Dto/user-jwt.dto.js';
 import userLoginDTO from '#Dto/user-login.dto.js';

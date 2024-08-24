@@ -76,6 +76,7 @@ const startServer = async () => {
                         await userRegisterController(req, res);
                         channel.ack(message);
                     } else {
+                        // Si hubo un error, descartamos el mensaje para que no entre en loop
                         channel.ack(message);
                         console.log(
                             'Mensaje no procesado: nombre o apellido vacío'

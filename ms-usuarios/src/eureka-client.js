@@ -11,7 +11,7 @@ const client = new Eureka({
             $: process.env.PORT || 8080, // Puerto configurado, 8080 por defecto
             '@enabled': 'true',
         },
-        vipAddress: 'ms-usuarios', // Dirección VIP de tu servicio
+        vipAddress: 'ms-usuarios',
         dataCenterInfo: {
             '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
             name: 'MyOwn',
@@ -20,9 +20,9 @@ const client = new Eureka({
         fetchRegistry: true, // Obtener el registro de Eureka
     },
     eureka: {
-        host: 'eureka-server', // Nombre del host del servidor Eureka
-        port: 8761, // Puerto del servidor Eureka
-        servicePath: '/eureka/apps/', // Ruta para acceder al servicio Eureka
+        host: 'eureka-server',
+        port: 8761,
+        servicePath: '/eureka/apps/',
     },
 });
 
