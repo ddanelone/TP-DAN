@@ -17,9 +17,11 @@ const AuthPage = () => {
           <Logo />
 
           <div className="relative z-20 mt-auto">
-            <p className="text-lg">Brindando soluciones desde 2021</p>
+            <p className="text-lg">
+              Brindamos soluciones integrales de software
+            </p>
             <footer className="text-sm">
-              {"Cosolito-Danelone-Margitic® "}
+              {"Análisis, diseño e implementación por Diego F. Danelone"}
             </footer>
           </div>
         </div>
